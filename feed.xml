@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Heavy Metal Dev - Articles</title>
+    <description>Developer stories from the trenches.</description>
+    <link>
+    </link>
+    
+      
+      <item>
+        <title>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</title>
+        
+          <description>&lt;p&gt;With everyone bragging about .Net Core Release, I was asking myself one question: “How the hell am I going to migrate my &lt;code class=&quot;highlighter-rouge&quot;&gt;rc1&lt;/code&gt; projects?”. Having in mind that the last migration from &lt;code class=&quot;highlighter-rouge&quot;&gt;beta4&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;rc1&lt;/code&gt; has taken about 2 days, I hoped that this time it would be a little easier.&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Sat, 30 Jul 2016 12:18:00 +0200</pubDate>
+        <link>
+        /dnx-to-dotnet-migration</link>
+        <guid isPermaLink="true">/dnx-to-dotnet-migration</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>.Net Core 1.0 Released!</title>
+        
+          <description>&lt;p&gt;This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! &lt;a href=&quot;http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx&quot;&gt;.Net Core 1.0 is finally released&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Tue, 28 Jun 2016 00:00:00 +0200</pubDate>
+        <link>
+        /net-core-1-0-released</link>
+        <guid isPermaLink="true">/net-core-1-0-released</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
+        
+          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 26 Nov 2015 00:00:00 +0100</pubDate>
+        <link>
+        /aspnet5-reflectiontypeloadexception</link>
+        <guid isPermaLink="true">/aspnet5-reflectiontypeloadexception</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Sharing code between aspnet5 and &quot;old&quot; .net</title>
+        
+          <description>&lt;p&gt;If you want to share some common code between &lt;code class=&quot;highlighter-rouge&quot;&gt;aspnet5&lt;/code&gt; and regular &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; projects, you basically have three options:
+ * create a nuget from the common library and push it to a shared nuget repository&lt;br /&gt;
+ * use &lt;code class=&quot;highlighter-rouge&quot;&gt;dnu wrap&lt;/code&gt; to wrap existing &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; into aspnet5 &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; 
+ * maintain two versions of your shared project - a  &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; for aspnet5 and a &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; for regular .net&lt;/p&gt;
+
+&lt;p&gt;The last option is the most error-prone and harder to maintain, so I will just ignore it.&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 12 Mar 2015 00:00:00 +0100</pubDate>
+        <link>
+        /aspnet5-reference-csproj</link>
+        <guid isPermaLink="true">/aspnet5-reference-csproj</guid>
+      </item>
+      
+    
+  </channel>
+</rss>

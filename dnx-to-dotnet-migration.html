@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head " 
+    
+        style="no-cover"
+     
+>
+
+    <nav class="main-nav  clearfix">
+        
+        
+    </nav>
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class="post-header">
+            <h1 class="post-title">Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</h1>
+            <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2016-07-30">30 Jul 2016</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/dotnet'>Dotnet</a>,
+                       
+                
+                    
+                       <a href='/tag/aspnet-vnext'>Aspnet-vnext</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>With everyone bragging about .Net Core Release, I was asking myself one question: “How the hell am I going to migrate my <code class="highlighter-rouge">rc1</code> projects?”. Having in mind that the last migration from <code class="highlighter-rouge">beta4</code> to <code class="highlighter-rouge">rc1</code> has taken about 2 days, I hoped that this time it would be a little easier.</p>
+
+<h2 id="whats-new">What’s new?</h2>
+
+<p>The first change you will immediately notice are the commandline tools. <code class="highlighter-rouge">Dnu</code> and <code class="highlighter-rouge">dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code class="highlighter-rouge">dotnet</code></a> command. <code class="highlighter-rouge">Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code class="highlighter-rouge">dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code class="highlighter-rouge">dnvm use</code> - you have to specify the desired version in <code class="highlighter-rouge">global.json</code> file.</p>
+
+<h2 id="how-stable-is-stable">How stable is <em>stable</em>?</h2>
+
+<p>Versioning of .Net Core (the framework) and versioning of commandline tools (SDK) are two different stories now. As .Net Core by itself is RTM, CLI tools are still in preview.</p>
+
+<p>But you cannot compile anything without the toolchain, right? Right.. and once you manage to compile and run your code against .Net Core RTM, then it should be stable from there and can be safely deployed on a server.</p>
+
+<blockquote>
+  <p>It’s also worth noting that <a href="https://blogs.msdn.microsoft.com/webdev/2016/06/27/announcing-asp-net-core-1-0/">ASP.NET Core 1.0</a> and <a href="https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/">Entity Framework Core 1.0</a> have also been released - so you’re not left with a stable core framework and unstable libraries.</p>
+</blockquote>
+
+<h2 id="what-has-changed">What has changed?</h2>
+
+<p>These are the areas that have changed:</p>
+
+<ul>
+  <li><em>project.json</em>
+    <ul>
+      <li>project dependencies</li>
+      <li>commands =&gt; tools</li>
+      <li>framework monikers</li>
+      <li>some minor section reorganizations</li>
+    </ul>
+  </li>
+  <li>application loading and startup model</li>
+</ul>
+
+<h3 id="projectjson-file"><em>Project.json</em> file</h3>
+
+<h4 id="project-dependencies">Project dependencies</h4>
+
+<p>The most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
+    "my.other.project": { "target": "project" }
+}
+</code></pre>
+</div>
+
+<p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package.</p>
+
+<p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="highlighter-rouge">src</code> directories listed in <code class="highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="highlighter-rouge">"target": "package"</code>.</p>
+
+<h4 id="commands-vs-tools">Commands vs. Tools</h4>
+
+<p><code class="highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#a-console-app">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
+
+<p>There are basically 3 types of tools that can extend <code class="highlighter-rouge">dotnet</code> command.</p>
+
+<p>The simplest one is <code class="highlighter-rouge">PATH</code> tools - every executable file named <code class="highlighter-rouge">dotnet-something</code> that is on <code class="highlighter-rouge">PATH</code> can be called as <code class="highlighter-rouge">dotnet something</code> - pretty much how git does it with <a href="http://thediscoblog.com/blog/2014/03/29/custom-git-commands-in-3-steps/">git subcommands</a>. All the invocation arguments are passed to that command, then it’s up to the tool to do it’s work.</p>
+
+<p>Second type of tools are the project tools that are specified in <code class="highlighter-rouge">tools</code> section. These are portable console appications, which are restored with <code class="highlighter-rouge">dotnet restore</code> and have a separate dependency graph. They can only be run in project’s context. This means that when run, they can easily locate project files and outputs and manipulate them. An example of such command is <code class="highlighter-rouge">dotnet-publish-iis</code>.</p>
+
+<p>This brings us to the third type of tools - tools that need to load project output binaries, like for example <code class="highlighter-rouge">dotnet-test-xunit</code>. As mentioned before, tools have a separate dependency graph. But in order to load project output binaries, the tool dependency graph and project dependency graph have to be unified - otherwise all sort of bad things may happen. In order to achieve this, a simple trick is made - the package in <code class="highlighter-rouge">tools</code> section is just a <a href="https://github.com/dotnet/cli/tree/rel/1.0.0-preview2/TestAssets/TestPackages/dotnet-dependency-tool-invoker">simple invoker</a> that loads a specific library (named excatly as the command, e.g. <code class="highlighter-rouge">dotnet-test-xunit</code>) from project dependencies. Because you have to add this library to project’s dependencies, it is part of the overall dependency graph and is able to load project binaries. If there are any conflicts between the tool library and your project, they will come out during <code class="highlighter-rouge">restore</code>.</p>
+
+<p>This works a little bit like the old <code class="highlighter-rouge">commands</code> section, but you cannot embed any commandline arguments in <code class="highlighter-rouge">project.json</code> (this part of functionality seem to be gone for good).</p>
+
+<h4 id="scripts">Scripts</h4>
+
+<p>The <code class="highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <em>‘precompile’</em> and <em>‘postcompile’</em>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
+
+<h4 id="section-renames">Section renames</h4>
+
+<p>Other changes in <code class="highlighter-rouge">project.json</code> are rather cosmetic:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">compileOptions</code> were renamed to <code class="highlighter-rouge">buildOptions</code></li>
+  <li>metadata properties, like <code class="highlighter-rouge">summary</code>, <code class="highlighter-rouge">releaseNotes</code>, <code class="highlighter-rouge">iconUrl</code> were moved to <code class="highlighter-rouge">packOptions</code> section</li>
+</ul>
+
+<p>The renames are not breaking  (yet) - you will just get a warning that a specific entry is deprecated and you should use the new one instead.</p>
+
+<h4 id="frameworks">Frameworks</h4>
+
+<p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code class="highlighter-rouge">dnx451</code> should be renamed to <code class="highlighter-rouge">net451</code>. In practice, <code class="highlighter-rouge">dnx451</code> still works just fine. <code class="highlighter-rouge">dnxcore50</code> should become <code class="highlighter-rouge">netcoreapp1.0</code> and must add a dependency to <code class="highlighter-rouge">Microsoft.NETCore.App</code> package.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">imports</code>: allow packages supporting these frameworks to be installed in this target, regardless of the compatibility rules.</li>
+</ul>
+
+<h3 id="tests">Tests</h3>
+
+<p>Unit testing seems to be the area that has the most moving pieces. It is depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner is released. And it’s really easy to get confused. Fortunately, xunit team keeps <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">xunit docs</a> up to date.</p>
+
+<p>There are 2 things you have to do to configure a unit test project:</p>
+
+<ol>
+  <li>
+    <p>Reference the test tool in project dependencies, like this:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
+  "dotnet-test-xunit": "1.0.0-rc2-192208-24"
+}
+</code></pre>
+    </div>
+
+    <p>This will include testing tool in your dependency chain.</p>
+  </li>
+  <li>
+    <p>Set <code class="highlighter-rouge">testRunner</code> property in <em>project.json</em>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>"testRunner": "xunit"
+</code></pre>
+    </div>
+  </li>
+</ol>
+
+<p>That’s it. If you now run <code class="highlighter-rouge">dotnet test</code>, dotnet will know it should invoke <code class="highlighter-rouge">dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code class="highlighter-rouge">dotnet new</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new -t xunittest
+</code></pre>
+</div>
+
+<blockquote>
+  <p>If you want to know more about <code class="highlighter-rouge">dotnet new</code>, there’s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code class="highlighter-rouge">dotnet new</code></a> by Scott Hanselman.</p>
+</blockquote>
+
+<p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
+
+<h2 id="application-startup">Application startup</h2>
+
+<p><code class="highlighter-rouge">RC1</code> supported two launch modes:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">"emitEntryPoint":true</code> - the application is compiled to an <code class="highlighter-rouge">.exe</code>, and has to have a static <code class="highlighter-rouge">Main</code> method. This hasn’t change.</li>
+  <li>
+    <p><code class="highlighter-rouge">"emitEntryPoint":false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code class="highlighter-rouge">project.json</code>, like this:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
+</code></pre>
+    </div>
+
+    <p>In this mode, the loading process was similiar to how Asp.Net <code class="highlighter-rouge">Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code class="highlighter-rouge">Main</code> method (non-static), create the containing class instance and inject dependencies into it’s constructor, then run <code class="highlighter-rouge">Main</code>. This was very convienient, because you had access to things like <code class="highlighter-rouge">IApplicationEnvironment</code> or <code class="highlighter-rouge">IServiceProvider</code>. This also meant that additional work had to be done by <code class="highlighter-rouge">dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of “magic” too.</p>
+  </li>
+</ul>
+
+<p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code class="highlighter-rouge">IServiceProvider</code> is defined in <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won’t. That was a problem for <code class="highlighter-rouge">dnx</code> - versions of you’re dependencies and <code class="highlighter-rouge">dnx</code> version had to match (you couldn’t have <code class="highlighter-rouge">beta5</code> dependencies and use <code class="highlighter-rouge">dnx</code> <code class="highlighter-rouge">v.1.0.0-beta4</code>).</p>
+
+<p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public static void Main(string[] args)
+{
+    var host = new WebHostBuilder()
+        .UseKestrel()
+        .UseContentRoot(Directory.GetCurrentDirectory())
+        .UseStartup&lt;Startup&gt;()
+        .Build();
+
+    host.Run();
+}
+</code></pre>
+</div>
+
+<p>Now, the <code class="highlighter-rouge">WebHostBuilder</code> is responsible for creating instance of <code class="highlighter-rouge">IApplicationEnvironment</code>, etc. and passing these dependencies to <code class="highlighter-rouge">Startup</code> class. So the <code class="highlighter-rouge">Startup</code> class does not have to change, the only change is in the <code class="highlighter-rouge">Main</code> method.</p>
+
+<p>Some of these services that were provided in <code class="highlighter-rouge">dnx</code> has moved to other places, like <code class="highlighter-rouge">IApplicationEnvironment</code>:
+https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcements/issues/171, https://github.com/aspnet/PlatformAbstractions/issues/37. Most of them, including <code class="highlighter-rouge">ApplicationBasePath</code> can now be accessed by a static field: <code class="highlighter-rouge">Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application</code>. That’s it for “dependency injection as a first class citizen” (at least for barebone console apps) and we’re back to static classes.</p>
+
+<h2 id="migration-process">Migration process</h2>
+
+<p>In the following section I will break down the process of migration from RC1 to RTM, along with some explanation of changes and problems you might encounter. If you wan’t a more step-by-step approach, see Shawn Wildermuth’s <a href="https://wildermuth.com/2016/05/17/Converting-an-ASP-NET-Core-RC1-Project-to-RC2">Converting an ASP.NET Core RC1 Project to RC2</a> (RC2 <a href="https://docs.asp.net/en/latest/migration/rc2-to-rtm.html">does not differ much</a> from RTM) and the <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Official migration guide</a>.</p>
+
+<h2 id="using-dotnet-with-old-projects">Using dotnet with old projects</h2>
+
+<p>As mentioned before, the tooling/SDK is now completely separate from Core Framework libraries. This also means that you’re dependencie versions does no longer have to match tooling version (previously, you weren’t able to have a dependency on, say, <code class="highlighter-rouge">-beta8</code> libraries and compile with <code class="highlighter-rouge">-rc1</code> <em>dnu</em>). The consequence is that you can still depend on older <code class="highlighter-rouge">-rc1</code> libraries and use new <code class="highlighter-rouge">dotnet</code> commands. This gives you a little more flexibility in the migration process.</p>
+
+<p>Let’s get down to business and see, how does the migration process go. The experience can vary depending on how complicated is your project and how much (if any) dependencies does it have on .Net Core libraries.</p>
+
+<p>We’ll break it down into three types of projects:</p>
+
+<ol>
+  <li>A simple library project that has no other project dependencies</li>
+  <li>A console application</li>
+  <li>Aspnet MVC application with some project dependencies</li>
+</ol>
+
+<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451">A library project, with no project dependencies, targeting net451 and dnx451.</h3>
+
+<p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
+
+<p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> had no problems. The only difference: all of dll dependencies were copied to output <code class="highlighter-rouge">bin</code> folder.</p>
+
+<h3 id="a-namea-console-appaa-console-app"><a name="a-console-app"></a>A console app</h3>
+
+<p>ILibraryManager http://stackoverflow.com/questions/37315419/how-to-load-assemblies-in-asp-net-core-1-0-rc2</p>
+
+<p>globalPackagesFolder
+https://github.com/NuGet/Home/issues/2831</p>
+
+<ul>
+  <li>newtonsoft.json for netcoreapp1.0 - requires system.serialization.primitives dependency.</li>
+</ul>
+
+<blockquote>
+  <p>there is no <code class="highlighter-rouge">dotnet wrap</code> command, but if you alredy have some wrapped csprojs, they should work just fine.</p>
+</blockquote>
+
+<p>http://docs.nuget.org/create/targetframeworks
+https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
+https://github.com/dotnet/corefx
+http://stackoverflow.com/questions/35421935/what-are-the-platforms-in-the-net-platform-standard</p>
+
+<h2 id="restore---build---run---test">restore - build - run - test</h2>
+
+<p>Errors in C:\src\legimi\common.hg\src\Common.vnext\test\common.configuration.tests\project.json
+    Package Should 1.1.20 is not compatible with netcoreapp1.0 (.NETCoreApp,Version=v1.0). Package Should 1.1.20 supports: net (.NETFramework,Version=v0.0)</p>
+
+<p>“imports”: [“dnxcore50”, “portable-net45+win8”, “net”]</p>
+
+<blockquote>
+  <p>warning DOTNET1015: The ‘compilationOptions’ option is deprecated. Use ‘buildOptions’ instead.</p>
+</blockquote>
+
+<h3 id="some-restore-cases">some restore cases:</h3>
+
+<h4 id="package-downgrade">Package downgrade</h4>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>warn : Detected package downgrade: System.Runtime from 4.1.0 to 4.0.0
+warn :  console-upgrade (&gt;= 1.0.0) -&gt; Microsoft.Extensions.DependencyModel (&gt;= 1.0.0) -&gt; Microsoft.DotNet.InternalAbstractions (&gt;= 1.0.0) -&gt; System.Runtime.InteropServices.RuntimeInformation (&gt;= 4.0.0) -&gt; System.Runtime (&gt;= 4.1.0)
+warn :  console-upgrade (&gt;= 1.0.0) -&gt; System.Runtime (&gt;= 4.0.0)
+</code></pre>
+</div>
+
+<p>The messaeg is pretty clear: in my project <code class="highlighter-rouge">console-upgrade</code>, I have a dependency on <code class="highlighter-rouge">"System.Runtime": "4.0.0"</code>, but some of my other dependencies depends on <code class="highlighter-rouge">System.Runtime &gt;= 4.1.0</code>.</p>
+
+<p>// Which package will be used?</p>
+
+<h3 id="custom-packages-dir-in-globaljson---dotnet-restore-does-not-respect-it-dotnet-build-does">custom packages dir in global.json - dotnet restore does not respect it, dotnet build does</h3>
+
+<p>https://github.com/dotnet/core-setup/tree/master/pkg/projects/Microsoft.NETCore.App</p>
+
+<h3 id="build-out-of-band">Build out-of-band</h3>
+
+<blockquote>
+  <p>dotnet build rc2\test
+The structure of init data has changed, do not know how to interpret it</p>
+</blockquote>
+
+<p>takes settings from current directory instead of project directory (global.json)</p>
+
+<h3 id="tests-1">Tests</h3>
+
+<p>Unit testing seems to be the most moving part of the whole thing. It is a part of tooling and depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner has to be released. And it’s really easy to get confused. Fortunately, xunit team keeps the docs up to date: https://xunit.github.io/docs/getting-started-dotnet-core.html.</p>
+
+<h4 id="targeting-desktop-net">Targeting desktop .NET</h4>
+
+<p>The .NET CLI runner is capable of running tests which target desktop .NET (minimum version 4.5.1), in addition to .NET Core. To target desktop .NET, use this frameworks section instead:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"frameworks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"net451"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"Microsoft.NETCore.Platforms"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.1"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> </span><span class="err">You</span><span class="w"> </span><span class="err">can</span><span class="w"> </span><span class="err">target</span><span class="w"> </span><span class="err">both</span><span class="w"> </span><span class="err">net</span><span class="mi">4</span><span class="err">xx</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">netcoreapp</span><span class="w"> </span><span class="err">simply</span><span class="w"> </span><span class="err">by</span><span class="w"> </span><span class="err">adding</span><span class="w"> </span><span class="err">both</span><span class="w"> </span><span class="err">frameworks</span><span class="w"> </span><span class="err">together</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">your</span><span class="w"> </span><span class="err">project.json</span><span class="w"> </span><span class="err">file.</span><span class="w"> </span><span class="err">When</span><span class="w"> </span><span class="err">you</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">dotnet</span><span class="w"> </span><span class="err">test</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">multiple</span><span class="w"> </span><span class="err">framework</span><span class="w"> </span><span class="err">entries,</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">system</span><span class="w"> </span><span class="err">will</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">tests</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">**all**</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">frameworks,</span><span class="w"> </span><span class="err">one</span><span class="w"> </span><span class="err">after</span><span class="w"> </span><span class="err">another.</span><span class="w">
+</span></code></pre>
+</div>
+
+<h2 id="net-core-on-server">.Net Core on server</h2>
+
+<p>If you want to run your app on IIS, there is a <em>“windows (server hosting)”</em> position on the <a href="https://www.microsoft.com/net/download#winserverhost">.Net Core download</a> page. This will install .Net Core and the <strong>ASP.NET Core Module for IIS</strong>, which is a <a href="https://github.com/aspnet/Announcements/issues/164">replacement for the old <code class="highlighter-rouge">HttpPaltformHandler</code></a> (and which I’m waiting to see being <a href="https://github.com/aspnet/IISIntegration/issues/105#issuecomment-205082952">open sourced</a>).</p>
+
+<h3 id="publishing-to-iis">Publishing to IIS</h3>
+
+<p>There is a new tool: , which adds <code class="highlighter-rouge">dotnet-publish-iis</code> command. As promising as it may seem, it doesn’t handle IIS deployment (i.e. with MSDeploy). What it does is just add or modify <em>web.config</em> file to inclide <em>Asp.Net Core Module for IIS</em> with the right parameters. The deployment part you have to handle yourself, but Visual Studio will make it easy for you.</p>
+
+<h3 id="server-mode-garbage-collection">Server-mode Garbage Collection</h3>
+
+<p>When targeting full .Net Framework, if you want <a href="https://msdn.microsoft.com/en-us/library/cc165011(v=office.11).aspx">server garbage collection</a>, you have to <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html#server-garbage-collection-gc">enable it</a> in  <em>project.json</em> or <em>app.config</em>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"runtimeOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"configProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"System.GC.Server"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="highlighter-rouge">runtimeOptions</code></a>.</p>
+
+<h3 id="hunt-down-old-references">hunt down old references</h3>
+
+<p>If you have a decent dependency tree, it is possible that some of the dependencies are still using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory, or even starring at it to long - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0&amp;url=dnx-to-dotnet-migration"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=dnx-to-dotnet-migration"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=dnx-to-dotnet-migration"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+        <a class="read-next-story prev no-cover" href="/net-core-1-0-released">
+            <section class="post">
+                <h2>.Net Core 1.0 Released!</h2>
+                <p>This came as a little surprise for me, especially that rc2 was released not so...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- [[! The main JavaScript file for Casper ]] -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+</body>
+
+</html>
