@@ -10,7 +10,7 @@
       <item>
         <title>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</title>
         
-          <description>&lt;p&gt;With everyone bragging about .Net Core Release, I was asking myself one question: “How the hell am I going to migrate my &lt;code class=&quot;highlighter-rouge&quot;&gt;rc1&lt;/code&gt; projects?”. Having in mind that the last migration from &lt;code class=&quot;highlighter-rouge&quot;&gt;beta4&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;rc1&lt;/code&gt; has taken about 2 days, I hoped that this time it would be a little easier.&lt;/p&gt;
+          <description>&lt;p&gt;Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” &lt;code class=&quot;highlighter-rouge&quot;&gt;dnx&lt;/code&gt; projects forward and switch to &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt;? There is a pretty good official &lt;a href=&quot;https://docs.asp.net/en/latest/migration/rc1-to-rtm.html&quot;&gt;Migration gude&lt;/a&gt;, but if you want some more detailed explanation, read on.&lt;/p&gt;
 
 </description>
         

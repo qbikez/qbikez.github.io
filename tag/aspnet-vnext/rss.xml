@@ -18,7 +18,7 @@
 	  <pubDate>2016-07-30T12:18:00+02:00</pubDate>
 	  <guid>//dnx-to-dotnet-migration</guid>
 	  <description><![CDATA[
-	     <p>With everyone bragging about .Net Core Release, I was asking myself one question: “How the hell am I going to migrate my <code class="highlighter-rouge">rc1</code> projects?”. Having in mind that the last migration from <code class="highlighter-rouge">beta4</code> to <code class="highlighter-rouge">rc1</code> has taken about 2 days, I hoped that this time it would be a little easier.</p>
+	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
 
 <h2 id="whats-new">What’s new?</h2>
 
@@ -36,7 +36,7 @@
 
 <h2 id="what-has-changed">What has changed?</h2>
 
-<p>These are the areas that have changed:</p>
+<p>These are a few areas that have changed. Some of them will require more work to get them working, some will be just a matter of simple find-and-replace:</p>
 
 <ul>
   <li><em>project.json</em>
@@ -48,13 +48,14 @@
     </ul>
   </li>
   <li>application loading and startup model</li>
+  <li>ASP.NET Core - namespace, nuget versions and some APIs</li>
 </ul>
 
 <h3 id="projectjson-file"><em>Project.json</em> file</h3>
 
 <h4 id="project-dependencies">Project dependencies</h4>
 
-<p>The most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
+<p>For me, the most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
     "my.other.project": { "target": "project" }
@@ -62,13 +63,15 @@
 </code></pre>
 </div>
 
-<p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package.</p>
+<p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
 
-<p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="highlighter-rouge">src</code> directories listed in <code class="highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="highlighter-rouge">"target": "package"</code>.</p>
+<blockquote>
+  <p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="highlighter-rouge">src</code> directories listed in <code class="highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="highlighter-rouge">"target": "package"</code>.</p>
+</blockquote>
 
 <h4 id="commands-vs-tools">Commands vs. Tools</h4>
 
-<p><code class="highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#a-console-app">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
+<p><code class="highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#application-startup">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
 
 <p>There are basically 3 types of tools that can extend <code class="highlighter-rouge">dotnet</code> command.</p>
 
@@ -82,7 +85,7 @@
 
 <h4 id="scripts">Scripts</h4>
 
-<p>The <code class="highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <em>‘precompile’</em> and <em>‘postcompile’</em>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
+<p>The <code class="highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <strong>‘precompile’</strong> and <strong>‘postcompile’</strong>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
 
 <h4 id="section-renames">Section renames</h4>
 
@@ -93,15 +96,26 @@
   <li>metadata properties, like <code class="highlighter-rouge">summary</code>, <code class="highlighter-rouge">releaseNotes</code>, <code class="highlighter-rouge">iconUrl</code> were moved to <code class="highlighter-rouge">packOptions</code> section</li>
 </ul>
 
-<p>The renames are not breaking  (yet) - you will just get a warning that a specific entry is deprecated and you should use the new one instead.</p>
+<p>The renames are not breaking  (at least not yet) - you will just get a warning that a specific entry is deprecated and you should use the new one instead.</p>
 
 <h4 id="frameworks">Frameworks</h4>
 
 <p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code class="highlighter-rouge">dnx451</code> should be renamed to <code class="highlighter-rouge">net451</code>. In practice, <code class="highlighter-rouge">dnx451</code> still works just fine. <code class="highlighter-rouge">dnxcore50</code> should become <code class="highlighter-rouge">netcoreapp1.0</code> and must add a dependency to <code class="highlighter-rouge">Microsoft.NETCore.App</code> package.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">imports</code>: allow packages supporting these frameworks to be installed in this target, regardless of the compatibility rules.</li>
-</ul>
+<p>A framework declaration in <em>project.json</em> may also include <code class="highlighter-rouge">imports</code> section:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"frameworks": {
+  "netcoreapp1.0": { 
+    "imports": [ 
+        "dnxcore50",
+        "portable-net45+win8"
+      ] 
+    }
+}
+</code></pre>
+</div>
+
+<p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it’s telling the package manager: <em>“If you don’t find a package version targeting <code class="highlighter-rouge">netcoreapp1.0</code> or other compatible framework, I wan’t you to install a version that targets one of the imported frameworks”</em>.</p>
 
 <h3 id="tests">Tests</h3>
 
@@ -142,7 +156,7 @@
 
 <p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
 
-<h2 id="application-startup">Application startup</h2>
+<h2 id="application-startup-a-idapplication-startupa">Application startup <a id="application-startup"></a></h2>
 
 <p><code class="highlighter-rouge">RC1</code> supported two launch modes:</p>
 
@@ -161,7 +175,7 @@
 
 <p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code class="highlighter-rouge">IServiceProvider</code> is defined in <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won’t. That was a problem for <code class="highlighter-rouge">dnx</code> - versions of you’re dependencies and <code class="highlighter-rouge">dnx</code> version had to match (you couldn’t have <code class="highlighter-rouge">beta5</code> dependencies and use <code class="highlighter-rouge">dnx</code> <code class="highlighter-rouge">v.1.0.0-beta4</code>).</p>
 
-<p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this:</p>
+<p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>public static void Main(string[] args)
 {
@@ -197,71 +211,48 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
   <li>A simple library project that has no other project dependencies</li>
   <li>A console application</li>
   <li>Aspnet MVC application with some project dependencies</li>
+  <li>Tests</li>
 </ol>
 
-<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451">A library project, with no project dependencies, targeting net451 and dnx451.</h3>
+<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451-a-namelibrary-appa">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
 
 <p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
 
-<p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> had no problems. The only difference: all of dll dependencies were copied to output <code class="highlighter-rouge">bin</code> folder.</p>
+<p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code class="highlighter-rouge">bin</code> folder.</p>
 
-<h3 id="a-namea-console-appaa-console-app"><a name="a-console-app"></a>A console app</h3>
+<h3 id="a-console-app-a-nameconsole-appa">A console app <a name="console-app"></a></h3>
 
-<p>ILibraryManager http://stackoverflow.com/questions/37315419/how-to-load-assemblies-in-asp-net-core-1-0-rc2</p>
+<p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code class="highlighter-rouge">emitEntryPoint</code></a>. In that case, you have to add a static <code class="highlighter-rouge">Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
 
-<p>globalPackagesFolder
-https://github.com/NuGet/Home/issues/2831</p>
+<h3 id="aspnet-mvc-application-a-namemvc-appa">ASP.NET MVC application <a name="mvc-app"></a></h3>
 
-<ul>
-  <li>newtonsoft.json for netcoreapp1.0 - requires system.serialization.primitives dependency.</li>
-</ul>
+<p>A full ASP.NET MVC application will require some more work. Follow these steps:</p>
 
-<blockquote>
-  <p>there is no <code class="highlighter-rouge">dotnet wrap</code> command, but if you alredy have some wrapped csprojs, they should work just fine.</p>
-</blockquote>
+<ol>
+  <li>In <em>project.json</em> <code class="highlighter-rouge">dependendcies</code> section, make these renames:
+    <ul>
+      <li>AspNetCore namespace: <code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li>AspNet versions: <code class="highlighter-rouge">1.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
+      <li>MVC versions: <code class="highlighter-rouge">6.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
+      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+    </ul>
 
-<p>http://docs.nuget.org/create/targetframeworks
-https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
-https://github.com/dotnet/corefx
-http://stackoverflow.com/questions/35421935/what-are-the-platforms-in-the-net-platform-standard</p>
+    <p>Some of the versions or namespaces may actually be incorrect. If there’s just an issue, just try referencing the newest one (preferrably stable). Continue to fix dependencies until <code class="highlighter-rouge">dotnet restore</code> suceeds.</p>
+  </li>
+  <li>Get rid of <em>project.json</em> <code class="highlighter-rouge">commands</code> section.</li>
+  <li>In code, rename namespaces:
+    <ul>
+      <li><code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+    </ul>
+  </li>
+  <li>Try doing <code class="highlighter-rouge">dotnet build</code> and fix the remaining compilation errors.</li>
+  <li>In <em>project.json</em> set <code class="highlighter-rouge">buildOptions:emitEntryPoint</code> to <code class="highlighter-rouge">true</code> and add <a href="#aspnet-main">static <code class="highlighter-rouge">Main</code> method</a> or fix the existing one.</li>
+  <li>In <em>projectJson</em>, set <a href="https://github.com/aspnet/cli-samples/issues/19"><code class="highlighter-rouge">buildOptions:preserveCompilationContext</code></a> to <code class="highlighter-rouge">true</code> - this is required for Razor views compilation.</li>
+  <li>If the project compiles, try running it. There will probably be some minor problems in views, but they should’n be hard to fix.</li>
+</ol>
 
-<h2 id="restore---build---run---test">restore - build - run - test</h2>
-
-<p>Errors in C:\src\legimi\common.hg\src\Common.vnext\test\common.configuration.tests\project.json
-    Package Should 1.1.20 is not compatible with netcoreapp1.0 (.NETCoreApp,Version=v1.0). Package Should 1.1.20 supports: net (.NETFramework,Version=v0.0)</p>
-
-<p>“imports”: [“dnxcore50”, “portable-net45+win8”, “net”]</p>
-
-<blockquote>
-  <p>warning DOTNET1015: The ‘compilationOptions’ option is deprecated. Use ‘buildOptions’ instead.</p>
-</blockquote>
-
-<h3 id="some-restore-cases">some restore cases:</h3>
-
-<h4 id="package-downgrade">Package downgrade</h4>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>warn : Detected package downgrade: System.Runtime from 4.1.0 to 4.0.0
-warn :  console-upgrade (&gt;= 1.0.0) -&gt; Microsoft.Extensions.DependencyModel (&gt;= 1.0.0) -&gt; Microsoft.DotNet.InternalAbstractions (&gt;= 1.0.0) -&gt; System.Runtime.InteropServices.RuntimeInformation (&gt;= 4.0.0) -&gt; System.Runtime (&gt;= 4.1.0)
-warn :  console-upgrade (&gt;= 1.0.0) -&gt; System.Runtime (&gt;= 4.0.0)
-</code></pre>
-</div>
-
-<p>The messaeg is pretty clear: in my project <code class="highlighter-rouge">console-upgrade</code>, I have a dependency on <code class="highlighter-rouge">"System.Runtime": "4.0.0"</code>, but some of my other dependencies depends on <code class="highlighter-rouge">System.Runtime &gt;= 4.1.0</code>.</p>
-
-<p>// Which package will be used?</p>
-
-<h3 id="custom-packages-dir-in-globaljson---dotnet-restore-does-not-respect-it-dotnet-build-does">custom packages dir in global.json - dotnet restore does not respect it, dotnet build does</h3>
-
-<p>https://github.com/dotnet/core-setup/tree/master/pkg/projects/Microsoft.NETCore.App</p>
-
-<h3 id="build-out-of-band">Build out-of-band</h3>
-
-<blockquote>
-  <p>dotnet build rc2\test
-The structure of init data has changed, do not know how to interpret it</p>
-</blockquote>
-
-<p>takes settings from current directory instead of project directory (global.json)</p>
+<p>If you encounter strange errors with loading dependency assemblies or anything that seems like <code class="highlighter-rouge">rc1</code> leftover, try <a href="#hunt-down-rc1">Hunting down rc1 references</a>.</p>
 
 <h3 id="tests-1">Tests</h3>
 
@@ -284,6 +275,10 @@ The structure of init data has changed, do not know how to interpret it</p>
 </div>
 
 <p>You can target both net4xx and netcoreapp simply by adding both frameworks together in your project.json file. When you run dotnet test with multiple framework entries, the system will run tests with <strong>all</strong> the frameworks, one after another.</p>
+
+<h2 id="hunt-down-old-references-a-idhunt-down-rc1a">Hunt down old references <a id="hunt-down-rc1"></a></h2>
+
+<p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
 
 <h2 id="net-core-on-server">.Net Core on server</h2>
 
@@ -309,9 +304,6 @@ The structure of init data has changed, do not know how to interpret it</p>
 
 <p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="highlighter-rouge">runtimeOptions</code></a>.</p>
 
-<h3 id="hunt-down-old-references">hunt down old references</h3>
-
-<p>If you have a decent dependency tree, it is possible that some of the dependencies are still using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory, or even starring at it to long - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
 
 	  ]]></description>
 	</item>
