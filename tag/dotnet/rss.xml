@@ -18,7 +18,11 @@
 	  <pubDate>2016-07-30T12:18:00+02:00</pubDate>
 	  <guid>//dnx-to-dotnet-migration</guid>
 	  <description><![CDATA[
-	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
+	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
+
+<p><a href="http://www.smashinglists.com/top-10-barney-stinson-quotes/"><img src="assets/images/new-is-always-better.gif" alt="New is always better" /></a></p>
+
+<p>There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
 
 <h2 id="whats-new">What’s new?</h2>
 

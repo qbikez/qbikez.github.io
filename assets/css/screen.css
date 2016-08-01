@@ -1064,7 +1064,7 @@ body:not(.post-template) .post-title {
    6. Author profile
    ========================================================================== */
 .post-head.main-header {
-  height: 65vh;
+  height: 45vh;
   min-height: 180px; }
 
 .no-cover.post-head.main-header {
