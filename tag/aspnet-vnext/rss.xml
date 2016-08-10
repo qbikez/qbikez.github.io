@@ -5,7 +5,7 @@
    
       <title>https://github.com/qbikez</title>
    
-   <link></link>
+   <link>http://heavymetaldev.com</link>
    <description>Developer stories from the trenches.</description>
    <language>en-uk</language>
    <managingEditor> qbik</managingEditor>
@@ -313,103 +313,10 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 	</item>
 
 	<item>
-	  <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
-	  <link>//aspnet5-reflectiontypeloadexception</link>
-	  <author>qbik</author>
-	  <pubDate>2015-11-26T00:00:00+01:00</pubDate>
-	  <guid>//aspnet5-reflectiontypeloadexception</guid>
-	  <description><![CDATA[
-	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
-
-<p><code class="highlighter-rouge">
-&gt; dnx web
-Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
-   at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
-   at System.Reflection.RuntimeAssembly.get_DefinedTypes()
-   at Microsoft.AspNet.Hosting.Startup.StartupLoader.FindStartupType(String startupAssemblyName, IList`1 diagnosticMessages)
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureStartup()
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureApplicationServices()
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.BuildApplication()
-Hosting environment: Production
-Now listening on: http://localhost:5000
-Application started. Press Ctrl+C to shut down.
-</code></p>
-
-<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
-
-<p><code class="highlighter-rouge">
-&gt; dnu restore
-(...)
-Done, without errors.
-Restore complete, 18523ms elapsed
-</code></p>
-
-<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
-
-<p>Try to compile then:</p>
-
-<p>```
-&gt; dnu build
-(…)
-Build succeeded.
-    0 Warning(s)
-    0 Error(s)</p>
-
-<p>Time elapsed 00:00:01.9781471
-Total build time elapsed: 00:00:02.0094707
-Total projects built: 1
-```</p>
-
-<p>Seems ok to me. What the hell is causing the problem then?</p>
-
-<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:
-<code class="highlighter-rouge">
-&gt; dnx --debug web
-Process Id: 15396
-Waiting for the debugger to attach...
-</code></p>
-
-<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
-In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
-
-<p><code class="highlighter-rouge">
-Debugger attached.
-</code></p>
-
-<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
-Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
-
-<p>And voila, we have our exception caught. What now? How to get details for this exception? 
-Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
-If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
-In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
-
-<p>In my case the problem was:</p>
-
-<p>```
-Exception thrown: ‘Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException’ in Microsoft.Dnx.Compilation.CSharp.dll</p>
-
-<p>Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
-```</p>
-
-<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
-It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
-I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
-Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
-I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
-If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
-
-<p>I hope that will be fixed in next releases!</p>
-
-
-	  ]]></description>
-	</item>
-
-	<item>
 	  <title>Sharing code between aspnet5 and "old" .net</title>
 	  <link>//aspnet5-reference-csproj</link>
 	  <author>qbik</author>
-	  <pubDate>2015-03-12T00:00:00+01:00</pubDate>
+	  <pubDate>2015-12-03T00:00:00+01:00</pubDate>
 	  <guid>//aspnet5-reference-csproj</guid>
 	  <description><![CDATA[
 	     <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:
@@ -498,6 +405,99 @@ If the runtime exception was at least a little bit more meaningfull - just <code
 <p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
 
 <p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
+	  <link>//aspnet5-reflectiontypeloadexception</link>
+	  <author>qbik</author>
+	  <pubDate>2015-11-26T00:00:00+01:00</pubDate>
+	  <guid>//aspnet5-reflectiontypeloadexception</guid>
+	  <description><![CDATA[
+	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnx web
+Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
+   at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
+   at System.Reflection.RuntimeAssembly.get_DefinedTypes()
+   at Microsoft.AspNet.Hosting.Startup.StartupLoader.FindStartupType(String startupAssemblyName, IList`1 diagnosticMessages)
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureStartup()
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureApplicationServices()
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.BuildApplication()
+Hosting environment: Production
+Now listening on: http://localhost:5000
+Application started. Press Ctrl+C to shut down.
+</code></p>
+
+<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnu restore
+(...)
+Done, without errors.
+Restore complete, 18523ms elapsed
+</code></p>
+
+<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
+
+<p>Try to compile then:</p>
+
+<p>```
+&gt; dnu build
+(…)
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)</p>
+
+<p>Time elapsed 00:00:01.9781471
+Total build time elapsed: 00:00:02.0094707
+Total projects built: 1
+```</p>
+
+<p>Seems ok to me. What the hell is causing the problem then?</p>
+
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:
+<code class="highlighter-rouge">
+&gt; dnx --debug web
+Process Id: 15396
+Waiting for the debugger to attach...
+</code></p>
+
+<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
+In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
+
+<p><code class="highlighter-rouge">
+Debugger attached.
+</code></p>
+
+<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
+Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
+
+<p>And voila, we have our exception caught. What now? How to get details for this exception? 
+Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
+If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
+In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
+
+<p>In my case the problem was:</p>
+
+<p>```
+Exception thrown: ‘Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException’ in Microsoft.Dnx.Compilation.CSharp.dll</p>
+
+<p>Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
+```</p>
+
+<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
+It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
+I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
+Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
+I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
+If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
+
+<p>I hope that will be fixed in next releases!</p>
+
 
 	  ]]></description>
 	</item>

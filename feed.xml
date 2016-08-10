@@ -4,7 +4,7 @@
     <title>Heavy Metal Dev - Articles</title>
     <description>Developer stories from the trenches.</description>
     <link>
-    </link>
+    http://heavymetaldev.com</link>
     
       
       <item>
@@ -16,8 +16,8 @@
         
         <pubDate>Sat, 30 Jul 2016 12:18:00 +0200</pubDate>
         <link>
-        /dnx-to-dotnet-migration</link>
-        <guid isPermaLink="true">/dnx-to-dotnet-migration</guid>
+        http://heavymetaldev.com/dnx-to-dotnet-migration</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/dnx-to-dotnet-migration</guid>
       </item>
       
     
@@ -31,23 +31,8 @@
         
         <pubDate>Tue, 28 Jun 2016 00:00:00 +0200</pubDate>
         <link>
-        /net-core-1-0-released</link>
-        <guid isPermaLink="true">/net-core-1-0-released</guid>
-      </item>
-      
-    
-      
-      <item>
-        <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
-        
-          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
-
-</description>
-        
-        <pubDate>Thu, 26 Nov 2015 00:00:00 +0100</pubDate>
-        <link>
-        /aspnet5-reflectiontypeloadexception</link>
-        <guid isPermaLink="true">/aspnet5-reflectiontypeloadexception</guid>
+        http://heavymetaldev.com/net-core-1-0-released</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/net-core-1-0-released</guid>
       </item>
       
     
@@ -64,10 +49,40 @@
 
 </description>
         
-        <pubDate>Thu, 12 Mar 2015 00:00:00 +0100</pubDate>
+        <pubDate>Thu, 03 Dec 2015 00:00:00 +0100</pubDate>
         <link>
-        /aspnet5-reference-csproj</link>
-        <guid isPermaLink="true">/aspnet5-reference-csproj</guid>
+        http://heavymetaldev.com/aspnet5-reference-csproj</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/aspnet5-reference-csproj</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
+        
+          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 26 Nov 2015 00:00:00 +0100</pubDate>
+        <link>
+        http://heavymetaldev.com/aspnet5-reflectiontypeloadexception</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/aspnet5-reflectiontypeloadexception</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Azure MIME mapping</title>
+        
+          <description>&lt;p&gt;It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 18 Nov 2015 00:00:00 +0100</pubDate>
+        <link>
+        http://heavymetaldev.com/azure-mime-mapping</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/azure-mime-mapping</guid>
       </item>
       
     
