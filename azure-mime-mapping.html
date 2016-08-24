@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>Azure MIME mapping</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head main-header   no-cover" 
+     
+>
+
+    <nav class="main-nav  clearfix">
+        
+        
+    </nav>
+
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class=" post-header ">
+              
+            <h1 class="post-title">Azure MIME mapping</h1>
+            
+         <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2015-11-18">18 Nov 2015</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/azure'>Azure</a>,
+                       
+                
+                    
+                       <a href='/tag/aspnet'>Aspnet</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.</p>
+
+<p>I’ve been playing around with serving files through asp.net mvc. Basically, what I did was:</p>
+
+<p>```csharp
+public ActionResult GetFile(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return HttpNotFound();
+            }</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>        var fileName = MapFilePath(path);
+        return File(fileName, System.Web.MimeMapping.GetMimeMapping(fileName)); 
+    } ```
+</code></pre>
+</div>
+
+<p>This works fine on my local machine (using IIS Express). Surprisingly, after publishing to Azure Website, I received a download alert instead of file content inside the browser. After some quick debugging, I found out that the file extension (<code class="highlighter-rouge">.xhtml</code> in this case) was being mapped to <code class="highlighter-rouge">application/octet-stream</code> instead of <code class="highlighter-rouge">application/xhtml+xml</code>. Interestingly, GetMimeMapping uses IIS MIME mapping: http://www.c-sharpcorner.com/Blogs/47150/. 
+So, my local IIS has this extension mapped and Azure has not. This may be a cool feature, but in this case it just gets in my way. So, instead of adding mappings to my web.config, I decided to hardcode the mapping dictionary, using this little class: https://github.com/samuelneff/MimeTypeMap/blob/master/src/MimeTypeMap.cs 
+This gist is similar, but it does not containt xhtml: https://gist.github.com/atifaziz/14553</p>
+
+<p>Now, that’s better.</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Azure MIME mapping&amp;url=http://heavymetaldev.comazure-mime-mapping"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://heavymetaldev.comazure-mime-mapping"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://heavymetaldev.comazure-mime-mapping"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+        <a class="read-next-story no-cover" href="/aspnet5-reflectiontypeloadexception">
+            <section class="post">
+                <h2>ReflectionTypeLoadException when running dnx (aspnet5)</h2>
+                <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I'm...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- [[! The main JavaScript file for Casper ]] -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', 'UA-62540719-1', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+</body>
+
+</html>

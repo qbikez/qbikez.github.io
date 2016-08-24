@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>https://github.com/qbikez</title>
+   
+   <link>http://heavymetaldev.com</link>
+   <description>Developer stories from the trenches.</description>
+   <language>en-uk</language>
+   <managingEditor> qbik</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>Powershell on Linux</title>
+	  <link>//powershell-on-linux</link>
+	  <author>qbik</author>
+	  <pubDate>2016-08-24T00:00:00+02:00</pubDate>
+	  <guid>//powershell-on-linux</guid>
+	  <description><![CDATA[
+	     <p>A few days ago <a href="https://azure.microsoft.com/en-us/blog/powershell-is-open-sourced-and-is-available-on-linux/">Microsoft has announced Powershell on Linux</a>. You can get it from <a href="https://github.com/powershell/powershell">Powershell’s Github</a>. This is a big announcement and perfectly complies with “Microsoft loves Linux” philosophy.</p>
+
+<p>The installation (here, for Ubuntu 14.04) is pretty straightforward:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.9/powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb
+<span class="gp">$ </span>sudo apt-get install libunwind8 libicu52
+<span class="gp">$ </span>sudo dpkg -i powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb</code></pre></figure>
+
+<p>So now, I can do this:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt; </span>c:<span class="se">\w</span>indows<span class="se">\s</span>ystem32<span class="se">\b</span>ash
+<span class="gp">$ </span>whereis powershell
+powershell: /usr/bin/powershell
+<span class="gp">$ </span>powershell
+<span class="gp">PS&gt; </span>write-host <span class="s2">"hello world!"</span>
+hello world!</code></pre></figure>
+
+<p>Yay, look at that: Powershell on Bash on Windows :)</p>
+
+<p>Of course, the important thing here is that the same works on a <em>real</em> Linux.</p>
+
+<h1 id="what-works">What works?</h1>
+
+<blockquote>
+  <p>Note: This is PowerShell <code class="highlighter-rouge">v6.0.0-alpha.9</code>, so you can expect “Alpha-quality” and “things won’t work”.</p>
+</blockquote>
+
+<p>Let’s take a look at available preinstalled modules:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Get-Module -ListAvailable
+
+    Directory: /opt/microsoft/powershell/6.0.0-alpha.9/Modules
+
+
+ModuleType Version    Name                                ExportedCommands
+---------- -------    ----                                ----------------
+Manifest   1.0.1.0    Microsoft.PowerShell.Archive        <span class="o">{</span>Compress-Archive, Expand-Archive<span class="o">}</span>
+Manifest   3.0.0.0    Microsoft.PowerShell.Host           <span class="o">{</span><span class="nb">Start-Transcript</span>, <span class="nb">Stop-Transcript</span><span class="o">}</span>
+Manifest   3.1.0.0    Microsoft.PowerShell.Management     <span class="o">{</span><span class="nb">Add-Content</span>, <span class="nb">Clear-Content</span>, <span class="nb">Clear</span>-ItemProperty, Join-Path...<span class="o">}</span>
+Manifest   3.0.0.0    Microsoft.PowerShell.Security       <span class="o">{</span><span class="nb">Get-Credential</span>, <span class="nb">Get-ExecutionPolicy</span>, <span class="nb">Set-ExecutionPolicy</span>, ConvertFrom-SecureString...<span class="o">}</span>
+Manifest   3.1.0.0    Microsoft.PowerShell.Utility        <span class="o">{</span><span class="nb">Format-List</span>, <span class="nb">Format-Custom</span>, <span class="nb">Format-Table</span>, Format-Wide...<span class="o">}</span>
+Binary     1.0.0.1    PackageManagement                   <span class="o">{</span>Find-Package, Get-Package, Get-PackageProvider, Get-PackageSource...<span class="o">}</span>
+Script     3.3.9      Pester                              <span class="o">{</span>Describe, Context, It, Should...<span class="o">}</span>
+Script     1.0.0.1    PowerShellGet                       <span class="o">{</span>Install-Module, Find-Module, Save-Module, Update-Module...<span class="o">}</span>
+Script     0.0        PSDesiredStateConfiguration         <span class="o">{</span>IsHiddenResource, StrongConnect, <span class="nb">Write</span>-MetaConfigFile, Get-InnerMostErrorRecord...<span class="o">}</span>
+Script     1.2        PSReadLine                          <span class="o">{</span>Get-PSReadlineKeyHandler, <span class="nb">Set</span>-PSReadlineKeyHandler, Remove-PSReadlineKeyHandler, Get-PSReadlineO...</code></pre></figure>
+
+<p>Note that PowerShellGet is available, so you should be able to install modules from <a href="http://powershellgallery.com">Powershell Gallery</a>:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Install-Module PathUtils</code></pre></figure>
+
+<p>But this seem to be broken for now:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">    PackageManagement<span class="se">\I</span>nstall-Package : Could not <span class="nb">compare</span> <span class="s2">"6.0.0-alpha"</span> to <span class="s2">"5.0"</span>. Error:
+    <span class="s2">"Cannot convert value "</span>5.0<span class="s2">" to type "</span>System.Management.Automation.SemanticVersion<span class="s2">". Error:
+    "</span>Cannot <span class="k">process </span>argument because the value of argument <span class="s2">"version"</span> is not valid. Change the value of the <span class="s2">"version"</span> argument and run the operation again.</code></pre></figure>
+
+<p>There already is a <a href="https://github.com/bmanikm/PowerShell/commit/97eb76cf9841faf1754028842ee5a1eb11516538">fix for this particular problem</a>. If you want to use that patch:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="gp">$ </span>sudo <span class="nb">cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
+<span class="gp">$ </span>sudo <span class="nb">wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
+
+<p>And voila, <code class="highlighter-rouge">Install-Module</code> works.</p>
+
+<blockquote>
+  <p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code class="highlighter-rouge">Import-Module PathUtils</code> will work, whereas <code class="highlighter-rouge">Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
+</blockquote>
+
+<h1 id="open-source-everything">Open source everything</h1>
+
+<p>As excited as I am with running PowerShell scripts on Linux, I think that the most important thing here is the open sourcing of PowerShell. If Microsoft didn’t prepare a version that runs on Linux, some other geek would probably do it (sooner or later).
+But the fact that I can now look into PS source code and see, how they do things, then tinker around and send a pull request is really amazing. I’ve been using Asp.Net Core for some time now and the possibility to just look at the source code proven invaluable a cuple of times.</p>
+
+<blockquote>
+  <p>It’s worth mentioning that there already exists an open source effort to reimplement Powershell: <a href="https://github.com/Pash-Project/Pash">Pash</a>. I wonder what will become of it now.</p>
+</blockquote>
+
+<h1 id="possiblities">Possiblities</h1>
+
+<p>Taking aside the excitement of “because I can”, what are real benefits of using PowerShell on Linux, when you have Bash available at your disposal?</p>
+
+<h2 id="build-scripts">Build scripts</h2>
+
+<p>Up until now, cross platform .Net projects, like Dotnet CLI itself, used separate build scripts for Linux and Windows. Now, it will be possible to write one PowerShell script to rule them all. I personally have tons of build/deploy/other DevOps scripts written in PowerShell (and DSC). I would rather gladly test them on Linux and work around the rough edges than rewrite all that stuff in Bash (and maintain two separate versions).</p>
+
+<p>If you think of dockerizing your services, the possibility to use the same scripts on Linux and Windows should make the transition much smoother.</p>
+
+<h2 id="managing-the-cloud">Managing the cloud</h2>
+
+<p>If you are managing multiple Linux and Windows machines, you will be able to use the same shell and scripts for all of them. Also, as MS announcement says:</p>
+
+<blockquote>
+  <p>We will be extending the PowerShell Remoting Protocol (MS-PSRP) to use OpenSSH as a native transport. Users will have the option to use SSH or WINRM as a transport.</p>
+</blockquote>
+
+<p>So, you will be able to do something like:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Invoke-Command -ComputerName MyLinux <span class="o">{</span> wtite-host <span class="s2">"this is me executing remotely"</span> <span class="o">}</span></code></pre></figure>
+
+<p>And that will work over SSH, without the struggle of setting up WINRM.</p>
+
+<h1 id="whats-next">What’s next</h1>
+
+<p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it’s “production ready”. But I’m not waiting until then - I’m starting to make my scripts and modules “cross-platform” with PowerShell 6 right now.</p>
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head main-header   no-cover" 
+     
+>
+
+    <nav class="main-nav  clearfix">
+        
+        
+    </nav>
+
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class=" post-header ">
+              
+            <h1 class="post-title">ReflectionTypeLoadException when running dnx (aspnet5)</h1>
+            
+         <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2015-11-26">26 Nov 2015</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/aspnet-vnext'>Aspnet-vnext</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnx web
+Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
+   at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
+   at System.Reflection.RuntimeAssembly.get_DefinedTypes()
+   at Microsoft.AspNet.Hosting.Startup.StartupLoader.FindStartupType(String startupAssemblyName, IList`1 diagnosticMessages)
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureStartup()
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureApplicationServices()
+   at Microsoft.AspNet.Hosting.Internal.HostingEngine.BuildApplication()
+Hosting environment: Production
+Now listening on: http://localhost:5000
+Application started. Press Ctrl+C to shut down.
+</code></p>
+
+<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnu restore
+(...)
+Done, without errors.
+Restore complete, 18523ms elapsed
+</code></p>
+
+<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
+
+<p>Try to compile then:</p>
+
+<p>```
+&gt; dnu build
+(…)
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)</p>
+
+<p>Time elapsed 00:00:01.9781471
+Total build time elapsed: 00:00:02.0094707
+Total projects built: 1
+```</p>
+
+<p>Seems ok to me. What the hell is causing the problem then?</p>
+
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:
+<code class="highlighter-rouge">
+&gt; dnx --debug web
+Process Id: 15396
+Waiting for the debugger to attach...
+</code></p>
+
+<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
+In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
+
+<p><code class="highlighter-rouge">
+Debugger attached.
+</code></p>
+
+<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
+Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
+
+<p>And voila, we have our exception caught. What now? How to get details for this exception? 
+Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
+If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
+In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
+
+<p>In my case the problem was:</p>
+
+<p>```
+Exception thrown: ‘Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException’ in Microsoft.Dnx.Compilation.CSharp.dll</p>
+
+<p>Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
+```</p>
+
+<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
+It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
+I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
+Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
+I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
+If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
+
+<p>I hope that will be fixed in next releases!</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=ReflectionTypeLoadException when running dnx (aspnet5)&amp;url=http://heavymetaldev.comaspnet5-reflectiontypeloadexception"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://heavymetaldev.comaspnet5-reflectiontypeloadexception"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://heavymetaldev.comaspnet5-reflectiontypeloadexception"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+        <a class="read-next-story no-cover" href="/aspnet5-reference-csproj">
+            <section class="post">
+                <h2>Sharing code between aspnet5 and "old" .net</h2>
+                <p>If you want to share some common code between `aspnet5` and regular `csproj` projects, you...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+        <a class="read-next-story prev no-cover" href="/azure-mime-mapping">
+            <section class="post">
+                <h2>Azure MIME mapping</h2>
+                <p>It turns out that Azure Websites have some MIME mapping problems that a default IIS...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- [[! The main JavaScript file for Casper ]] -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', 'UA-62540719-1', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+</body>
+
+</html>
