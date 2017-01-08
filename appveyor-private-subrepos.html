@@ -127,15 +127,15 @@
 
         <section class="post-content">
             
-            <p>Appveyor is a great CI service for Windows apps. It&#39;s simple, free (for open-source) and easy to setup. In this post, I want to talk a little bit more about the &quot;free&quot; part. You may have a repository that&#39;s public and open-source but still uses some private bits that are referenced as private repositories. </p>
+            <p>Appveyor is a great CI service for Windows apps. It&#39;s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.</p>
 
 <h2 id="the-git-way">The Git way</h2>
 
-<p>There already is a good guide for <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules">private git subrepos</a>.</p>
+<p>There already is a good guide for <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules">private git subrepos</a>. Let&#39;s try and do the same for mercurial. The git guide references GitHub as hosting platform, and for mercurial I will use BitBucket, wich has similar est of features but support both git and mercurial (and has unlimited number of <strong>free private repositories</strong>, yay!). </p>
 
 <h2 id="the-hg-way">The Hg way</h2>
 
-<p>In case of mercurial, the solution is similar to git, but configuring it may not be as straightforward. There are some hints mentioned in <a href="http://help.appveyor.com/discussions/questions/2196-easily-build-public-bitbucketmercurial-repo-with-ssh-subrepos">this issue</a>, but there is no step-by-step guide.</p>
+<p>In case of mercurial, the solution is similar to git, but configuriaton may not be as straightforward. </p>
 
 <p>We will split the process in three steps:
 1. Configure ssh clone on local machine
@@ -227,9 +227,9 @@ install:
   - ps: .\clone-subrepo.ps1
 </code></p>
 
-<p>The additional environment variables (<code>subrepo_*) are used to determine repository url and branch name to checkout.
-</code>clone-subrepo.ps1<code>is where the real job is done:
-</code>``</p>
+<p>The additional environment variables (<code>subrepo_*</code>) are used to determine repository url and branch name to checkout.
+<code>clone-subrepo.ps1</code> is where the real job is done:
+```</p>
 
 <h1 id="get-repo-url-and-branch-from-env-variables">get repo url and branch from env variables</h1>
 

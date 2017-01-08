@@ -10,7 +10,7 @@
       <item>
         <title>Build private mercurial subrepos on Appveyor</title>
         
-          <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It&amp;#39;s simple, free (for open-source) and easy to setup. In this post, I want to talk a little bit more about the &amp;quot;free&amp;quot; part. You may have a repository that&amp;#39;s public and open-source but still uses some private bits that are referenced as private repositories. &lt;/p&gt;
+          <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It&amp;#39;s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.&lt;/p&gt;
 </description>
         
         <pubDate>Sun, 08 Jan 2017 00:00:00 +0100</pubDate>
