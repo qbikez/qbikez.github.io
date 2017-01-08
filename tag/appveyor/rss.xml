@@ -89,7 +89,7 @@ BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.c
 
 <p>In the build script (during <code>install</code> phase), we need to:
 1. Extract private key from environment variable to file <code>$env:USERPROFILE/.ssh/id_rsa</code>
-2. Add Bitbucket&#39;s SSL certificate fingerprint to &quot;$env:USERPROFILE/.ssh/known_hosts&quot;</p>
+2. Add Bitbucket&#39;s SSL certificate fingerprint to <code>$env:USERPROFILE/.ssh/known_hosts</code></p>
 
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
 <div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
@@ -106,9 +106,8 @@ BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.c
 
 <p>Paste the encrypted value into the build script (or configure it in web UI). It will look something like this:</p>
 
-<p><code>appveyor.yml</code>:
-<code>
-environment:
+<p><code>appveyor.yml</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">environment:
   priv_key:
     secure: &lt;encryped-value&gt;
   subrepo_owner: heavymetaldev
@@ -116,84 +115,74 @@ environment:
   subrepo_branch: default
 install:
   - ps: .\clone-subrepo.ps1
-</code></p>
-
-<p>The additional environment variables (<code>subrepo_*</code>) are used to determine repository url and branch name to checkout.
-<code>clone-subrepo.ps1</code> is where the real job is done:
-```</p>
-
-<h1 id="get-repo-url-and-branch-from-env-variables">get repo url and branch from env variables</h1>
-
-<p>$owner = $env:subrepo_owner
-$repoName = $env:subrepo_name
-$repo = &quot;$owner/$repoName&quot;
-$branch = $env:subrepo_branch</p>
-
-<p>if ($branch -eq $null) {
-    $branch = &quot;default&quot;
-    write-host &quot;will use default branch &#39;$branch&#39;&quot;
-} else {
-    write-host &quot;will use configured branch &#39;$branch&#39;&quot;
-}</p>
-
-<p>write-host &quot;testing if ssh is available&quot;
-get-command &quot;ssh.exe&quot; -ErrorAction Stop</p>
-
-<h1 id="use-ssh-exe-available-on-path">use ssh.exe available on PATH</h1>
-
-<p>&#39;[ui]&#39; | out-file  &quot;$env:USERPROFILE/mercurial.ini&quot; -Append -Encoding utf8
-&#39;ssh=ssh.exe&#39; | out-file &quot;$env:USERPROFILE/mercurial.ini&quot; -Append -Encoding utf8</p>
-
-<h1 id="add-bitbucket-host-fingerprint-to-known_hosts">add Bitbucket host fingerprint to known_hosts</h1>
-
-<p>$bbhostkey = @&quot;
-bitbucket.org,104.192.143.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
-&quot;@</p>
-
-<p>write-host &quot;adding bitbucket to known_hosts&quot;
-$bbhostkey | out-file &quot;$env:USERPROFILE/.ssh/known_hosts&quot; -Append -Encoding utf8</p>
-
-<h1 id="add-private-key-to-id_rsa">add private key to id_rsa</h1>
-
-<p>write-host &quot;adding private key&quot;
-$fileContent = &quot;-----BEGIN RSA PRIVATE KEY-----<code>n&quot;
-$fileContent += $env:priv_key.Replace(&#39; &#39;, &quot;</code>n&quot;)
-$fileContent += &quot;<code>n-----END RSA PRIVATE KEY-----</code>n&quot;
-Set-Content &quot;$env:USERPROFILE.ssh\id_rsa&quot; $fileContent</p>
-
-<h1 id="clone-private-repo">clone private repo</h1>
-
-<p>write-host &quot;cloning&quot;
-hg clone --verbose ssh://<a href="mailto:hg@bitbucket.org">hg@bitbucket.org</a>/$repo $repoName</p>
-
-<h1 id="update-private-repo-to-specified-branch-get-status">update private repo to specified branch, get status</h1>
-
-<p>try {
-    pushd</p>
-<div class="highlight"><pre><code class="language-" data-lang="">cd $repoName
-
-write-host "updating to $branch"
-hg update $branch 
-
-hg summary
-
-
-$message = hg log -r . -T "{desc}"
-$id = hg log -r . -T "{node}"
-$ts = hg log -r . -T "{date|isodate}"
-$ts = [DateTime]::Parse($ts)
-$authorname = hg log -r . -T "{author|person}"
-$authormail = hg log -r . -T "{author|email}"
-$br = hg log -r . -T "{branch}"
-
-write-host "id:$id branch:$br msg:$message date:$ts author:$authorname mail:$authormail"
 </code></pre></div>
-<p>} 
+<p>The additional environment variables (<code>subrepo_*</code>) are used to determine repository url and branch name to checkout.
+<code>clone-subrepo.ps1</code> is where the real job is done:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># get repo url and branch from env variables 
+$owner = $env:subrepo_owner
+$repoName = $env:subrepo_name
+$repo = "$owner/$repoName"
+$branch = $env:subrepo_branch
+
+if ($branch -eq $null) {
+    $branch = "default"
+    write-host "will use default branch '$branch'"
+} else {
+    write-host "will use configured branch '$branch'"
+}
+
+write-host "testing if ssh is available"
+get-command "ssh.exe" -ErrorAction Stop
+
+# use ssh.exe available on PATH
+'[ui]' | out-file  "$env:USERPROFILE/mercurial.ini" -Append -Encoding utf8
+'ssh=ssh.exe' | out-file "$env:USERPROFILE/mercurial.ini" -Append -Encoding utf8
+
+# add Bitbucket host fingerprint to known_hosts
+$bbhostkey = @"
+bitbucket.org,104.192.143.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+"@
+
+write-host "adding bitbucket to known_hosts"
+$bbhostkey | out-file "$env:USERPROFILE/.ssh/known_hosts" -Append -Encoding utf8
+
+# add private key to id_rsa
+write-host "adding private key"
+$fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
+$fileContent += $env:priv_key.Replace(' ', "`n")
+$fileContent += "`n-----END RSA PRIVATE KEY-----`n"
+Set-Content "$env:USERPROFILE\.ssh\id_rsa" $fileContent
+
+#clone private repo
+write-host "cloning"
+hg clone --verbose ssh://hg@bitbucket.org/$repo $repoName
+
+#update private repo to specified branch, get status
+try {
+    pushd
+
+    cd $repoName
+
+    write-host "updating to $branch"
+    hg update $branch 
+
+    hg summary
+
+
+    $message = hg log -r . -T "{desc}"
+    $id = hg log -r . -T "{node}"
+    $ts = hg log -r . -T "{date|isodate}"
+    $ts = [DateTime]::Parse($ts)
+    $authorname = hg log -r . -T "{author|person}"
+    $authormail = hg log -r . -T "{author|email}"
+    $br = hg log -r . -T "{branch}"
+
+    write-host "id:$id branch:$br msg:$message date:$ts author:$authorname mail:$authormail"
+} 
 finally {
     popd
 }
-```</p>
-
+</code></pre></div>
 <p>This is everything you need to get this working. Commit <code>appveyor.yml</code> and <code>clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
 
 <h2 id="changing-appveyor-build-info">Changing Appveyor build info</h2>
