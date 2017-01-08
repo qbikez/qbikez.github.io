@@ -119,92 +119,79 @@
 
         <section class="post-content">
             
-            <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:
- * create a nuget from the common library and push it to a shared nuget repository<br />
- * use <code class="highlighter-rouge">dnu wrap</code> to wrap existing <code class="highlighter-rouge">csproj</code> into aspnet5 <code class="highlighter-rouge">project.json</code> 
- * maintain two versions of your shared project - a  <code class="highlighter-rouge">project.json</code> for aspnet5 and a <code class="highlighter-rouge">csproj</code> for regular .net</p>
+            <p>If you want to share some common code between <code>aspnet5</code> and regular <code>csproj</code> projects, you basically have three options:
+ * create a nuget from the common library and push it to a shared nuget repository<br>
+ * use <code>dnu wrap</code> to wrap existing <code>csproj</code> into aspnet5 <code>project.json</code> 
+ * maintain two versions of your shared project - a  <code>project.json</code> for aspnet5 and a <code>csproj</code> for regular .net</p>
 
-<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
+<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.   </p>
 
 <h3 id="shared-nuget-package">Shared nuget package</h3>
 
 <p>Sharing a library through nuget has many benefits:
  * versioning
- * easy restoration (devs don’t need to compile anything, just restore nuget packaget)
+ * easy restoration (devs don&#39;t need to compile anything, just restore nuget packaget)
  * less projects to compile - shorter compilation time</p>
 
-<p>If the shared code doesn’t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
+<p>If the shared code doesn&#39;t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
 
-<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="highlighter-rouge">dnu wrap</code></h3>
+<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code>dnu wrap</code></h3>
 
-<p>There is one other way - <code class="highlighter-rouge">dnu</code> has a handy command named <code class="highlighter-rouge">wrap</code>. It wraps your existing <code class="highlighter-rouge">.csproj</code> files into <code class="highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
+<p>There is one other way - <code>dnu</code> has a handy command named <code>wrap</code>. It wraps your existing <code>.csproj</code> files into <code>project.json</code> files that can be then referenced by aspnet5 projects.</p>
 
 <p>You can do something like this:</p>
 
 <ol>
-  <li>
-    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
+<li><p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code>global.json</code></a> file in the some top-level directory that contains your projects. In the <code>projects</code> section, list directories that contain your source-code, for example:</p>
 
-    <p><!-- language: lang-json --></p>
-
-    <div class="highlighter-rouge"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
-     </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w"> </span><span class="s2">"test"</span><span class="w"> </span><span class="p">],</span><span class="w">
-     </span><span class="nt">"sdk"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-         </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0-rc1-final"</span><span class="w">
-     </span><span class="p">}</span><span class="w">
- </span><span class="p">}</span><span class="w">
-</span></code></pre>
-    </div>
-  </li>
-  <li>
-    <p>In the same directory that contains <code class="highlighter-rouge">global.json</code> execute <code class="highlighter-rouge">dnu wrap</code> for each existing <code class="highlighter-rouge">.csproj</code> project.</p>
-  </li>
+<!-- language: lang-json -->
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+    </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w"> </span><span class="s2">"test"</span><span class="w"> </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"sdk"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0-rc1-final"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></li>
+<li><p>In the same directory that contains <code>global.json</code> execute <code>dnu wrap</code> for each existing <code>.csproj</code> project.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">dnu wrap src/my.project/my.project.csproj  
+</code></pre></div></li>
 </ol>
 
- 		dnu wrap src/my.project/my.project.csproj<br />
+<p>This should create a directory <code>wrap</code> containing <code>project.json</code> files that wrap <code>.csprojs</code>. A sample file  looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&lt;!-- language: lang-json --&gt;
 
-<p>This should create a directory <code class="highlighter-rouge">wrap</code> containing <code class="highlighter-rouge">project.json</code> files that wrap <code class="highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
-
-	{
-		"version": "1.0.0-*",
-		"frameworks": {
-			"net45": {
-				"wrappedProject": "../../src/my.project/my.project.csproj",
-				"bin": {
-					"assembly": "../../src/my.project/obj/{configuration}/my.project.dll",
-					"pdb": "../../src/my.project/obj/{configuration}/my.project.pdb"
-				}
-			}
-		}
-	}
-</code></pre>
-</div>
-
-<p>Note that <code class="highlighter-rouge">wrap</code> directory is also added to <code class="highlighter-rouge">projects</code> section in <code class="highlighter-rouge">global.json</code>.</p>
+    {
+        "version": "1.0.0-*",
+        "frameworks": {
+            "net45": {
+                "wrappedProject": "../../src/my.project/my.project.csproj",
+                "bin": {
+                    "assembly": "../../src/my.project/obj/{configuration}/my.project.dll",
+                    "pdb": "../../src/my.project/obj/{configuration}/my.project.pdb"
+                }
+            }
+        }
+    }
+</code></pre></div>
+<p>Note that <code>wrap</code> directory is also added to <code>projects</code> section in <code>global.json</code>.</p>
 
 <ol>
-  <li>
-    <p>In your solution, add a new aspnet project and add a reference to the wrapped project. Just add:</p>
+<li><p>In your solution, add a new aspnet project and add a reference to the wrapped project. Just add:</p>
 
-    <p><!-- language: lang-json --></p>
-
-    <div class="highlighter-rouge"><pre class="highlight"><code> "my.project": ""
-</code></pre>
-    </div>
-  </li>
+<!-- language: lang-json -->
+<div class="highlight"><pre><code class="language-" data-lang="">"my.project": ""
+</code></pre></div></li>
 </ol>
 
-<p>to <code class="highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="highlighter-rouge">wrap</code> directory.</p>
+<p>to <code>dependencies</code> section. Aspnet should automatically pick up <code>global.json</code> file in root directory, and will look for projects in all directories listed there, including <code>wrap</code> directory.</p>
 
 <ol>
-  <li>Now you’re good to go - you can use all classes from <code class="highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="highlighter-rouge">csproj</code>.</li>
+<li>Now you&#39;re good to go - you can use all classes from <code>my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code>csproj</code>.</li>
 </ol>
 
-<p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
+<p>You can find a sample code here: <a href="https://github.com/heavymetaldev/aspnet5-wrap">https://github.com/heavymetaldev/aspnet5-wrap</a>. </p>
 
-<p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.</p>
+<p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.    </p>
 
 
         </section>
@@ -271,7 +258,7 @@
         <a class="read-next-story prev no-cover" href="/aspnet5-reflectiontypeloadexception">
             <section class="post">
                 <h2>ReflectionTypeLoadException when running dnx (aspnet5)</h2>
-                <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m...</p>
+                <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I&#39;m...</p>
             </section>
         </a>
     
@@ -282,7 +269,7 @@
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2016</section>
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>

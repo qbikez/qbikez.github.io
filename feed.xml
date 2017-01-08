@@ -8,6 +8,20 @@
     
       
       <item>
+        <title>Build private mercurial subrepos on Appveyor</title>
+        
+          <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It&amp;#39;s simple, free (for open-source) and easy to setup. In this post, I want to talk a little bit more about the &amp;quot;free&amp;quot; part. You may have a repository that&amp;#39;s public and open-source but still uses some private bits that are referenced as private repositories. &lt;/p&gt;
+</description>
+        
+        <pubDate>Sun, 08 Jan 2017 00:00:00 +0100</pubDate>
+        <link>
+        http://heavymetaldev.com/appveyor-private-subrepos</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/appveyor-private-subrepos</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Powershell on Linux</title>
         
           <description>Powershell is now Open Source. This perfectly complies with “Microsoft loves Linux” philosophy. Hardcore Bash users will probably ignore it anyway, but for many PowerShell fans that also work with Linux systems it will be a big treat.</description>
@@ -23,8 +37,7 @@
       <item>
         <title>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</title>
         
-          <description>&lt;p&gt;Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” &lt;code class=&quot;highlighter-rouge&quot;&gt;dnx&lt;/code&gt; projects forward and switch to &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt;? Because, as someone avesome said: &lt;em&gt;new is always better!&lt;/em&gt;&lt;/p&gt;
-
+          <description>&lt;p&gt;Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it&amp;#39;s time to move &amp;quot;old&amp;quot; &lt;code&gt;dnx&lt;/code&gt; projects forward and switch to &lt;code&gt;dotnet&lt;/code&gt;? Because, as someone avesome said: &lt;em&gt;new is always better!&lt;/em&gt;&lt;/p&gt;
 </description>
         
         <pubDate>Sat, 30 Jul 2016 12:18:00 +0200</pubDate>
@@ -38,8 +51,7 @@
       <item>
         <title>.Net Core 1.0 Released!</title>
         
-          <description>&lt;p&gt;This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! &lt;a href=&quot;http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx&quot;&gt;.Net Core 1.0 is finally released&lt;/a&gt;.&lt;/p&gt;
-
+          <description>&lt;p&gt;This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! &lt;a href=&quot;http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx&quot;&gt;.Net Core 1.0 is finally released&lt;/a&gt;. &lt;/p&gt;
 </description>
         
         <pubDate>Tue, 28 Jun 2016 00:00:00 +0200</pubDate>
@@ -53,13 +65,12 @@
       <item>
         <title>Sharing code between aspnet5 and &quot;old&quot; .net</title>
         
-          <description>&lt;p&gt;If you want to share some common code between &lt;code class=&quot;highlighter-rouge&quot;&gt;aspnet5&lt;/code&gt; and regular &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; projects, you basically have three options:
- * create a nuget from the common library and push it to a shared nuget repository&lt;br /&gt;
- * use &lt;code class=&quot;highlighter-rouge&quot;&gt;dnu wrap&lt;/code&gt; to wrap existing &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; into aspnet5 &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; 
- * maintain two versions of your shared project - a  &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; for aspnet5 and a &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; for regular .net&lt;/p&gt;
+          <description>&lt;p&gt;If you want to share some common code between &lt;code&gt;aspnet5&lt;/code&gt; and regular &lt;code&gt;csproj&lt;/code&gt; projects, you basically have three options:
+ * create a nuget from the common library and push it to a shared nuget repository&lt;br&gt;
+ * use &lt;code&gt;dnu wrap&lt;/code&gt; to wrap existing &lt;code&gt;csproj&lt;/code&gt; into aspnet5 &lt;code&gt;project.json&lt;/code&gt; 
+ * maintain two versions of your shared project - a  &lt;code&gt;project.json&lt;/code&gt; for aspnet5 and a &lt;code&gt;csproj&lt;/code&gt; for regular .net&lt;/p&gt;
 
-&lt;p&gt;The last option is the most error-prone and harder to maintain, so I will just ignore it.&lt;/p&gt;
-
+&lt;p&gt;The last option is the most error-prone and harder to maintain, so I will just ignore it.   &lt;/p&gt;
 </description>
         
         <pubDate>Thu, 03 Dec 2015 00:00:00 +0100</pubDate>
@@ -73,8 +84,7 @@
       <item>
         <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
         
-          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
-
+          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I&amp;#39;m using aspnet version &lt;code&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
 </description>
         
         <pubDate>Thu, 26 Nov 2015 00:00:00 +0100</pubDate>
@@ -89,7 +99,6 @@
         <title>Azure MIME mapping</title>
         
           <description>&lt;p&gt;It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.&lt;/p&gt;
-
 </description>
         
         <pubDate>Wed, 18 Nov 2015 00:00:00 +0100</pubDate>

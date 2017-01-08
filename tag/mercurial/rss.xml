@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>https://github.com/qbikez</title>
+   
+   <link>http://heavymetaldev.com</link>
+   <description>Developer stories from the trenches.</description>
+   <language>en-uk</language>
+   <managingEditor> qbik</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>Build private mercurial subrepos on Appveyor</title>
+	  <link>//appveyor-private-subrepos</link>
+	  <author>qbik</author>
+	  <pubDate>2017-01-08T00:00:00+01:00</pubDate>
+	  <guid>//appveyor-private-subrepos</guid>
+	  <description><![CDATA[
+	     <p>Appveyor is a great CI service for Windows apps. It&#39;s simple, free (for open-source) and easy to setup. In this post, I want to talk a little bit more about the &quot;free&quot; part. You may have a repository that&#39;s public and open-source but still uses some private bits that are referenced as private repositories. </p>
+
+<h2 id="the-git-way">The Git way</h2>
+
+<p>There already is a good guide for <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules">private git subrepos</a>.</p>
+
+<h2 id="the-hg-way">The Hg way</h2>
+
+<p>In case of mercurial, the solution is similar to git, but configuring it may not be as straightforward. There are some hints mentioned in <a href="http://help.appveyor.com/discussions/questions/2196-easily-build-public-bitbucketmercurial-repo-with-ssh-subrepos">this issue</a>, but there is no step-by-step guide.</p>
+
+<p>We will split the process in three steps:
+1. Configure ssh clone on local machine
+2. Do the same in AppVeyor with an arbitrary repository
+3. Configure private hg subrepo and check it out in AppVeyor</p>
+
+<h2 id="cloning-hg-over-ssh-from-bitbucket">Cloning HG over SSH (from Bitbucket)</h2>
+
+<p>Let&#39;s start with a simple thing: clone a repository over ssh. I&#39;ll use BitBucket for mercurial hosting and Appveyor for cloning and building.
+BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
+
+<p>Lucky for me, a similar guide for git (<a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html</a>) doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
+
+<ol>
+<li><p>Install Git for Windows: </p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; choco install -y git
+</code></pre></div></li>
+<li><p>Make sure you have <code>ssh.exe</code> on PATH (it will most probably be in &#39;c:\Program Files\Git\usr\bin&#39;)</p></li>
+<li><p>List the content of <code>$env:USERPROFILE/.ssh</code> directory</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; ls $env:USERPROFILE/.ssh
+</code></pre></div></li>
+</ol>
+
+<p>If you have a default identity already, you&#39;ll some <em>id_*</em> files.</p>
+
+<ol>
+<li><p>Generate a ssh key (or use an existing one)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+</code></pre></div></li>
+<li><p>Set up SSH key on Bitbucket:</p>
+
+<ol>
+<li>Open a browser and log in to Bitbucket.</li>
+<li>Choose <em>avatar</em> &gt; <strong>Bitbucket settings</strong> from the menu bar, then click <strong>SSH Settings</strong> on the left. </li>
+<li>Add a new key. This is a public key, which value is the content of <code>$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with &quot;<em>ssh-rsa</em> ...&quot;)</li>
+</ol></li>
+<li><p>create a private HG repo and clone it over SSH:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
+</code></pre></div>
+<blockquote>
+<p>If you see <code>remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:
+ 1. Mercurial doesn&#39;t use the private key from <code>$env:USERPROFILE/.ssh/id_rsa</code> 
+ 2. Public SSH key is not properly configured in BitBucket </p>
+
+<p>You can add <code>--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
+
+<p><code>ssh hg@bitbucket.org &quot;hg -R heavymetaldev/top-secret serve --stdio&quot;</code></p>
+
+<p>You can use this command to further debug ssh issues. </p>
+</blockquote></li>
+</ol>
+
+<h2 id="private-hg-subprepos-on-appveyor">Private HG subprepos on Appveyor</h2>
+
+<p>Knowing that SSH clone works locally, we can configure AppVeyor to do the same.</p>
+
+<p>These are general steps we need to take:
+1. Generate a new SSH key pair for AppVeyor access to Bitbucket repo
+2. Save private key in AppVeyor&#39;s encrypted environment variable</p>
+
+<p>In the build script (during <code>install</code> phase), we need to:
+1. Extract private key from environment variable to file <code>$env:USERPROFILE/.ssh/id_rsa</code>
+2. Add Bitbucket&#39;s SSL certificate fingerprint to &quot;$env:USERPROFILE/.ssh/known_hosts&quot;</p>
+
+<p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
+</code></pre></div>
+<p>Instead of configuring it at account level, add it as a <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html">deployment key</a> to specific repo that you will be cloning.</p>
+
+<p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
+
+<blockquote>
+<p>Open the generated private key and copy base-64 body of the key <em>between</em> <code>-----BEGIN RSA PRIVATE KEY-----</code> and <code>-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
+
+<p>Copy the contents of private key to clipboard as shown above and open Encrypt data tool in AppVeyor. Encrypt the value of clipboard using that page. </p>
+</blockquote>
+
+<p>Paste the encrypted value into the build script (or configure it in web UI). It will look something like this:</p>
+
+<p><code>appveyor.yml</code>:
+<code>
+environment:
+  priv_key:
+    secure: &lt;encryped-value&gt;
+  subrepo_owner: heavymetaldev
+  subrepo_name: top-secret
+  subrepo_branch: default
+install:
+  - ps: .\clone-subrepo.ps1
+</code></p>
+
+<p>The additional environment variables (<code>subrepo_*) are used to determine repository url and branch name to checkout.
+</code>clone-subrepo.ps1<code>is where the real job is done:
+</code>``</p>
+
+<h1 id="get-repo-url-and-branch-from-env-variables">get repo url and branch from env variables</h1>
+
+<p>$owner = $env:subrepo_owner
+$repoName = $env:subrepo_name
+$repo = &quot;$owner/$repoName&quot;
+$branch = $env:subrepo_branch</p>
+
+<p>if ($branch -eq $null) {
+    $branch = &quot;default&quot;
+    write-host &quot;will use default branch &#39;$branch&#39;&quot;
+} else {
+    write-host &quot;will use configured branch &#39;$branch&#39;&quot;
+}</p>
+
+<p>write-host &quot;testing if ssh is available&quot;
+get-command &quot;ssh.exe&quot; -ErrorAction Stop</p>
+
+<h1 id="use-ssh-exe-available-on-path">use ssh.exe available on PATH</h1>
+
+<p>&#39;[ui]&#39; | out-file  &quot;$env:USERPROFILE/mercurial.ini&quot; -Append -Encoding utf8
+&#39;ssh=ssh.exe&#39; | out-file &quot;$env:USERPROFILE/mercurial.ini&quot; -Append -Encoding utf8</p>
+
+<h1 id="add-bitbucket-host-fingerprint-to-known_hosts">add Bitbucket host fingerprint to known_hosts</h1>
+
+<p>$bbhostkey = @&quot;
+bitbucket.org,104.192.143.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+&quot;@</p>
+
+<p>write-host &quot;adding bitbucket to known_hosts&quot;
+$bbhostkey | out-file &quot;$env:USERPROFILE/.ssh/known_hosts&quot; -Append -Encoding utf8</p>
+
+<h1 id="add-private-key-to-id_rsa">add private key to id_rsa</h1>
+
+<p>write-host &quot;adding private key&quot;
+$fileContent = &quot;-----BEGIN RSA PRIVATE KEY-----<code>n&quot;
+$fileContent += $env:priv_key.Replace(&#39; &#39;, &quot;</code>n&quot;)
+$fileContent += &quot;<code>n-----END RSA PRIVATE KEY-----</code>n&quot;
+Set-Content &quot;$env:USERPROFILE.ssh\id_rsa&quot; $fileContent</p>
+
+<h1 id="clone-private-repo">clone private repo</h1>
+
+<p>write-host &quot;cloning&quot;
+hg clone --verbose ssh://<a href="mailto:hg@bitbucket.org">hg@bitbucket.org</a>/$repo $repoName</p>
+
+<h1 id="update-private-repo-to-specified-branch-get-status">update private repo to specified branch, get status</h1>
+
+<p>try {
+    pushd</p>
+<div class="highlight"><pre><code class="language-" data-lang="">cd $repoName
+
+write-host "updating to $branch"
+hg update $branch 
+
+hg summary
+
+
+$message = hg log -r . -T "{desc}"
+$id = hg log -r . -T "{node}"
+$ts = hg log -r . -T "{date|isodate}"
+$ts = [DateTime]::Parse($ts)
+$authorname = hg log -r . -T "{author|person}"
+$authormail = hg log -r . -T "{author|email}"
+$br = hg log -r . -T "{branch}"
+
+write-host "id:$id branch:$br msg:$message date:$ts author:$authorname mail:$authormail"
+</code></pre></div>
+<p>} 
+finally {
+    popd
+}
+```</p>
+
+<p>This is everything you need to get this working. Commit <code>appveyor.yml</code> and <code>clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
+
+<h2 id="changing-appveyor-build-info">Changing Appveyor build info</h2>
+
+<p>You may also want to include some information about  the status of your subrepo in Appveyor&#39;s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code>clone-subrepo.ps1</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">if ($env:appveyor -ne $null) {
+    Update-AppveyorBuild -message "subrepo [$br](https://bitbucket.org/$repo/commits/$id): $message" -Committed $ts -CommitterName $authorname -CommitterEmail $authorEmail 
+    #-CommitId $id
+} 
+</code></pre></div>
+<h2 id="a-real-subrepo">A real subrepo</h2>
+
+<p>Until now, the inner repository was not a real <a href="https://www.mercurial-scm.org/wiki/Subrepository">hg subrepo</a> - the script determined it&#39;s location and branch. Let&#39;s now make it a subrepo and tie the exact revision to parent repository revision.</p>
+
+<p>Add <code>.hgsub</code> to your public repo (this will be the &quot;parent&quot;):</p>
+<div class="highlight"><pre><code class="language-" data-lang="">top-secret = top-secret
+
+[subpaths]
+https://bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
+ssh://hg@bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
+</code></pre></div>
+<p><code>top-secret</code> is the name of the private repository. 
+The <code>subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it&#39;s name after slash, so we need to remap: <code>https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code>ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
+
+<p>After commiting, do a clean update: </p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg update -C
+</code></pre></div>
+<p>This will create <code>top-secret</code> directory and set it&#39;s default url to <code>ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code>top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo. </p>
+
+<p>One last thing we need to do is to move <code>id_rsa</code> initalization directly to <code>appveyor.yml</code>, to <code>init</code> phase. The reason for this is the chicken-egg problem we now have: <code>install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code>appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code>init</code> script without the repo being checked out.</p>
+
+<p><code>appveyor.yml</code> will now look like this (note that we don&#39;t need <code>subrepo_*</code> ariables any more):</p>
+<div class="highlight"><pre><code class="language-" data-lang="">environment:
+  priv_key:
+    secure: &lt;encryped-value&gt;
+init: 
+  - ps: $fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
+  - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
+  - ps: $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
+  - ps: Set-Content c:\users\appveyor\.ssh\id_rsa $fileContent
+</code></pre></div>
+<p>Finally, commit changes and push the parent repo. Appveyor should now detect a new commit and start building. Hopefully, everything will be built smoothly.</p>
+
+<p>Hapy hacking!</p>
+
+<h2 id="notes-and-resources">Notes and resources</h2>
+
+<ul>
+<li>You can find sample repo at: <code>https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
+<li>The build status at <a href="https://ci.appveyor.com/project/qbikez/appveyor-wrapper">https://ci.appveyor.com/project/qbikez/appveyor-wrapper</a>. </li>
+<li>The private repo is at <code>https://bitbucket.org/heavymetaldev/top-secret</code>, but you won&#39;t find it there, because, well.. it&#39;s private :)</li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>
