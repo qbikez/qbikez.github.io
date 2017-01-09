@@ -8,6 +8,20 @@
     
       
       <item>
+        <title>Configuring mercurial keyring</title>
+        
+          <description>&lt;p&gt;If you don&amp;#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline &lt;code&gt;hg&lt;/code&gt; does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in &lt;em&gt;mercurial.ini&lt;/em&gt; file. This is not the most secure way to do it, and mercurial will even warn you about that. &lt;/p&gt;
+</description>
+        
+        <pubDate>Mon, 09 Jan 2017 00:00:00 +0100</pubDate>
+        <link>
+        http://heavymetaldev.com/configuring-mercurial-keyring</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/configuring-mercurial-keyring</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Build private mercurial subrepos on Appveyor</title>
         
           <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It&amp;#39;s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.&lt;/p&gt;

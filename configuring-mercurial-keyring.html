@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>Configuring mercurial keyring</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head main-header   no-cover" 
+     
+>
+
+    <nav class="main-nav  clearfix">
+        
+        
+    </nav>
+
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class=" post-header ">
+              
+            <h1 class="post-title">Configuring mercurial keyring</h1>
+            
+         <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2017-01-09">09 Jan 2017</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/hg'>Hg</a>,
+                       
+                
+                    
+                       <a href='/tag/mercurial'>Mercurial</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>If you don&#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code>hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that. </p>
+
+<h1 id="keyring">Keyring</h1>
+
+<p><a href="https://pypi.python.org/pypi/keyring">Keyring</a> is a Python module that uses native OS credentials database to store passwords. On Windows, it uses <a href="http://www.techrepublic.com/blog/windows-and-office/manage-network-logon-credentials-in-microsoft-windows/">Windows Credentials Manager</a> <a href="https://technet.microsoft.com/en-us/library/cc754243(v=ws.11).aspx">cmdkey.exe</a>. For mercurial, there is <a href="https://bitbucket.org/Mekk/mercurial_keyring/">mercurial_keyring</a> extension that uses keyring as credentials store.</p>
+
+<h1 id="installing-keyring-on-windows">Installing keyring on Windows</h1>
+
+<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code>mercurial_keyring</code></a> says that installation &quot;in some cases (Windows…) requires more care&quot;. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
+What we will do is install <code>python2</code> from chocolatey, use <code>pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
+
+<ol>
+<li><p>If you don&#39;t have it already, install <code>python2</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; choco install -y python2
+&gt; refreshenv
+</code></pre></div>
+<blockquote>
+<p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
+</blockquote></li>
+<li><p>install <code>mercurial_keyring</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; pip install --user mercurial_keyring
+</code></pre></div>
+<blockquote>
+<p>pip will handle installation of all dependencies, including <code>keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code>mercurial_extension_utils</code></a>, etc.</p>
+</blockquote></li>
+<li><p>Configure exension in <em>mercurial.ini</em>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">[extensions]
+mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
+</code></pre></div></li>
+</ol>
+
+<h1 id="verify-it">Verify it</h1>
+
+<p>Let&#39;s try it out:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
+keyring: username not specified in hgrc (or in url). Password will not be saved.
+http authorization required
+realm: Bitbucket.org HTTP
+url: https://bitbucket.org/heavymetaldev/top-secret
+user:
+</code></pre></div>
+<p>Note that <code>keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  <a href="https://qbik@bitbucket.org/heavymetaldev/top-secret">https://qbik@bitbucket.org/heavymetaldev/top-secret</a>) or configure in <code>mercurial.ini</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">[auth]
+bitbucket.org.prefix = bitbucket.org
+bitbucket.org.username = qbik
+</code></pre></div>
+<p>TortoiseHG does exactly that when you configure credentials there (with <code>mercurial_keyring</code> enabled).</p>
+
+<p>Now, you can safely store your credentials, not worrying about it leaking somewhere.</p>
+
+<h1 id="use-ssh">Use SSH</h1>
+
+<p>If you use a hostin service that provides SSH access (like bitbucket), you may also want to <a href="/appveyor-private-subrepos#cloning-hg-over-ssh-from-bitbucket">configure SSH private key</a> instead of storing usernamee and password.  </p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Configuring mercurial keyring&amp;url=http://heavymetaldev.comconfiguring-mercurial-keyring"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://heavymetaldev.comconfiguring-mercurial-keyring"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://heavymetaldev.comconfiguring-mercurial-keyring"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+        <a class="read-next-story prev no-cover" href="/appveyor-private-subrepos">
+            <section class="post">
+                <h2>Build private mercurial subrepos on Appveyor</h2>
+                <p>Appveyor is a great CI service for Windows apps. It&#39;s simple, free (for open-source) and...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- [[! The main JavaScript file for Casper ]] -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', 'UA-62540719-1', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+</body>
+
+</html>

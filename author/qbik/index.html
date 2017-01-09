@@ -110,7 +110,7 @@
             
             <span class="author-link icon-link"><a href="http://heavymetaldev.com">https://github.com/qbikez</a></span>
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <span class="author-stats"><i class="icon-stats"></i>7 posts</span>
+            <span class="author-stats"><i class="icon-stats"></i>8 posts</span>
         </div>
     </section>
 <!-- /author -->
@@ -133,6 +133,40 @@
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/configuring-mercurial-keyring">Configuring mercurial keyring</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>
+            
+                <p>If you don&#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code>hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that. </p>
+ 
+            
+                <a class="read-more" href="/configuring-mercurial-keyring">&raquo;</a>
+                </p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/qbik'>qbik</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/hg'>Hg</a>,
+                       
+                
+                    
+                       <a href='/tag/mercurial'>Mercurial</a>
+                       
+                
+            
+            <time class="post-date" datetime="2017-01-09">09 Jan 2017</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -266,41 +300,6 @@
                 
             
             <time class="post-date" datetime="2016-06-28">28 Jun 2016</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/aspnet5-reference-csproj">Sharing code between aspnet5 and "old" .net</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>
-            
-                <p>If you want to share some common code between <code>aspnet5</code> and regular <code>csproj</code> projects, you basically have three options:
- * create a nuget from the common library and push it to a shared nuget repository<br>
- * use <code>dnu wrap</code> to wrap existing <code>csproj</code> into aspnet5 <code>project.json</code> 
- * maintain two versions of your shared project - a  <code>project.json</code> for aspnet5 and a <code>csproj</code> for regular .net</p>
-
-<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.   </p>
- 
-            
-                <a class="read-more" href="/aspnet5-reference-csproj">&raquo;</a>
-                </p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/qbik'>qbik</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/aspnet-vnext'>Aspnet-vnext</a>
-                       
-                
-            
-            <time class="post-date" datetime="2015-12-03">03 Dec 2015</time>
         </footer>
     </article>
     
