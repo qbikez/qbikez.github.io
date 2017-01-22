@@ -15,7 +15,7 @@
 	  <title>Mercurial repository conversion</title>
 	  <link>//hg-repo-conversion</link>
 	  <author>qbik</author>
-	  <pubDate>2017-01-10T00:00:00+01:00</pubDate>
+	  <pubDate>2017-01-22T00:00:00+01:00</pubDate>
 	  <guid>//hg-repo-conversion</guid>
 	  <description><![CDATA[
 	     <p>Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
