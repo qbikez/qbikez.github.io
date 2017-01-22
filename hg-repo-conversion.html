@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>Mercurial repository conversion</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC55WVG');</script>
+<!-- End Google Tag Manager -->
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head main-header   no-cover" 
+     
+>
+
+    <nav class="main-nav nav-top topbar clearfix">
+        
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
+        
+        
+    </nav>
+
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class=" post-header ">
+              
+            <h1 class="post-title">Mercurial repository conversion</h1>
+            
+         <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2017-01-10">10 Jan 2017</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/powershell'>Powershell</a>,
+                       
+                
+                    
+                       <a href='/tag/mercurial'>Mercurial</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
+Or maybe your repo contains too many (possibly unrelated) projects? 
+Or has grown so big that you can&#39;t even clone it? </p>
+
+<p>Mercurial&#39;s <a href="https://www.mercurial-scm.org/wiki/ConvertExtension#Usage">convert extension</a> is here to help. It&#39;s a multitool that can convert from various other VCS, like git, SVN, ect, and from HG. The last one is what we need.</p>
+
+<h1 id="why">Why</h1>
+
+<p>The benefits of splitting large repositories are:</p>
+
+<ul>
+<li>teams can work independently and move at different speeds</li>
+<li>you can give someone (an outsourcer perhaps) access to only some parts of your codebase</li>
+<li>smaller repos are easier to manage</li>
+<li>some CI systems (like appveyor or travis) use a single configuration file per repo - stuffing multiple projects into these files will just complicate the build and obfuscate results<br></li>
+</ul>
+
+<h1 id="powering-up-convert-with-some-scripts">Powering up <code>convert</code> with some scripts</h1>
+
+<p><code>convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let&#39;s face it - you won&#39;t be right for the first time and will need to do some tweaking.</p>
+
+<p>That&#39;s why I created a few powershell scripts and template files to help us with conversion.</p>
+
+<h1 id="configuration">Configuration</h1>
+
+<ol>
+<li><p>Enable the <code>convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">[extensions]
+convert =
+</code></pre></div></li>
+<li><p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there. </p></li>
+<li><p>Create two files: <code>branchmap.txt</code> and <code>filemap.txt</code> (you may copy them from <code>branchmap.sample.txt</code> and <code>filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code>convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial. </p></li>
+</ol>
+
+<p>Now, we need to fill these config files.</p>
+
+<h2 id="sample-repository">Sample repository</h2>
+
+<p>Let&#39;s use the repo at <a href="https://bitbucket.org/heavymetaldev/convert-me">https://bitbucket.org/heavymetaldev/convert-me</a> as an example. The structure looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|-- convert-me
+    |-- .hgignore
+    |-- top-secret.txt
+    |-- sln
+    |   |-- MyProject.Core
+    |   |   |-- MyProject.Core.sln
+    |   |-- MyProject.Desktop
+    |       |-- MyProject.Desktop.sln
+    |-- src
+        |-- MyProject.Core.Api
+        |   |-- MyProject.Core.Api.csproj
+        |-- MyProject.Core.Model
+        |   |-- MyProject.Core.Model.csproj
+        |-- MyProject.Core.Utils
+        |   |-- MyProject.Core.Utils.csproj
+        |-- MyProject.Desktop.WinForms
+            |-- MyProject.Desktop.WinForms.csproj
+</code></pre></div>
+<blockquote>
+<p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
+</blockquote>
+
+<p>There are two solution files <code>MyProject.Core</code> and <code>MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code>repo-a</code> and <code>repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code>top-secret.txt</code>, as it contains confidential data.</p>
+
+<p><code>Repo A</code> should look like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|-- Repo-A
+    |-- .hgignore
+    |-- sln
+    |   |-- MyProject.Core
+    |   |   |-- MyProject.Core.sln
+    |-- src
+        |-- MyProject.Core.Api
+        |   |-- MyProject.Core.Api.csproj
+        |-- MyProject.Core.Model
+        |   |-- MyProject.Core.Model.csproj
+        |-- MyProject.Core.Utils
+        |   |-- MyProject.Core.Utils.csproj
+</code></pre></div>
+<p><code>Repo B</code> should contain remaining projects and files:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|-- Repo-B
+    |-- .hgignore
+    |-- sln
+    |   |-- MyProject.Desktop
+    |       |-- MyProject.Desktop.sln
+    |-- src
+        |-- MyProject.Desktop.WinForms
+            |-- MyProject.Desktop.WinForms.csproj
+</code></pre></div>
+<h2 id="filemap-on-steroids">Filemap on steroids</h2>
+
+<p>Let&#39;s start with filemap. It defines, which files or directories should be included (or excluded) in the new repository. You may also use it to rename files. </p>
+
+<p>The extended filemap format supports lines in the following forms:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># this is th basic mercurial stuff:
+include path/to/file
+exclude path/to/file
+rename from/file to/file
+
+# this is extended format:
+include r:regex/to/.*/include
+include r:!regex/to/.*/include/if/not/match
+exclude r:regex/to/.*/exclude
+exclude r:!regex/to/.*/exclude/if/not/match
+include sln:path/to/something.sln
+</code></pre></div>
+<ul>
+<li><code>r:</code> indicates that this entry is a regex. <code>r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
+<li><code>sln:</code> is specifically for C# solution files. This will parse the <code>.sln</code> file and generate include entries for every <code>csproj</code> it contains. In other words, this will include the whole solution.</li>
+</ul>
+
+<p>Let&#39;s look at our sample repo. For converting to <code>repo-a</code>, we can use the following <code>filemap.txt</code> content:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">include .hgignore
+include r:.*/MyProject\.Core(\..*){0,1}/
+exclude top-secret.txt
+</code></pre></div>
+<blockquote>
+<p>By default, everything that&#39;s not included gets excluded, so the last line isn&#39;t really necessary, but we&#39;ll leave it there for verbosity.</p>
+</blockquote>
+
+<p>This will generate the following <code>filemap.gen.txt</code> for mercurial to use:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">include ".hgignore"
+include "sln/MyProject.Core"
+include "src/MyProject.Core.Api"
+include "src/MyProject.Core.Model"
+include "src/MyProject.Core.Utils"
+include "src/MyProject.Core.Api/App_Data"
+include "src/MyProject.Core.Api/App_Start"
+include "src/MyProject.Core.Api/Controllers"
+include "src/MyProject.Core.Api/Models"
+include "src/MyProject.Core.Api/Properties"
+include "src/MyProject.Core.Api/Service References"
+include "src/MyProject.Core.Api/Service References/Application Insights"
+include "src/MyProject.Core.Model/Properties"
+include "src/MyProject.Core.Utils/Properties"
+remove top-secret.txt
+</code></pre></div>
+<blockquote>
+<p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it&#39;s subdirectories. But since the file is autogenerated, this is not a worry. </p>
+</blockquote>
+
+<p>For <code>repo-b</code>, I will go minimalist and use <code>sln:</code> prefix:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">include .hgignore
+include sln:sln/MyProject.Desktop/MyProject.Desktop.sln
+exclude top-secret.txt
+</code></pre></div>
+<h1 id="conversion-process">Conversion Process</h1>
+
+<p>We will use <code>hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
+</code></pre></div>
+<p>This script takes care of configuring and calling <code>hg convert</code>. It will:</p>
+
+<ol>
+<li>Take <code>filemap.txt</code> (if it exists), generate <code>filemap.gen.txt</code> and pass it to <code>convert</code></li>
+<li>Take <code>branchmap.txt</code> (if it exists), generate <code>branchmap.gen.txt</code> and pass it to <code>convert</code> (more of branchmap later)</li>
+<li>Check if the target repository already exists (use <code>-force</code> to force overwrite)</li>
+<li>Convert the repository at <code>path/to/source/convert-me</code>, starting at revision <code>123</code> and save it at <code>path/to/target/repo-a</code> </li>
+</ol>
+
+<p><code>startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code>0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
+
+<ol>
+<li>Setup filemap </li>
+<li><p>Convert only the newest revision, using <code>startrev</code> parameter, i.e:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
+</code></pre></div></li>
+<li><p>Check the converted repository - try to build everything</p></li>
+<li><p>Copy missing files from old repo to the new repo and add them to filemap, until the new repo builds properly</p></li>
+<li><p>Repeat from 2. until I get it rigth</p></li>
+<li><p>Start full conversion from revision 0</p>
+<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
+</code></pre></div></li>
+</ol>
+
+<p>If everything goes rigth, we got now two separate repositories, <code>repo-a</code> and <code>repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this). </p>
+
+<p>But wait, there are also some other scenarios whe should cover.</p>
+
+<h3 id="automated-branchmap">Automated branchmap</h3>
+
+<p>Branchmap defines the mapping between branch names in old repo and new repo. <code>branchmap.txt</code> support the following line format:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># this is th basic mercurial stuff:
+original_branch_name new_branch_name
+
+# this is extended format:
+r:release/.* release
+r:!release default
+* default
+</code></pre></div>
+<p>Similar to filemap, <code>r:</code> and <code>r:!</code> denotes regex to match/notmatch. A single <code>*</code> means - you guessed it - &quot;everything&quot;.</p>
+
+<p>For example, my <code>branchmap.txt</code> could look like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">* default
+r:release/.* release
+dev dev
+</code></pre></div>
+<p>All branches that match <code>release/*</code> pattern will be renamed to <code>release</code>. Branch <code>dev</code> will remain <code>dev</code>. Everything else will be renamed to <code>default</code>. </p>
+
+<blockquote>
+<p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code>* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code>branchmap.gen.txt</code> to see, if everything looks like you wanted. </p>
+</blockquote>
+
+<h3 id="appending-revisions-to-existing-repo">Appending revisions to existing repo</h3>
+
+<p>The last thing I want to mention is appending parts of history onto one another. Let&#39;s go back to our <code>convert-me</code> repo. The news of switching to new repositories hasn&#39;t reach one developer, who just pushed some critical changes in <code>MyProject.Core.Model</code> and <code>MyProject.Desktop.WinForms</code> in <code>convert-me</code> repo (instead of <code>repo-a</code> and <code>repo-b</code> respectively) - lets call them &quot;offending changes&quot;. How to transfer these changes to new repos without breaking anything? Run <code>convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
+
+<p><code>convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
+
+<ol>
+<li>specify offending changes (starting from the first revision that hasn&#39;t been converted before)</li>
+<li>Check offending changes parent and find corresponding commits in <code>repo-a</code> and <code>repo-b</code></li>
+<li>Convert offending changes and append them onto these corresponding parent commits. We will use the same filemaps and branchmaps to filter only required files.</li>
+</ol>
+
+<p>Now, that&#39;s it. Hope you find this helpful and if you have any problems with the scripts - please drop me a line! </p>
+
+<h1 id="resources">Resources</h1>
+
+<ul>
+<li><a href="https://www.mercurial-scm.org/wiki/ConvertExtension">https://www.mercurial-scm.org/wiki/ConvertExtension</a></li>
+<li><a href="http://hgtip.com/tips/advanced/2009-11-16-using-convert-to-decompose-your-repository/">http://hgtip.com/tips/advanced/2009-11-16-using-convert-to-decompose-your-repository/</a></li>
+<li><a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd</a></li>
+</ul>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Mercurial repository conversion&amp;url=http://heavymetaldev.comhg-repo-conversion"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://heavymetaldev.comhg-repo-conversion"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://heavymetaldev.comhg-repo-conversion"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'heavymetaldev'; // required: replace example with your forum shortname
+        var disqus_identifier = '/hg-repo-conversion';
+        var disqus_url = 'http://heavymetaldev.com/hg-repo-conversion';
+ 
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+        <a class="read-next-story prev no-cover" href="/configuring-mercurial-keyring">
+            <section class="post">
+                <h2>Configuring mercurial keyring</h2>
+                <p>If you don&#39;t want to type your username and password everytime you do a pull...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- [[! The main JavaScript file for Casper ]] -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+    	 <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+</body>
+
+</html>
