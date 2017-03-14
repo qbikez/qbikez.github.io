@@ -12,6 +12,102 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Measuring PowerShell hashtables performance</title>
+	  <link>//powershell-hashtables</link>
+	  <author>qbik</author>
+	  <pubDate>2017-03-03T00:00:00+01:00</pubDate>
+	  <guid>//powershell-hashtables</guid>
+	  <description><![CDATA[
+	     <p>Usually, Powershell is used as a &quot;glue&quot; to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
+But there are cases, where your doing seemingly trivial things, but your script just takes years to finish. </p>
+
+<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$timespan = Measure-Command {
+    # do whatever you want to measure here
+}
+</code></pre></div>
+<p>That&#39;s nice if you know or suspect which part of code is slow. But I would like to have something that&#39;s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+
+<p>That&#39;s why I created a little wrapper around <code>Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code>Measure-function</code></a>, that&#39;s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+    # i'm doing some heavy loading here
+    return $something
+  }
+</code></pre></div>
+<p>I just wrap the body with <code>Measure-Function</code> like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+    Measure-Function "$($MyInvocation.MyCommand.Name)" {
+      # i'm doing some heavy loading here
+      return $something
+    }
+  }
+</code></pre></div>
+<p><code>Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div>
+<p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
+
+<ol>
+<li>Start with the entry point of your script and add <code>Measure-Function</code> to it and functions that it calls. </li>
+<li>Run the code and see, which function takes the most time.</li>
+<li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
+</ol>
+
+<h1 id="powershell-hashtable-quircks">Powershell Hashtable quircks</h1>
+
+<p>One of the things I discovered using aforementioned method was in a place I really wasn&#39;t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you&#39;re not careful enough.</p>
+
+<p>Take a look at these three simple scenarios :</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># $h is a hastable of size 10000 
+$size = 10000
+$h = @{
+}
+for($i = 0; $i -lt $size; $i++) {
+    $h += @{ "key$i" = "value$i"  }
+}
+
+measure-function "enumerating $($h.count) items by enumerator" {
+    foreach ($e in $h.GetEnumerator()) {
+        $k = $e.key
+        $v = $e.value
+    }
+}
+
+measure-function "enumerating $($h.count) items by keys" {
+    foreach ($k in $h.keys) {
+        $v = $h[$k]
+    }
+}
+measure-function "enumerating $($h.count) items with property accessor" {
+    foreach ($k in $h.keys) {
+        $v = $h.$k
+    }
+}
+
+$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div>
+<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let&#39;s see...</p>
+<div class="highlight"><pre><code class="language-" data-lang="">name                                           elapsed          count
+----                                           -------          -----
+enumerating 10000 items with property accessor 00:00:30.4342957     1
+enumerating 10000 items by keys                00:00:00.0479557     1
+enumerating 10000 items by enumerator          00:00:00.1173057     1
+</code></pre></div>
+<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer! </p>
+
+<p>At a first glance, I would think that the form <code>$h.$k</code> would be just a syntactic sugar for <code>$h[$k]</code>. But it really isn&#39;t (and can&#39;t) be that simple. <code>$k</code> may not only be a key inside hashtable - it may as well be a property, like <code>Count</code> or a method like <code>ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+
+<p>The conclusion is simple: if you know you&#39;re working with a potentially big hashtable, don&#39;t go for shortcuts and use plain old <code>$h[$k]</code>. But if you&#39;re not in a tight loop - just go with what you think is more readable.</p>
+
+<p>Reference:
+* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a>
+* There is also 
+<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>. </p>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Mercurial repository conversion</title>
 	  <link>//hg-repo-conversion</link>
 	  <author>qbik</author>
@@ -1356,36 +1452,6 @@ I currently don&#39;t see other way than compiling every project separately. Of 
 If the runtime exception was at least a little bit more meaningfull - just <code>RoslynCompilationException</code> instead of cryptic <code>ReflectionTypeLoadException</code> - that would be enough. </p>
 
 <p>I hope that will be fixed in next releases!</p>
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>Azure MIME mapping</title>
-	  <link>//azure-mime-mapping</link>
-	  <author>qbik</author>
-	  <pubDate>2015-11-18T00:00:00+01:00</pubDate>
-	  <guid>//azure-mime-mapping</guid>
-	  <description><![CDATA[
-	     <p>It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.</p>
-
-<p>I&#39;ve been playing around with serving files through asp.net mvc. Basically, what I did was:</p>
-<div class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="n">ActionResult</span> <span class="nf">GetFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">path</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="nf">HttpNotFound</span><span class="p">();</span>
-            <span class="p">}</span>
-
-            <span class="kt">var</span> <span class="n">fileName</span> <span class="p">=</span> <span class="nf">MapFilePath</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nf">File</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">Web</span><span class="p">.</span><span class="n">MimeMapping</span><span class="p">.</span><span class="nf">GetMimeMapping</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span> 
-        <span class="p">}</span>
-</code></pre></div>
-<p>This works fine on my local machine (using IIS Express). Surprisingly, after publishing to Azure Website, I received a download alert instead of file content inside the browser. After some quick debugging, I found out that the file extension (<code>.xhtml</code> in this case) was being mapped to <code>application/octet-stream</code> instead of <code>application/xhtml+xml</code>. Interestingly, GetMimeMapping uses IIS MIME mapping: <a href="http://www.c-sharpcorner.com/Blogs/47150/">http://www.c-sharpcorner.com/Blogs/47150/</a>. 
-So, my local IIS has this extension mapped and Azure has not. This may be a cool feature, but in this case it just gets in my way. So, instead of adding mappings to my web.config, I decided to hardcode the mapping dictionary, using this little class: <a href="https://github.com/samuelneff/MimeTypeMap/blob/master/src/MimeTypeMap.cs">https://github.com/samuelneff/MimeTypeMap/blob/master/src/MimeTypeMap.cs</a> 
-This gist is similar, but it does not containt xhtml: <a href="https://gist.github.com/atifaziz/14553">https://gist.github.com/atifaziz/14553</a></p>
-
-<p>Now, that&#39;s better.</p>
 
 	  ]]></description>
 	</item>

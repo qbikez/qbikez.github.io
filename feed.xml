@@ -8,6 +8,19 @@
     
       
       <item>
+        <title>Measuring PowerShell hashtables performance</title>
+        
+          <description>How to instrument PowerShell scripts and find performance bottlenecks? And how PS hashtables can bite you.</description>
+        
+        <pubDate>Fri, 03 Mar 2017 00:00:00 +0100</pubDate>
+        <link>
+        http://heavymetaldev.com/powershell-hashtables</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/powershell-hashtables</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Mercurial repository conversion</title>
         
           <description>&lt;p&gt;Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
