@@ -3,7 +3,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
    
-      <title></title>
+      <title>https://github.com/qbikez</title>
    
    <link>http://heavymetaldev.com</link>
    <description>Developer stories from the trenches.</description>
@@ -24,7 +24,7 @@
 
 <p>There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
 
-<h2 id="what-39-s-new">What&#39;s new?</h2>
+<h2 id="whats-new">What&#39;s new?</h2>
 
 <p>The first change you will immediately notice are the commandline tools. <code>Dnu</code> and <code>dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code>dotnet</code></a> command. <code>Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code>dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code>dnvm use</code> - you have to specify the desired version in <code>global.json</code> file.</p>
 
@@ -356,7 +356,7 @@ If you are debugging the Shared Framework Host, set 'COREHOST_TRACE' to '1' in y
 To get started on developing applications for .NET Core, install .NET SDK from:
 http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 </code></pre></div>
-<h3 id="what-39-s-in-the-box">What&#39;s in the box?</h3>
+<h3 id="whats-in-the-box">What&#39;s in the box?</h3>
 
 <p>The <code>dotnet</code> directory layout looks like this:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">dotnet

@@ -30,6 +30,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -75,6 +77,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <body class="author-template nav-closed">
     
     
+<div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        <li class="nav-home " role="presentation"><a href="//" style="text-transform:capitalize;">home</a></li>   
+        
+        <li class="nav-about " role="presentation"><a href="/author/qbik" style="text-transform:capitalize;">about</a></li>   
+             
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+    <div class="coffee-button">
+    <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee!', '#6b4a4a', 'A34723SL');kofiwidget2.draw();</script>
+    </div>
+</div>
+<span class="nav-cover"></span>
+
 
 
     <div class="site-wrapper">
@@ -89,6 +110,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         
         <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
+        
+            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
         
     </nav>
 
@@ -112,7 +135,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </figure>
         
         <h1 class="author-title">qbik</h1>
-        
+        <!--
             <div class="author-bio"><p>I love exploring new technologies and ideas and applying them in day-to-day work. I believe that the best way to validate knowledge is by teaching it to others.</p>
 <p>
 I'm passionate about designing and creatining scalable, performant Software Systems, along with APIs and tools that are pleasurable to code against. I ensure that those systems work smoothly from the client-facing JavaScript code, up to back-end services and database queries.
@@ -121,21 +144,51 @@ I'm passionate about designing and creatining scalable, performant Software Syst
 As as DevOps believer, I attempt to automate everything (mostly with PowerShell). I also don't mind a little system administration.
 </p>
 <div style="text-align:center">
-<div>
 <a href="http://stackoverflow.com/users/1829045/qbik"><img src="http://stackoverflow.com/users/flair/1829045.png" width="208" height="58" alt="profile for qbik at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for qbik at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
-</div>
-<div>
-<span class="author-link"><a href="https://github.com/qbikez">https://github.com/qbikez</a></span>
-</div>
 </div>
 </div>
         
         <div class="author-meta">
             
-            <!--<span class="author-link icon-link"><a href="http://heavymetaldev.com"></a></span>-->
+            <span class="author-link icon-link"><a href="http://heavymetaldev.com">https://github.com/qbikez</a></span>
+        </div> -->
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
             <!--<span class="author-stats"><i class="icon-stats"></i>11 posts</span>-->
-        </div>
+        <div class="author-bio">
+    <p>
+        I love exploring new technologies and ideas and applying them in day-to-day work. I believe that the best way to validate
+        knowledge is by teaching it to others.</p>
+    <p>
+        I'm passionate about designing and creatining scalable, performant Software Systems, along with APIs and tools that are pleasurable
+        to code against. I ensure that those systems work smoothly from the client-facing JavaScript code, up to back-end
+        services and database queries.
+    </p>
+    <p>
+        As as DevOps believer, I attempt to automate everything (mostly with PowerShell). I also don't mind a little system administration.
+    </p>
+    
+    <h5>Social links:</h5>
+    <div class="shields">        
+    <div class="">
+        <a href="http://stackoverflow.com/users/1829045/qbik"><img src="http://stackoverflow.com/users/flair/1829045.png" width="208" height="58" alt="profile for qbik at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for qbik at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+    </div>
+    <!--<div style="text-align:center">
+    <iframe src="http://githubbadge.appspot.com/qbikez?a=0" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
+    </div>-->
+    
+    <div id="shield-twitter" class="shield"><a href="https://twitter.com/qbikez"><img src="https://img.shields.io/twitter/follow/qbikez.svg?style=social&label=Follow" /></a></div>
+    <div id="shield-github" class="shield"><a href="https://github.com/qbikez"><img src="https://img.shields.io/github/followers/qbikez.svg?style=social&label=Follow" /></a></div>
+    <div id="bitbucket" class="shield"><a href="https://bitbucket.org/qbik"><img src="https://img.shields.io/badge/bitbucket-qbik-blue.svg" /></a></div>    
+    </div>
+    <div id="buy-coffee" class="inline">
+        <br/>
+    <span><strong>Found something useful here?</strong></span>&nbsp;&nbsp;
+    <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee!', '#6b4a4a', 'A34723SL');kofiwidget2.draw();</script>
+    </div>
+    <!--<script>  	
+        $("#shield-twitter").load( "https://img.shields.io/twitter/follow/qbikez.svg?style=social&label=Follow" );
+    </script>-->
+</div>
     </section>
 <!-- /author -->
 
@@ -349,13 +402,10 @@ Or has grown so big that you can&#39;t even clone it? </p>
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
-    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!-- [[! The main JavaScript file for Casper ]] -->
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
     <!-- Add Google Analytics  -->

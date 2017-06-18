@@ -682,6 +682,31 @@ body.nav-opened .nav {
     font-size: 9px;
     margin-right: 6px; }
 
+.coffee-button {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  bottom: 76px;
+  left: 30px;
+  right: 30px;
+  height: 38px;
+  padding: 0;
+  color: #111 !important;
+  /* Overides `.nav a:link, .nav a:visited` colour */
+  text-align: center;
+  font-size: 12px;
+  font-family: "Open Sans", sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 35px;
+  border-radius: 3px;
+  transition: all ease 0.3s; }
+  .coffee-button:before {
+    font-size: 9px;
+    margin-right: 6px; }
+
 /* Create a bouncing scroll-down arrow on homepage with cover image */
 .scroll-down {
   display: block;
@@ -1733,6 +1758,19 @@ body:not(.post-template) .post-title {
   60% {
     -webkit-transform: translateY(-5px) rotate(-90deg);
     transform: translateY(-5px) rotate(-90deg); } }
+.shields {
+  display: flex; }
+  .shields div {
+    margin: 1rem; }
+
+.inline {
+  display: inline; }
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
 /* ==========================================================================
    End of file. Animations should be the last thing here. Do not add stuff
    below this point, or it will probably fuck everything up.
