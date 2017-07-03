@@ -19,8 +19,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
     />
+    
     <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
-
     <!-- [[! highlight.js ]] -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
     <style>
@@ -30,6 +30,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -83,7 +85,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      
 >
 
-    <nav class="main-nav  clearfix">
+    <nav class="main-nav nav-top topbar clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
         
     </nav>
@@ -236,6 +240,13 @@ bitbucket.org.username = qbik
 
     <!-- [[! next_post ]] -->
     
+        <a class="read-next-story no-cover" href="/hg-repo-conversion">
+            <section class="post">
+                <h2>Mercurial repository conversion</h2>
+                <p>Have you ever needed to split a repository, or take out just a few directories,...</p>
+            </section>
+        </a>
+    
     <!-- [[! /next_post ]] -->
     <!-- [[! prev_post ]] -->
     
@@ -253,13 +264,10 @@ bitbucket.org.username = qbik
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
-    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!-- [[! The main JavaScript file for Casper ]] -->
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
     <!-- Add Google Analytics  -->

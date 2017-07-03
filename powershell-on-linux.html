@@ -19,8 +19,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
     />
+    
     <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
-
     <!-- [[! highlight.js ]] -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
     <style>
@@ -30,6 +30,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -85,7 +87,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      
 >
 
-    <nav class="main-nav overlay clearfix">
+    <nav class="main-nav nav-top overlay clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
         
     </nav>
@@ -233,7 +237,7 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>And that will work over SSH, without the struggle of setting up WINRM.</p>
 
-<h1 id="what-39-s-next">What&#39;s next</h1>
+<h1 id="whats-next">What&#39;s next</h1>
 
 <p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it&#39;s &quot;production ready&quot;. But I&#39;m not waiting until then - I&#39;m starting to make my scripts and modules &quot;cross-platform&quot; with PowerShell 6 right now.</p>
 
@@ -318,10 +322,10 @@ But the fact that I can now look into PS source code and see, how they do things
     <!-- [[! /next_post ]] -->
     <!-- [[! prev_post ]] -->
     
-        <a class="read-next-story prev " style="background-image: url(/assets/images/cover2.jpg)" href="/dnx-to-dotnet-migration">
+        <a class="read-next-story prev no-cover" href="/iis-web-deploy-permissions">
             <section class="post">
-                <h2>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</h2>
-                <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe...</p>
+                <h2>Adding Web Deploy permissions using PowerShell</h2>
+                <p>Web Deploy is a great way to publish websites if you use Windows + IIS...</p>
             </section>
         </a>
     
@@ -332,13 +336,10 @@ But the fact that I can now look into PS source code and see, how they do things
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
-    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!-- [[! The main JavaScript file for Casper ]] -->
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
     <!-- Add Google Analytics  -->

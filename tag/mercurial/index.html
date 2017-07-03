@@ -19,8 +19,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
     />
+    
     <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
-
     <!-- [[! highlight.js ]] -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
     <style>
@@ -30,6 +30,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -75,6 +77,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <body class="tag-template nav-closed">
     
     
+<div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        
+        <li class="nav-home " role="presentation"><a href="//" style="text-transform:capitalize;">home</a></li>   
+        
+        <li class="nav-about " role="presentation"><a href="/author/qbik" style="text-transform:capitalize;">about</a></li>   
+             
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+    <div class="coffee-button">
+    <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee!', '#6b4a4a', 'A34723SL');kofiwidget2.draw();</script>
+    </div>
+</div>
+<span class="nav-cover"></span>
+
 
 
     <div class="site-wrapper">
@@ -85,8 +106,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      
 >
 
-    <nav class="main-nav overlay clearfix">
+    <nav class="main-nav nav-top overlay clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
+        
+            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
         
     </nav>
 
@@ -97,7 +122,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <h1 class="page-title">Mercurial</h1>
             <h2 class="page-description">
             
-			    A 2-post collection
+			    A 3-post collection
             
             </h2>
         </div>
@@ -130,6 +155,42 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/hg-repo-conversion">Mercurial repository conversion</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>
+            
+                <p>Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
+Or maybe your repo contains too many (possibly unrelated) projects? 
+Or has grown so big that you can&#39;t even clone it? </p>
+ 
+            
+                <a class="read-more" href="/hg-repo-conversion">&raquo;</a>
+                </p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/qbik'>qbik</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/powershell'>Powershell</a>,
+                       
+                
+                    
+                       <a href='/tag/mercurial'>Mercurial</a>
+                       
+                
+            
+            <time class="post-date" datetime="2017-01-22">22 Jan 2017</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -217,13 +278,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </main>
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
-    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!-- [[! The main JavaScript file for Casper ]] -->
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
     <!-- Add Google Analytics  -->

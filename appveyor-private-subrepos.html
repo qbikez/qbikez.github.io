@@ -19,8 +19,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
     />
+    
     <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
-
     <!-- [[! highlight.js ]] -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
     <style>
@@ -30,6 +30,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -83,7 +85,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      
 >
 
-    <nav class="main-nav  clearfix">
+    <nav class="main-nav nav-top topbar clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
         
     </nav>
@@ -152,9 +156,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h2 id="cloning-hg-over-ssh-from-bitbucket">Cloning HG over SSH (from Bitbucket)</h2>
 
 <p>Let&#39;s start with a simple thing: clone a repository over ssh. I&#39;ll use BitBucket for mercurial hosting and Appveyor for cloning and building.
-BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
+BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Mercurial">setting up ssh</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
 
-<p>Lucky for me, a similar guide for git (<a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html</a>) doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
+<p>Lucky for me, a <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">similar guide for git</a> doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
 
 <ol>
 <li><p>Install Git for Windows: </p>
@@ -210,7 +214,7 @@ BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.c
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
 <div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
 </code></pre></div>
-<p>Instead of configuring it at account level, add it as a <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html">deployment key</a> to specific repo that you will be cloning.</p>
+<p>Instead of configuring it at account level, add it as <a href="https://confluence.atlassian.com/display/BITBUCKET/Use+access+keys">read-only access key</a> to specific repo that you will be cloning.</p>
 
 <p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
 
@@ -447,13 +451,10 @@ init:
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
-    <!-- [[! Ghost outputs important scripts and data with this tag ]] -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <!-- [[! The main JavaScript file for Casper ]] -->
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
     <!-- Add Google Analytics  -->

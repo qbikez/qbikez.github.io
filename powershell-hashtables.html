@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- [[! Document Settings ]] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- [[! Page Meta ]] -->
+    <title>Measuring PowerShell hashtables performance</title>
+    <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- [[! Styles'n'Scripts ]] -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"
+    />
+    
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+    <!-- [[! highlight.js ]] -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>
+        .hljs {
+            background: none;
+        }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
+        <link rel="canonical" href="/" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="Heavy Metal Dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Heavy Metal Dev" />
+    <meta property="og:description" content="Developer stories from the trenches." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heavy Metal Dev" />
+    <meta name="twitter:description" content="Developer stories from the trenches." />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Finding The Way Home",
+    "url": "/",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Developer stories from the trenches."
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="Heavy Metal Dev" href="/feed.xml" />
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NC55WVG');</script>
+<!-- End Google Tag Manager -->
+</head>
+
+<body class="home-template nav-closed">
+    
+    
+
+
+    <div class="site-wrapper">
+
+        <header class=" post-head main-header   no-cover" 
+     
+>
+
+    <nav class="main-nav nav-top topbar clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
+        
+        
+    </nav>
+
+
+
+</header>
+
+        <!-- [[! Everything else gets inserted here ]] -->
+        <!-- < default -->
+
+<!-- The comment above "< default" means - insert everything in this file into -->
+    <!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main class="content" role="main">
+
+    <article class=" post ">
+
+        <header class=" post-header ">
+              
+            <h1 class="post-title">Measuring PowerShell hashtables performance</h1>
+            
+         <section class="post-meta">
+            <!-- <a href='/'>qbik</a> -->
+            <time class="post-date" datetime="2017-03-03">03 Mar 2017</time>
+                <!-- [[tags prefix=" on "]] -->
+                 
+                on 
+                
+                    
+                       <a href='/tag/powershell'>Powershell</a>,
+                       
+                
+                    
+                       <a href='/tag/performance'>Performance</a>
+                       
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+            
+            <p>Usually, Powershell is used as a &quot;glue&quot; to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
+But there are cases, where your doing seemingly trivial things, but your script just takes years to finish. </p>
+
+<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$timespan = Measure-Command {
+    # do whatever you want to measure here
+}
+</code></pre></div>
+<p>That&#39;s nice if you know or suspect which part of code is slow. But I would like to have something that&#39;s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+
+<p>That&#39;s why I created a little wrapper around <code>Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code>Measure-function</code></a>, that&#39;s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+    # i'm doing some heavy loading here
+    return $something
+  }
+</code></pre></div>
+<p>I just wrap the body with <code>Measure-Function</code> like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+    Measure-Function "$($MyInvocation.MyCommand.Name)" {
+      # i'm doing some heavy loading here
+      return $something
+    }
+  }
+</code></pre></div>
+<p><code>Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div>
+<p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
+
+<ol>
+<li>Start with the entry point of your script and add <code>Measure-Function</code> to it and functions that it calls. </li>
+<li>Run the code and see, which function takes the most time.</li>
+<li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
+</ol>
+
+<h1 id="powershell-hashtable-quircks">Powershell Hashtable quircks</h1>
+
+<p>One of the things I discovered using aforementioned method was in a place I really wasn&#39;t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you&#39;re not careful enough.</p>
+
+<p>Take a look at these three simple scenarios :</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># $h is a hastable of size 10000 
+$size = 10000
+$h = @{
+}
+for($i = 0; $i -lt $size; $i++) {
+    $h += @{ "key$i" = "value$i"  }
+}
+
+measure-function "enumerating $($h.count) items by enumerator" {
+    foreach ($e in $h.GetEnumerator()) {
+        $k = $e.key
+        $v = $e.value
+    }
+}
+
+measure-function "enumerating $($h.count) items by keys" {
+    foreach ($k in $h.keys) {
+        $v = $h[$k]
+    }
+}
+measure-function "enumerating $($h.count) items with property accessor" {
+    foreach ($k in $h.keys) {
+        $v = $h.$k
+    }
+}
+
+$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div>
+<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let&#39;s see...</p>
+<div class="highlight"><pre><code class="language-" data-lang="">name                                           elapsed          count
+----                                           -------          -----
+enumerating 10000 items with property accessor 00:00:30.4342957     1
+enumerating 10000 items by keys                00:00:00.0479557     1
+enumerating 10000 items by enumerator          00:00:00.1173057     1
+</code></pre></div>
+<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer! </p>
+
+<p>At a first glance, I would think that the form <code>$h.$k</code> would be just a syntactic sugar for <code>$h[$k]</code>. But it really isn&#39;t (and can&#39;t) be that simple. <code>$k</code> may not only be a key inside hashtable - it may as well be a property, like <code>Count</code> or a method like <code>ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+
+<p>The conclusion is simple: if you know you&#39;re working with a potentially big hashtable, don&#39;t go for shortcuts and use plain old <code>$h[$k]</code>. But if you&#39;re not in a tight loop - just go with what you think is more readable.</p>
+
+<p>Reference:
+* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a>
+* There is also 
+<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>. </p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+
+            
+            <figure class="author-image">
+                <a class="img" href="/author/qbik" style="background-image: url(/assets/images/qbik.jpg)"><span class="hidden">'s Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/qbik">qbik</a></h4>
+                    <p>Read <a href="/author/qbik">more posts</a> by this author.</p>
+                <div class="author-meta">                
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Measuring PowerShell hashtables performance&amp;url=http://heavymetaldev.compowershell-hashtables"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://heavymetaldev.compowershell-hashtables"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://heavymetaldev.compowershell-hashtables"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            <!-- Add Disqus Comments -->
+            
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'heavymetaldev'; // required: replace example with your forum shortname
+        var disqus_identifier = '/powershell-hashtables';
+        var disqus_url = 'http://heavymetaldev.com/powershell-hashtables';
+ 
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+            
+            
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+        <a class="read-next-story prev no-cover" href="/hg-repo-conversion">
+            <section class="post">
+                <h2>Mercurial repository conversion</h2>
+                <p>Have you ever needed to split a repository, or take out just a few directories,...</p>
+            </section>
+        </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <!-- Add Google Analytics  -->
+    	 <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+</body>
+
+</html>

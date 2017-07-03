@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>https://github.com/qbikez</title>
+   
+   <link>http://heavymetaldev.com</link>
+   <description>Developer stories from the trenches.</description>
+   <language>en-uk</language>
+   <managingEditor> qbik</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>Adding Web Deploy permissions using PowerShell</title>
+	  <link>//iis-web-deploy-permissions</link>
+	  <author>qbik</author>
+	  <pubDate>2016-08-07T00:00:00+02:00</pubDate>
+	  <guid>//iis-web-deploy-permissions</guid>
+	  <description><![CDATA[
+	     <p>Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company&#39;s infrastructure. </p>
+
+<p>Why do I like it:</p>
+
+<ul>
+<li>It can be used from Visual Studio as well as from commandline - this means developers can publish right from VS, without any additional tools, but also script and commandline freaks like me can automate it</li>
+<li>It only syncs modified files - if you have low bandwith, deploy often or have large sites - it beats other methods that require full package to be deployed every time</li>
+<li>Active Directory can be used for authentication</li>
+</ul>
+
+<h1 id="allowing-a-user-to-publish-with-web-deploy">Allowing a user to publish with Web Deploy</h1>
+
+<p>The goal is to allow non-administrator user to publish IIS website using Web Deploy. </p>
+
+<p>There are two parts here:</p>
+
+<ol>
+<li>Add IIS Manager permissions</li>
+<li>Add File System permissions</li>
+</ol>
+
+<p>If you like clicking through it, see <a href="https://www.iis.net/learn/install/installing-publishing-technologies/installing-and-configuring-web-deploy-on-iis-80-or-later">Installing and Configuring Web Deploy on IIS 8.0 or Later</a>. Remember that you should also add appropriate permissions to site&#39;s physical folder or else the user won&#39;t be able to publish any files. </p>
+
+<p>If you want to do it from commandline, here&#39;s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
+</code></pre></div>
+<p>Then, use <code>Set-Acl</code> to set physical path permissions. Here&#39;s a full script:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&lt;#
+.SYNOPSIS
+
+adds ACL rules to specific path. it's a helper wrapper for Set-ACL from Microsoft.PowerShell.Security   
+
+#&gt;
+
+function set-acl2(
+[Parameter(Mandatory=$true)] $path, 
+[Parameter(Mandatory=$true)] [System.Security.AccessControl.FileSystemRights] $rights, 
+[Parameter(Mandatory=$true)] $user,
+[System.Security.AccessControl.InheritanceFlags]  $InheritanceFlag = [System.Security.AccessControl.InheritanceFlags]::None,
+ [System.Security.AccessControl.PropagationFlags] $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None
+) {
+    $colRights = $rights
+
+    $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
+
+    $objType =[System.Security.AccessControl.AccessControlType]::Allow 
+
+    $objUser = New-Object System.Security.Principal.NTAccount($user) 
+
+    $objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
+
+    $objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
+    $objACL.AddAccessRule($objACE) 
+
+    Set-ACL -Path $path -AclObject $objACL
+}
+
+&lt;#
+
+.SYNOPSIS 
+Allows the specified user to publish website through webdeploy
+
+#&gt;    
+function allow-iiswebdeploy {
+param(
+    [Parameter(Mandatory=$true)] $username,
+    [Parameter(Mandatory=$true)] $site,
+    [Switch][bool] $isgroup
+)
+
+    ipmo webadministration
+
+
+    $iissite = get-item "iis:\sites\$site" -ErrorAction Stop
+
+    if ($iissite -eq $null) { throw "site '$site' not found" }
+
+    # add  IIS Manager Users and Permissions
+    # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
+
+    [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
+
+    # grant file system permissions!
+
+    $dir = $iissite.physicalPath
+
+    set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit 
+}
+</code></pre></div>
+<p>Just call:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
+</code></pre></div>
+<p>And that&#39;s it! Note that site&#39;s physical path is obtained directly from IIS.</p>
+
+<h1 id="resources">Resources</h1>
+
+<p><a href="https://www.iis.net/learn/publish/using-web-deploy/web-deploy-powershell-cmdlets">https://www.iis.net/learn/publish/using-web-deploy/web-deploy-powershell-cmdlets</a></p>
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

@@ -24,7 +24,7 @@
 
 <p>There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
 
-<h2 id="what-39-s-new">What&#39;s new?</h2>
+<h2 id="whats-new">What&#39;s new?</h2>
 
 <p>The first change you will immediately notice are the commandline tools. <code>Dnu</code> and <code>dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code>dotnet</code></a> command. <code>Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code>dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code>dnvm use</code> - you have to specify the desired version in <code>global.json</code> file.</p>
 
@@ -122,9 +122,10 @@
 <p>There are 2 things you have to do to configure a unit test project:</p>
 
 <ol>
-<li><p>Reference the test tool in project dependencies, like this:</p>
+<li><p>Reference xunit and the test tool in project dependencies, like this:</p>
 
 <p>&quot;dependencies&quot;: {
+     &quot;xunit&quot;: &quot;2.1.0&quot;,<br>
      &quot;dotnet-test-xunit&quot;: &quot;1.0.0-rc2-192208-24&quot;
    }</p>
 
