@@ -487,7 +487,11 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>If you want to do it from commandline, here&#39;s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+<<<<<<< HEAD
 [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
+=======
+[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $true) 
+>>>>>>> 87fabc1586224c685247a02b4fc3e025b3f82e1d
 </code></pre></div>
 <p>Then, use <code>Set-Acl</code> to set physical path permissions. Here&#39;s a full script:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">&lt;#
@@ -529,8 +533,12 @@ Allows the specified user to publish website through webdeploy
 function allow-iiswebdeploy {
 param(
     [Parameter(Mandatory=$true)] $username,
+<<<<<<< HEAD
     [Parameter(Mandatory=$true)] $site,
     [Switch][bool] $isgroup
+=======
+    [Parameter(Mandatory=$true)] $site
+>>>>>>> 87fabc1586224c685247a02b4fc3e025b3f82e1d
 )
 
     ipmo webadministration
@@ -544,7 +552,11 @@ param(
     # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
 
     [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+<<<<<<< HEAD
     [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
+=======
+    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $true) 
+>>>>>>> 87fabc1586224c685247a02b4fc3e025b3f82e1d
 
     # grant file system permissions!
 
