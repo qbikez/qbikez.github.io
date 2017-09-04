@@ -31,7 +31,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
+    <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -136,7 +136,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <section class="post-content">
             
-            <p>A few days ago <a href="https://azure.microsoft.com/en-us/blog/powershell-is-open-sourced-and-is-available-on-linux/">Microsoft has announced Powershell on Linux</a>. You can get it from <a href="https://github.com/powershell/powershell">Powershell&#39;s Github</a>. This is a big announcement and perfectly complies with “Microsoft loves Linux” philosophy.</p>
+            <p>A few days ago <a href="https://azure.microsoft.com/en-us/blog/powershell-is-open-sourced-and-is-available-on-linux/">Microsoft has announced Powershell on Linux</a>. You can get it from <a href="https://github.com/powershell/powershell">Powershell’s Github</a>. This is a big announcement and perfectly complies with “Microsoft loves Linux” philosophy.</p>
 
 <p>The installation (here, for Ubuntu 14.04) is pretty straightforward:</p>
 
@@ -160,10 +160,10 @@ hello world!</code></pre></figure>
 <h1 id="what-works">What works?</h1>
 
 <blockquote>
-<p>Note: This is PowerShell <code>v6.0.0-alpha.9</code>, so you can expect &quot;Alpha-quality&quot; and &quot;things won&#39;t work&quot;.</p>
+  <p>Note: This is PowerShell <code class="highlighter-rouge">v6.0.0-alpha.9</code>, so you can expect “Alpha-quality” and “things won’t work”.</p>
 </blockquote>
 
-<p>Let&#39;s take a look at available preinstalled modules:</p>
+<p>Let’s take a look at available preinstalled modules:</p>
 
 <figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Get-Module -ListAvailable
 
@@ -198,28 +198,28 @@ Script     1.2        PSReadLine                          <span class="o">{</spa
 <figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="gp">$ </span>sudo <span class="nb">cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
 <span class="gp">$ </span>sudo <span class="nb">wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
 
-<p>And voila, <code>Install-Module</code> works.</p>
+<p>And voila, <code class="highlighter-rouge">Install-Module</code> works.</p>
 
 <blockquote>
-<p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code>Import-Module PathUtils</code> will work, whereas <code>Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
+  <p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code class="highlighter-rouge">Import-Module PathUtils</code> will work, whereas <code class="highlighter-rouge">Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
 </blockquote>
 
 <h1 id="open-source-everything">Open source everything</h1>
 
-<p>As excited as I am with running PowerShell scripts on Linux, I think that the most important thing here is the open sourcing of PowerShell. If Microsoft didn&#39;t prepare a version that runs on Linux, some other geek would probably do it (sooner or later).
-But the fact that I can now look into PS source code and see, how they do things, then tinker around and send a pull request is really amazing. I&#39;ve been using Asp.Net Core for some time now and the possibility to just look at the source code proven invaluable a cuple of times.</p>
+<p>As excited as I am with running PowerShell scripts on Linux, I think that the most important thing here is the open sourcing of PowerShell. If Microsoft didn’t prepare a version that runs on Linux, some other geek would probably do it (sooner or later).
+But the fact that I can now look into PS source code and see, how they do things, then tinker around and send a pull request is really amazing. I’ve been using Asp.Net Core for some time now and the possibility to just look at the source code proven invaluable a cuple of times.</p>
 
 <blockquote>
-<p>It&#39;s worth mentioning that there already exists an open source effort to reimplement Powershell: <a href="https://github.com/Pash-Project/Pash">Pash</a>. I wonder what will become of it now.</p>
+  <p>It’s worth mentioning that there already exists an open source effort to reimplement Powershell: <a href="https://github.com/Pash-Project/Pash">Pash</a>. I wonder what will become of it now.</p>
 </blockquote>
 
 <h1 id="possiblities">Possiblities</h1>
 
-<p>Taking aside the excitement of &quot;because I can&quot;, what are real benefits of using PowerShell on Linux, when you have Bash available at your disposal? </p>
+<p>Taking aside the excitement of “because I can”, what are real benefits of using PowerShell on Linux, when you have Bash available at your disposal?</p>
 
 <h2 id="build-scripts">Build scripts</h2>
 
-<p>Up until now, cross platform .Net projects, like Dotnet CLI itself, used separate build scripts for Linux and Windows. Now, it will be possible to write one PowerShell script to rule them all. I personally have tons of build/deploy/other DevOps scripts written in PowerShell (and DSC). I would rather gladly test them on Linux and work around the rough edges than rewrite all that stuff in Bash (and maintain two separate versions). </p>
+<p>Up until now, cross platform .Net projects, like Dotnet CLI itself, used separate build scripts for Linux and Windows. Now, it will be possible to write one PowerShell script to rule them all. I personally have tons of build/deploy/other DevOps scripts written in PowerShell (and DSC). I would rather gladly test them on Linux and work around the rough edges than rewrite all that stuff in Bash (and maintain two separate versions).</p>
 
 <p>If you think of dockerizing your services, the possibility to use the same scripts on Linux and Windows should make the transition much smoother.</p>
 
@@ -228,7 +228,7 @@ But the fact that I can now look into PS source code and see, how they do things
 <p>If you are managing multiple Linux and Windows machines, you will be able to use the same shell and scripts for all of them. Also, as MS announcement says:</p>
 
 <blockquote>
-<p>We will be extending the PowerShell Remoting Protocol (MS-PSRP) to use OpenSSH as a native transport. Users will have the option to use SSH or WINRM as a transport.</p>
+  <p>We will be extending the PowerShell Remoting Protocol (MS-PSRP) to use OpenSSH as a native transport. Users will have the option to use SSH or WINRM as a transport.</p>
 </blockquote>
 
 <p>So, you will be able to do something like:</p>
@@ -237,9 +237,9 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>And that will work over SSH, without the struggle of setting up WINRM.</p>
 
-<h1 id="whats-next">What&#39;s next</h1>
+<h1 id="whats-next">What’s next</h1>
 
-<p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it&#39;s &quot;production ready&quot;. But I&#39;m not waiting until then - I&#39;m starting to make my scripts and modules &quot;cross-platform&quot; with PowerShell 6 right now.</p>
+<p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it’s “production ready”. But I’m not waiting until then - I’m starting to make my scripts and modules “cross-platform” with PowerShell 6 right now.</p>
 
 
         </section>

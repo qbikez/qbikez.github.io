@@ -3,7 +3,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
    
-      <title>https://github.com/qbikez</title>
+      <title></title>
    
    <link>http://heavymetaldev.com</link>
    <description>Developer stories from the trenches.</description>
@@ -18,91 +18,109 @@
 	  <pubDate>2017-03-03T00:00:00+01:00</pubDate>
 	  <guid>//powershell-hashtables</guid>
 	  <description><![CDATA[
-	     <p>Usually, Powershell is used as a &quot;glue&quot; to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
-But there are cases, where your doing seemingly trivial things, but your script just takes years to finish. </p>
+	     <p>Usually, Powershell is used as a “glue” to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
+But there are cases, where your doing seemingly trivial things, but your script just takes years to finish.</p>
 
-<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">$timespan = Measure-Command {
+<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
+
+<p><code class="highlighter-rouge">
+$timespan = Measure-Command {
     # do whatever you want to measure here
 }
-</code></pre></div>
-<p>That&#39;s nice if you know or suspect which part of code is slow. But I would like to have something that&#39;s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+</code></p>
 
-<p>That&#39;s why I created a little wrapper around <code>Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code>Measure-function</code></a>, that&#39;s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+<p>That’s nice if you know or suspect which part of code is slow. But I would like to have something that’s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+
+<p>That’s why I created a little wrapper around <code class="highlighter-rouge">Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code class="highlighter-rouge">Measure-function</code></a>, that’s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
+
+<p><code class="highlighter-rouge">
+  function Get-Something {
     # i'm doing some heavy loading here
     return $something
   }
-</code></pre></div>
-<p>I just wrap the body with <code>Measure-Function</code> like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+</code></p>
+
+<p>I just wrap the body with <code class="highlighter-rouge">Measure-Function</code> like this:</p>
+
+<p><code class="highlighter-rouge">
+  function Get-Something {
     Measure-Function "$($MyInvocation.MyCommand.Name)" {
       # i'm doing some heavy loading here
       return $something
     }
   }
-</code></pre></div>
-<p><code>Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-</code></pre></div>
+</code></p>
+
+<p><code class="highlighter-rouge">Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
+
+<p><code class="highlighter-rouge">
+$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></p>
+
 <p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
 
 <ol>
-<li>Start with the entry point of your script and add <code>Measure-Function</code> to it and functions that it calls. </li>
-<li>Run the code and see, which function takes the most time.</li>
-<li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
+  <li>Start with the entry point of your script and add <code class="highlighter-rouge">Measure-Function</code> to it and functions that it calls.</li>
+  <li>Run the code and see, which function takes the most time.</li>
+  <li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
 </ol>
 
 <h1 id="powershell-hashtable-quircks">Powershell Hashtable quircks</h1>
 
-<p>One of the things I discovered using aforementioned method was in a place I really wasn&#39;t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you&#39;re not careful enough.</p>
+<p>One of the things I discovered using aforementioned method was in a place I really wasn’t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you’re not careful enough.</p>
 
 <p>Take a look at these three simple scenarios :</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># $h is a hastable of size 10000 
+
+<p>```
+# $h is a hastable of size 10000 
 $size = 10000
 $h = @{
 }
 for($i = 0; $i -lt $size; $i++) {
-    $h += @{ "key$i" = "value$i"  }
-}
+    $h += @{ “key$i” = “value$i”  }
+}</p>
 
-measure-function "enumerating $($h.count) items by enumerator" {
+<p>measure-function “enumerating $($h.count) items by enumerator” {
     foreach ($e in $h.GetEnumerator()) {
         $k = $e.key
         $v = $e.value
     }
-}
+}</p>
 
-measure-function "enumerating $($h.count) items by keys" {
+<p>measure-function “enumerating $($h.count) items by keys” {
     foreach ($k in $h.keys) {
         $v = $h[$k]
     }
 }
-measure-function "enumerating $($h.count) items with property accessor" {
+measure-function “enumerating $($h.count) items with property accessor” {
     foreach ($k in $h.keys) {
         $v = $h.$k
     }
-}
+}</p>
 
-$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-</code></pre></div>
-<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let&#39;s see...</p>
-<div class="highlight"><pre><code class="language-" data-lang="">name                                           elapsed          count
+<p>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+```</p>
+
+<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let’s see…</p>
+
+<p><code class="highlighter-rouge">
+name                                           elapsed          count
 ----                                           -------          -----
 enumerating 10000 items with property accessor 00:00:30.4342957     1
 enumerating 10000 items by keys                00:00:00.0479557     1
 enumerating 10000 items by enumerator          00:00:00.1173057     1
-</code></pre></div>
-<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer! </p>
+</code></p>
 
-<p>At a first glance, I would think that the form <code>$h.$k</code> would be just a syntactic sugar for <code>$h[$k]</code>. But it really isn&#39;t (and can&#39;t) be that simple. <code>$k</code> may not only be a key inside hashtable - it may as well be a property, like <code>Count</code> or a method like <code>ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer!</p>
 
-<p>The conclusion is simple: if you know you&#39;re working with a potentially big hashtable, don&#39;t go for shortcuts and use plain old <code>$h[$k]</code>. But if you&#39;re not in a tight loop - just go with what you think is more readable.</p>
+<p>At a first glance, I would think that the form <code class="highlighter-rouge">$h.$k</code> would be just a syntactic sugar for <code class="highlighter-rouge">$h[$k]</code>. But it really isn’t (and can’t) be that simple. <code class="highlighter-rouge">$k</code> may not only be a key inside hashtable - it may as well be a property, like <code class="highlighter-rouge">Count</code> or a method like <code class="highlighter-rouge">ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+
+<p>The conclusion is simple: if you know you’re working with a potentially big hashtable, don’t go for shortcuts and use plain old <code class="highlighter-rouge">$h[$k]</code>. But if you’re not in a tight loop - just go with what you think is more readable.</p>
 
 <p>Reference:
-* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a>
+* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a>
 * There is also 
-<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>. </p>
+<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>.</p>
 
 	  ]]></description>
 	</item>
@@ -116,44 +134,54 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
 	  <description><![CDATA[
 	     <p>Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
 Or maybe your repo contains too many (possibly unrelated) projects? 
-Or has grown so big that you can&#39;t even clone it? </p>
+Or has grown so big that you can’t even clone it?</p>
 
-<p>Mercurial&#39;s <a href="https://www.mercurial-scm.org/wiki/ConvertExtension#Usage">convert extension</a> is here to help. It&#39;s a multitool that can convert from various other VCS, like git, SVN, ect, and from HG. The last one is what we need.</p>
+<p>Mercurial’s <a href="https://www.mercurial-scm.org/wiki/ConvertExtension#Usage">convert extension</a> is here to help. It’s a multitool that can convert from various other VCS, like git, SVN, ect, and from HG. The last one is what we need.</p>
 
 <h1 id="why">Why</h1>
 
 <p>The benefits of splitting large repositories are:</p>
 
 <ul>
-<li>teams can work independently and move at different speeds</li>
-<li>you can give someone (an outsourcer perhaps) access to only some parts of your codebase</li>
-<li>smaller repos are easier to manage</li>
-<li>some CI systems (like appveyor or travis) use a single configuration file per repo - stuffing multiple projects into these files will just complicate the build and obfuscate results<br></li>
+  <li>teams can work independently and move at different speeds</li>
+  <li>you can give someone (an outsourcer perhaps) access to only some parts of your codebase</li>
+  <li>smaller repos are easier to manage</li>
+  <li>some CI systems (like appveyor or travis) use a single configuration file per repo - stuffing multiple projects into these files will just complicate the build and obfuscate results</li>
 </ul>
 
-<h1 id="powering-up-convert-with-some-scripts">Powering up <code>convert</code> with some scripts</h1>
+<h1 id="powering-up-convert-with-some-scripts">Powering up <code class="highlighter-rouge">convert</code> with some scripts</h1>
 
-<p><code>convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let&#39;s face it - you won&#39;t be right for the first time and will need to do some tweaking.</p>
+<p><code class="highlighter-rouge">convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let’s face it - you won’t be right for the first time and will need to do some tweaking.</p>
 
-<p>That&#39;s why I created a few powershell scripts and template files to help us with conversion.</p>
+<p>That’s why I created a few powershell scripts and template files to help us with conversion.</p>
 
 <h1 id="configuration">Configuration</h1>
 
 <ol>
-<li><p>Enable the <code>convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[extensions]
-convert =
-</code></pre></div></li>
-<li><p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there. </p></li>
-<li><p>Create two files: <code>branchmap.txt</code> and <code>filemap.txt</code> (you may copy them from <code>branchmap.sample.txt</code> and <code>filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code>convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial. </p></li>
+  <li>
+    <p>Enable the <code class="highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> [extensions]
+ convert =
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there.</p>
+  </li>
+  <li>
+    <p>Create two files: <code class="highlighter-rouge">branchmap.txt</code> and <code class="highlighter-rouge">filemap.txt</code> (you may copy them from <code class="highlighter-rouge">branchmap.sample.txt</code> and <code class="highlighter-rouge">filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code class="highlighter-rouge">convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial.</p>
+  </li>
 </ol>
 
 <p>Now, we need to fill these config files.</p>
 
 <h2 id="sample-repository">Sample repository</h2>
 
-<p>Let&#39;s use the repo at <a href="https://bitbucket.org/heavymetaldev/convert-me">https://bitbucket.org/heavymetaldev/convert-me</a> as an example. The structure looks like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">|-- convert-me
+<p>Let’s use the repo at https://bitbucket.org/heavymetaldev/convert-me as an example. The structure looks like this:</p>
+
+<p><code class="highlighter-rouge">
+|-- convert-me
     |-- .hgignore
     |-- top-secret.txt
     |-- sln
@@ -170,15 +198,18 @@ convert =
         |   |-- MyProject.Core.Utils.csproj
         |-- MyProject.Desktop.WinForms
             |-- MyProject.Desktop.WinForms.csproj
-</code></pre></div>
+</code></p>
+
 <blockquote>
-<p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
+  <p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
 </blockquote>
 
-<p>There are two solution files <code>MyProject.Core</code> and <code>MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code>repo-a</code> and <code>repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code>top-secret.txt</code>, as it contains confidential data.</p>
+<p>There are two solution files <code class="highlighter-rouge">MyProject.Core</code> and <code class="highlighter-rouge">MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code class="highlighter-rouge">top-secret.txt</code>, as it contains confidential data.</p>
 
-<p><code>Repo A</code> should look like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">|-- Repo-A
+<p><code class="highlighter-rouge">Repo A</code> should look like this:</p>
+
+<p><code class="highlighter-rouge">
+|-- Repo-A
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Core
@@ -190,9 +221,12 @@ convert =
         |   |-- MyProject.Core.Model.csproj
         |-- MyProject.Core.Utils
         |   |-- MyProject.Core.Utils.csproj
-</code></pre></div>
-<p><code>Repo B</code> should contain remaining projects and files:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">|-- Repo-B
+</code></p>
+
+<p><code class="highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
+
+<p><code class="highlighter-rouge">
+|-- Repo-B
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Desktop
@@ -200,40 +234,49 @@ convert =
     |-- src
         |-- MyProject.Desktop.WinForms
             |-- MyProject.Desktop.WinForms.csproj
-</code></pre></div>
+</code></p>
+
 <h2 id="filemap-on-steroids">Filemap on steroids</h2>
 
-<p>Let&#39;s start with filemap. It defines, which files or directories should be included (or excluded) in the new repository. You may also use it to rename files. </p>
+<p>Let’s start with filemap. It defines, which files or directories should be included (or excluded) in the new repository. You may also use it to rename files.</p>
 
 <p>The extended filemap format supports lines in the following forms:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># this is th basic mercurial stuff:
+
+<p>```
+# this is th basic mercurial stuff:
 include path/to/file
 exclude path/to/file
-rename from/file to/file
+rename from/file to/file</p>
 
-# this is extended format:
-include r:regex/to/.*/include
-include r:!regex/to/.*/include/if/not/match
-exclude r:regex/to/.*/exclude
-exclude r:!regex/to/.*/exclude/if/not/match
+<h1 id="this-is-extended-format">this is extended format:</h1>
+<p>include r:regex/to/.<em>/include
+include r:!regex/to/.</em>/include/if/not/match
+exclude r:regex/to/.<em>/exclude
+exclude r:!regex/to/.</em>/exclude/if/not/match
 include sln:path/to/something.sln
-</code></pre></div>
+```</p>
+
 <ul>
-<li><code>r:</code> indicates that this entry is a regex. <code>r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
-<li><code>sln:</code> is specifically for C# solution files. This will parse the <code>.sln</code> file and generate include entries for every <code>csproj</code> it contains. In other words, this will include the whole solution.</li>
+  <li><code class="highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
+  <li><code class="highlighter-rouge">sln:</code> is specifically for C# solution files. This will parse the <code class="highlighter-rouge">.sln</code> file and generate include entries for every <code class="highlighter-rouge">csproj</code> it contains. In other words, this will include the whole solution.</li>
 </ul>
 
-<p>Let&#39;s look at our sample repo. For converting to <code>repo-a</code>, we can use the following <code>filemap.txt</code> content:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">include .hgignore
+<p>Let’s look at our sample repo. For converting to <code class="highlighter-rouge">repo-a</code>, we can use the following <code class="highlighter-rouge">filemap.txt</code> content:</p>
+
+<p><code class="highlighter-rouge">
+include .hgignore
 include r:.*/MyProject\.Core(\..*){0,1}/
 exclude top-secret.txt
-</code></pre></div>
+</code></p>
+
 <blockquote>
-<p>By default, everything that&#39;s not included gets excluded, so the last line isn&#39;t really necessary, but we&#39;ll leave it there for verbosity.</p>
+  <p>By default, everything that’s not included gets excluded, so the last line isn’t really necessary, but we’ll leave it there for verbosity.</p>
 </blockquote>
 
-<p>This will generate the following <code>filemap.gen.txt</code> for mercurial to use:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">include ".hgignore"
+<p>This will generate the following <code class="highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
+
+<p><code class="highlighter-rouge">
+include ".hgignore"
 include "sln/MyProject.Core"
 include "src/MyProject.Core.Api"
 include "src/MyProject.Core.Model"
@@ -248,93 +291,114 @@ include "src/MyProject.Core.Api/Service References/Application Insights"
 include "src/MyProject.Core.Model/Properties"
 include "src/MyProject.Core.Utils/Properties"
 remove top-secret.txt
-</code></pre></div>
+</code></p>
+
 <blockquote>
-<p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it&#39;s subdirectories. But since the file is autogenerated, this is not a worry. </p>
+  <p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it’s subdirectories. But since the file is autogenerated, this is not a worry.</p>
 </blockquote>
 
-<p>For <code>repo-b</code>, I will go minimalist and use <code>sln:</code> prefix:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">include .hgignore
+<p>For <code class="highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="highlighter-rouge">sln:</code> prefix:</p>
+
+<p><code class="highlighter-rouge">
+include .hgignore
 include sln:sln/MyProject.Desktop/MyProject.Desktop.sln
 exclude top-secret.txt
-</code></pre></div>
+</code></p>
+
 <h1 id="conversion-process">Conversion Process</h1>
 
-<p>We will use <code>hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
-</code></pre></div>
-<p>This script takes care of configuring and calling <code>hg convert</code>. It will:</p>
+<p>We will use <code class="highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
+</code></pre>
+</div>
+
+<p>This script takes care of configuring and calling <code class="highlighter-rouge">hg convert</code>. It will:</p>
 
 <ol>
-<li>Take <code>filemap.txt</code> (if it exists), generate <code>filemap.gen.txt</code> and pass it to <code>convert</code></li>
-<li>Take <code>branchmap.txt</code> (if it exists), generate <code>branchmap.gen.txt</code> and pass it to <code>convert</code> (more of branchmap later)</li>
-<li>Check if the target repository already exists (use <code>-force</code> to force overwrite)</li>
-<li>Convert the repository at <code>path/to/source/convert-me</code>, starting at revision <code>123</code> and save it at <code>path/to/target/repo-a</code> </li>
+  <li>Take <code class="highlighter-rouge">filemap.txt</code> (if it exists), generate <code class="highlighter-rouge">filemap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code></li>
+  <li>Take <code class="highlighter-rouge">branchmap.txt</code> (if it exists), generate <code class="highlighter-rouge">branchmap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code> (more of branchmap later)</li>
+  <li>Check if the target repository already exists (use <code class="highlighter-rouge">-force</code> to force overwrite)</li>
+  <li>Convert the repository at <code class="highlighter-rouge">path/to/source/convert-me</code>, starting at revision <code class="highlighter-rouge">123</code> and save it at <code class="highlighter-rouge">path/to/target/repo-a</code></li>
 </ol>
 
-<p><code>startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code>0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
+<p><code class="highlighter-rouge">startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code class="highlighter-rouge">0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
 
 <ol>
-<li>Setup filemap </li>
-<li><p>Convert only the newest revision, using <code>startrev</code> parameter, i.e:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
-</code></pre></div></li>
-<li><p>Check the converted repository - try to build everything</p></li>
-<li><p>Copy missing files from old repo to the new repo and add them to filemap, until the new repo builds properly</p></li>
-<li><p>Repeat from 2. until I get it rigth</p></li>
-<li><p>Start full conversion from revision 0</p>
-<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
-</code></pre></div></li>
+  <li>Setup filemap</li>
+  <li>
+    <p>Convert only the newest revision, using <code class="highlighter-rouge">startrev</code> parameter, i.e:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
+</code></pre>
+    </div>
+  </li>
+  <li>Check the converted repository - try to build everything</li>
+  <li>Copy missing files from old repo to the new repo and add them to filemap, until the new repo builds properly</li>
+  <li>Repeat from 2. until I get it rigth</li>
+  <li>
+    <p>Start full conversion from revision 0</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
+</code></pre>
+    </div>
+  </li>
 </ol>
 
-<p>If everything goes rigth, we got now two separate repositories, <code>repo-a</code> and <code>repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this). </p>
+<p>If everything goes rigth, we got now two separate repositories, <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this).</p>
 
 <p>But wait, there are also some other scenarios whe should cover.</p>
 
 <h3 id="automated-branchmap">Automated branchmap</h3>
 
-<p>Branchmap defines the mapping between branch names in old repo and new repo. <code>branchmap.txt</code> support the following line format:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># this is th basic mercurial stuff:
-original_branch_name new_branch_name
+<p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="highlighter-rouge">branchmap.txt</code> support the following line format:</p>
 
-# this is extended format:
-r:release/.* release
+<p>```
+# this is th basic mercurial stuff:
+original_branch_name new_branch_name</p>
+
+<h1 id="this-is-extended-format-1">this is extended format:</h1>
+<p>r:release/.* release
 r:!release default
 * default
-</code></pre></div>
-<p>Similar to filemap, <code>r:</code> and <code>r:!</code> denotes regex to match/notmatch. A single <code>*</code> means - you guessed it - &quot;everything&quot;.</p>
+```</p>
 
-<p>For example, my <code>branchmap.txt</code> could look like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">* default
+<p>Similar to filemap, <code class="highlighter-rouge">r:</code> and <code class="highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
+
+<p>For example, my <code class="highlighter-rouge">branchmap.txt</code> could look like this:</p>
+
+<p><code class="highlighter-rouge">
+* default
 r:release/.* release
 dev dev
-</code></pre></div>
-<p>All branches that match <code>release/*</code> pattern will be renamed to <code>release</code>. Branch <code>dev</code> will remain <code>dev</code>. Everything else will be renamed to <code>default</code>. </p>
+</code></p>
+
+<p>All branches that match <code class="highlighter-rouge">release/*</code> pattern will be renamed to <code class="highlighter-rouge">release</code>. Branch <code class="highlighter-rouge">dev</code> will remain <code class="highlighter-rouge">dev</code>. Everything else will be renamed to <code class="highlighter-rouge">default</code>.</p>
 
 <blockquote>
-<p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code>* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code>branchmap.gen.txt</code> to see, if everything looks like you wanted. </p>
+  <p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code class="highlighter-rouge">* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code class="highlighter-rouge">branchmap.gen.txt</code> to see, if everything looks like you wanted.</p>
 </blockquote>
 
 <h3 id="appending-revisions-to-existing-repo">Appending revisions to existing repo</h3>
 
-<p>The last thing I want to mention is appending parts of history onto one another. Let&#39;s go back to our <code>convert-me</code> repo. The news of switching to new repositories hasn&#39;t reach one developer, who just pushed some critical changes in <code>MyProject.Core.Model</code> and <code>MyProject.Desktop.WinForms</code> in <code>convert-me</code> repo (instead of <code>repo-a</code> and <code>repo-b</code> respectively) - lets call them &quot;offending changes&quot;. How to transfer these changes to new repos without breaking anything? Run <code>convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
+<p>The last thing I want to mention is appending parts of history onto one another. Let’s go back to our <code class="highlighter-rouge">convert-me</code> repo. The news of switching to new repositories hasn’t reach one developer, who just pushed some critical changes in <code class="highlighter-rouge">MyProject.Core.Model</code> and <code class="highlighter-rouge">MyProject.Desktop.WinForms</code> in <code class="highlighter-rouge">convert-me</code> repo (instead of <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code> respectively) - lets call them “offending changes”. How to transfer these changes to new repos without breaking anything? Run <code class="highlighter-rouge">convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
 
-<p><code>convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
+<p><code class="highlighter-rouge">convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
 
 <ol>
-<li>specify offending changes (starting from the first revision that hasn&#39;t been converted before)</li>
-<li>Check offending changes parent and find corresponding commits in <code>repo-a</code> and <code>repo-b</code></li>
-<li>Convert offending changes and append them onto these corresponding parent commits. We will use the same filemaps and branchmaps to filter only required files.</li>
+  <li>specify offending changes (starting from the first revision that hasn’t been converted before)</li>
+  <li>Check offending changes parent and find corresponding commits in <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code></li>
+  <li>Convert offending changes and append them onto these corresponding parent commits. We will use the same filemaps and branchmaps to filter only required files.</li>
 </ol>
 
-<p>Now, that&#39;s it. Hope you find this helpful and if you have any problems with the scripts - please drop me a line! </p>
+<p>Now, that’s it. Hope you find this helpful and if you have any problems with the scripts - please drop me a line!</p>
 
 <h1 id="resources">Resources</h1>
 
 <ul>
-<li><a href="https://www.mercurial-scm.org/wiki/ConvertExtension">https://www.mercurial-scm.org/wiki/ConvertExtension</a></li>
-<li><a href="http://hgtip.com/tips/advanced/2009-11-16-using-convert-to-decompose-your-repository/">http://hgtip.com/tips/advanced/2009-11-16-using-convert-to-decompose-your-repository/</a></li>
-<li><a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd</a></li>
+  <li>https://www.mercurial-scm.org/wiki/ConvertExtension</li>
+  <li>http://hgtip.com/tips/advanced/2009-11-16-using-convert-to-decompose-your-repository/</li>
+  <li>https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd</li>
 </ul>
 
 	  ]]></description>
@@ -347,7 +411,7 @@ dev dev
 	  <pubDate>2017-01-09T00:00:00+01:00</pubDate>
 	  <guid>//configuring-mercurial-keyring</guid>
 	  <description><![CDATA[
-	     <p>If you don&#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code>hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that. </p>
+	     <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
 
 <h1 id="keyring">Keyring</h1>
 
@@ -355,51 +419,71 @@ dev dev
 
 <h1 id="installing-keyring-on-windows">Installing keyring on Windows</h1>
 
-<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code>mercurial_keyring</code></a> says that installation &quot;in some cases (Windows…) requires more care&quot;. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
-What we will do is install <code>python2</code> from chocolatey, use <code>pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
+<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code class="highlighter-rouge">mercurial_keyring</code></a> says that installation “in some cases (Windows…) requires more care”. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
+What we will do is install <code class="highlighter-rouge">python2</code> from chocolatey, use <code class="highlighter-rouge">pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
 
 <ol>
-<li><p>If you don&#39;t have it already, install <code>python2</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; choco install -y python2
-&gt; refreshenv
-</code></pre></div>
-<blockquote>
-<p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
-</blockquote></li>
-<li><p>install <code>mercurial_keyring</code></p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; pip install --user mercurial_keyring
-</code></pre></div>
-<blockquote>
-<p>pip will handle installation of all dependencies, including <code>keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code>mercurial_extension_utils</code></a>, etc.</p>
-</blockquote></li>
-<li><p>Configure exension in <em>mercurial.ini</em>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[extensions]
-mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
-</code></pre></div></li>
+  <li>
+    <p>If you don’t have it already, install <code class="highlighter-rouge">python2</code>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; choco install -y python2
+ &gt; refreshenv
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>install <code class="highlighter-rouge">mercurial_keyring</code></p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>pip will handle installation of all dependencies, including <code class="highlighter-rouge">keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code class="highlighter-rouge">mercurial_extension_utils</code></a>, etc.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Configure exension in <em>mercurial.ini</em>:</p>
+
+    <p><code class="highlighter-rouge">
+ [extensions]
+ mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
+</code></p>
+  </li>
 </ol>
 
 <h1 id="verify-it">Verify it</h1>
 
-<p>Let&#39;s try it out:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
+<p>Let’s try it out:</p>
+
+<p><code class="highlighter-rouge">
+&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
 keyring: username not specified in hgrc (or in url). Password will not be saved.
 http authorization required
 realm: Bitbucket.org HTTP
 url: https://bitbucket.org/heavymetaldev/top-secret
 user:
-</code></pre></div>
-<p>Note that <code>keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  <a href="https://qbik@bitbucket.org/heavymetaldev/top-secret">https://qbik@bitbucket.org/heavymetaldev/top-secret</a>) or configure in <code>mercurial.ini</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[auth]
+</code></p>
+
+<p>Note that <code class="highlighter-rouge">keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  https://qbik@bitbucket.org/heavymetaldev/top-secret) or configure in <code class="highlighter-rouge">mercurial.ini</code>:</p>
+
+<p>````
+[auth]
 bitbucket.org.prefix = bitbucket.org
 bitbucket.org.username = qbik
-</code></pre></div>
-<p>TortoiseHG does exactly that when you configure credentials there (with <code>mercurial_keyring</code> enabled).</p>
+```</p>
+
+<p>TortoiseHG does exactly that when you configure credentials there (with <code class="highlighter-rouge">mercurial_keyring</code> enabled).</p>
 
 <p>Now, you can safely store your credentials, not worrying about it leaking somewhere.</p>
 
 <h1 id="use-ssh">Use SSH</h1>
 
-<p>If you use a hostin service that provides SSH access (like bitbucket), you may also want to <a href="/appveyor-private-subrepos#cloning-hg-over-ssh-from-bitbucket">configure SSH private key</a> instead of storing usernamee and password.  </p>
+<p>If you use a hostin service that provides SSH access (like bitbucket), you may also want to <a href="/appveyor-private-subrepos#cloning-hg-over-ssh-from-bitbucket">configure SSH private key</a> instead of storing usernamee and password.</p>
 
 	  ]]></description>
 	</item>
@@ -411,15 +495,15 @@ bitbucket.org.username = qbik
 	  <pubDate>2017-01-08T00:00:00+01:00</pubDate>
 	  <guid>//appveyor-private-subrepos</guid>
 	  <description><![CDATA[
-	     <p>Appveyor is a great CI service for Windows apps. It&#39;s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.</p>
+	     <p>Appveyor is a great CI service for Windows apps. It’s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.</p>
 
 <h2 id="the-git-way">The Git way</h2>
 
-<p>There already is a good guide for <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules">private git subrepos</a>. Let&#39;s try and do the same for mercurial. The git guide references GitHub as hosting platform, and for mercurial I will use BitBucket, wich has similar est of features but support both git and mercurial (and has unlimited number of <strong>free private repositories</strong>, yay!). </p>
+<p>There already is a good guide for <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules">private git subrepos</a>. Let’s try and do the same for mercurial. The git guide references GitHub as hosting platform, and for mercurial I will use BitBucket, wich has similar est of features but support both git and mercurial (and has unlimited number of <strong>free private repositories</strong>, yay!).</p>
 
 <h2 id="the-hg-way">The Hg way</h2>
 
-<p>In case of mercurial, the solution is similar to git, but configuriaton may not be as straightforward. </p>
+<p>In case of mercurial, the solution is similar to git, but configuriaton may not be as straightforward.</p>
 
 <p>We will split the process in three steps:
 1. Configure ssh clone on local machine
@@ -428,48 +512,64 @@ bitbucket.org.username = qbik
 
 <h2 id="cloning-hg-over-ssh-from-bitbucket">Cloning HG over SSH (from Bitbucket)</h2>
 
-<p>Let&#39;s start with a simple thing: clone a repository over ssh. I&#39;ll use BitBucket for mercurial hosting and Appveyor for cloning and building.
-BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Mercurial">setting up ssh</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
+<p>Let’s start with a simple thing: clone a repository over ssh. I’ll use BitBucket for mercurial hosting and Appveyor for cloning and building.
+BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Mercurial">setting up ssh</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn’t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
 
-<p>Lucky for me, a <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">similar guide for git</a> doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
-
-<ol>
-<li><p>Install Git for Windows: </p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; choco install -y git
-</code></pre></div></li>
-<li><p>Make sure you have <code>ssh.exe</code> on PATH (it will most probably be in &#39;c:\Program Files\Git\usr\bin&#39;)</p></li>
-<li><p>List the content of <code>$env:USERPROFILE/.ssh</code> directory</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; ls $env:USERPROFILE/.ssh
-</code></pre></div></li>
-</ol>
-
-<p>If you have a default identity already, you&#39;ll some <em>id_*</em> files.</p>
+<p>Lucky for me, a <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">similar guide for git</a> doesn’t include putty at all. We can use the same steps to configure mercurials ssh.</p>
 
 <ol>
-<li><p>Generate a ssh key (or use an existing one)</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-</code></pre></div></li>
-<li><p>Set up SSH key on Bitbucket:</p>
+  <li>
+    <p>Install Git for Windows:</p>
 
-<ol>
-<li>Open a browser and log in to Bitbucket.</li>
-<li>Choose <em>avatar</em> &gt; <strong>Bitbucket settings</strong> from the menu bar, then click <strong>SSH Settings</strong> on the left. </li>
-<li>Add a new key. This is a public key, which value is the content of <code>$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with &quot;<em>ssh-rsa</em> ...&quot;)</li>
-</ol></li>
-<li><p>create a private HG repo and clone it over SSH:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
-</code></pre></div>
-<blockquote>
-<p>If you see <code>remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:
- 1. Mercurial doesn&#39;t use the private key from <code>$env:USERPROFILE/.ssh/id_rsa</code> 
- 2. Public SSH key is not properly configured in BitBucket </p>
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; choco install -y git
+</code></pre>
+    </div>
+  </li>
+  <li>Make sure you have <code class="highlighter-rouge">ssh.exe</code> on PATH (it will most probably be in ‘c:\Program Files\Git\usr\bin’)</li>
+  <li>
+    <p>List the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh</code> directory</p>
 
-<p>You can add <code>--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; ls $env:USERPROFILE/.ssh
+</code></pre>
+    </div>
 
-<p><code>ssh hg@bitbucket.org &quot;hg -R heavymetaldev/top-secret serve --stdio&quot;</code></p>
+    <p>If you have a default identity already, you’ll some <em>id_*</em> files.</p>
+  </li>
+  <li>
+    <p>Generate a ssh key (or use an existing one)</p>
 
-<p>You can use this command to further debug ssh issues. </p>
-</blockquote></li>
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Set up SSH key on Bitbucket:</p>
+
+    <ol>
+      <li>Open a browser and log in to Bitbucket.</li>
+      <li>Choose <em>avatar</em> &gt; <strong>Bitbucket settings</strong> from the menu bar, then click <strong>SSH Settings</strong> on the left.</li>
+      <li>Add a new key. This is a public key, which value is the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with “<em>ssh-rsa</em> …”)</li>
+    </ol>
+  </li>
+  <li>
+    <p>create a private HG repo and clone it over SSH:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>If you see <code class="highlighter-rouge">remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:
+ 1. Mercurial doesn’t use the private key from <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code> 
+ 2. Public SSH key is not properly configured in BitBucket</p>
+
+      <p>You can add <code class="highlighter-rouge">--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
+
+      <p><code class="highlighter-rouge">ssh hg@bitbucket.org "hg -R heavymetaldev/top-secret serve --stdio"</code></p>
+
+      <p>You can use this command to further debug ssh issues.</p>
+    </blockquote>
+  </li>
 </ol>
 
 <h2 id="private-hg-subprepos-on-appveyor">Private HG subprepos on Appveyor</h2>
@@ -478,29 +578,34 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
 
 <p>These are general steps we need to take:
 1. Generate a new SSH key pair for AppVeyor access to Bitbucket repo
-2. Save private key in AppVeyor&#39;s encrypted environment variable</p>
+2. Save private key in AppVeyor’s encrypted environment variable</p>
 
-<p>In the build script (during <code>install</code> phase), we need to:
-1. Extract private key from environment variable to file <code>$env:USERPROFILE/.ssh/id_rsa</code>
-2. Add Bitbucket&#39;s SSL certificate fingerprint to <code>$env:USERPROFILE/.ssh/known_hosts</code></p>
+<p>In the build script (during <code class="highlighter-rouge">install</code> phase), we need to:
+1. Extract private key from environment variable to file <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code>
+2. Add Bitbucket’s SSL certificate fingerprint to <code class="highlighter-rouge">$env:USERPROFILE/.ssh/known_hosts</code></p>
 
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
+</code></pre>
+</div>
+
 <p>Instead of configuring it at account level, add it as <a href="https://confluence.atlassian.com/display/BITBUCKET/Use+access+keys">read-only access key</a> to specific repo that you will be cloning.</p>
 
 <p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
 
 <blockquote>
-<p>Open the generated private key and copy base-64 body of the key <em>between</em> <code>-----BEGIN RSA PRIVATE KEY-----</code> and <code>-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
+  <p>Open the generated private key and copy base-64 body of the key <em>between</em> <code class="highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code> and <code class="highlighter-rouge">-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
 
-<p>Copy the contents of private key to clipboard as shown above and open Encrypt data tool in AppVeyor. Encrypt the value of clipboard using that page. </p>
+  <p>Copy the contents of private key to clipboard as shown above and open Encrypt data tool in AppVeyor. Encrypt the value of clipboard using that page.</p>
 </blockquote>
 
 <p>Paste the encrypted value into the build script (or configure it in web UI). It will look something like this:</p>
 
-<p><code>appveyor.yml</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">environment:
+<p><code class="highlighter-rouge">appveyor.yml</code>:</p>
+
+<p><code class="highlighter-rouge">
+environment:
   priv_key:
     secure: &lt;encryped-value&gt;
   subrepo_owner: heavymetaldev
@@ -508,107 +613,120 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   subrepo_branch: default
 install:
   - ps: .\clone-subrepo.ps1
-</code></pre></div>
-<p>The additional environment variables (<code>subrepo_*</code>) are used to determine repository url and branch name to checkout.
-<code>clone-subrepo.ps1</code> is where the real job is done:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># get repo url and branch from env variables 
+</code></p>
+
+<p>The additional environment variables (<code class="highlighter-rouge">subrepo_*</code>) are used to determine repository url and branch name to checkout.
+<code class="highlighter-rouge">clone-subrepo.ps1</code> is where the real job is done:</p>
+
+<p>```
+# get repo url and branch from env variables 
 $owner = $env:subrepo_owner
 $repoName = $env:subrepo_name
-$repo = "$owner/$repoName"
-$branch = $env:subrepo_branch
+$repo = “$owner/$repoName”
+$branch = $env:subrepo_branch</p>
 
-if ($branch -eq $null) {
-    $branch = "default"
-    write-host "will use default branch '$branch'"
+<p>if ($branch -eq $null) {
+	$branch = “default”
+    write-host “will use default branch ‘$branch’”
 } else {
-    write-host "will use configured branch '$branch'"
-}
+    write-host “will use configured branch ‘$branch’”
+}</p>
 
-write-host "testing if ssh is available"
-get-command "ssh.exe" -ErrorAction Stop
+<p>write-host “testing if ssh is available”
+get-command “ssh.exe” -ErrorAction Stop</p>
 
-# use ssh.exe available on PATH
-'[ui]' | out-file  "$env:USERPROFILE/mercurial.ini" -Append -Encoding utf8
-'ssh=ssh.exe' | out-file "$env:USERPROFILE/mercurial.ini" -Append -Encoding utf8
+<h1 id="use-sshexe-available-on-path">use ssh.exe available on PATH</h1>
+<p>‘[ui]’ | out-file  “$env:USERPROFILE/mercurial.ini” -Append -Encoding utf8
+‘ssh=ssh.exe’ | out-file “$env:USERPROFILE/mercurial.ini” -Append -Encoding utf8</p>
 
-# add Bitbucket host fingerprint to known_hosts
-$bbhostkey = @"
+<h1 id="add-bitbucket-host-fingerprint-to-knownhosts">add Bitbucket host fingerprint to known_hosts</h1>
+<p>$bbhostkey = @”
 bitbucket.org,104.192.143.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
-"@
+“@</p>
 
-write-host "adding bitbucket to known_hosts"
-$bbhostkey | out-file "$env:USERPROFILE/.ssh/known_hosts" -Append -Encoding utf8
+<p>write-host “adding bitbucket to known_hosts”
+$bbhostkey | out-file “$env:USERPROFILE/.ssh/known_hosts” -Append -Encoding utf8</p>
 
-# add private key to id_rsa
-write-host "adding private key"
-$fileContent = "-----BEGIN RSA PRIVATE KEY-----`n"
-$fileContent += $env:priv_key.Replace(' ', "`n")
-$fileContent += "`n-----END RSA PRIVATE KEY-----`n"
-Set-Content "$env:USERPROFILE\.ssh\id_rsa" $fileContent
+<h1 id="add-private-key-to-idrsa">add private key to id_rsa</h1>
+<p>write-host “adding private key”
+$fileContent = “—–BEGIN RSA PRIVATE KEY—–<code class="highlighter-rouge">n"
+$fileContent += $env:priv_key.Replace(' ', "</code>n”)
+$fileContent += “<code class="highlighter-rouge">n-----END RSA PRIVATE KEY-----</code>n”
+Set-Content “$env:USERPROFILE.ssh\id_rsa” $fileContent</p>
 
-#clone private repo
-write-host "cloning"
-hg clone --verbose ssh://hg@bitbucket.org/$repo $repoName
+<h1 id="clone-private-repo">clone private repo</h1>
+<p>write-host “cloning”
+hg clone –verbose ssh://hg@bitbucket.org/$repo $repoName</p>
 
-#update private repo to specified branch, get status
-try {
-    pushd
+<h1 id="update-private-repo-to-specified-branch-get-status">update private repo to specified branch, get status</h1>
+<p>try {
+    pushd</p>
 
-    cd $repoName
+<div class="highlighter-rouge"><pre class="highlight"><code>cd $repoName
 
-    write-host "updating to $branch"
-    hg update $branch 
+write-host "updating to $branch"
+hg update $branch 
 
-    hg summary
+hg summary
 
 
-    $message = hg log -r . -T "{desc}"
-    $id = hg log -r . -T "{node}"
-    $ts = hg log -r . -T "{date|isodate}"
-    $ts = [DateTime]::Parse($ts)
-    $authorname = hg log -r . -T "{author|person}"
-    $authormail = hg log -r . -T "{author|email}"
-    $br = hg log -r . -T "{branch}"
+$message = hg log -r . -T "{desc}"
+$id = hg log -r . -T "{node}"
+$ts = hg log -r . -T "{date|isodate}"
+$ts = [DateTime]::Parse($ts)
+$authorname = hg log -r . -T "{author|person}"
+$authormail = hg log -r . -T "{author|email}"
+$br = hg log -r . -T "{branch}"
 
-    write-host "id:$id branch:$br msg:$message date:$ts author:$authorname mail:$authormail"
-} 
-finally {
-    popd
-}
-</code></pre></div>
-<p>This is everything you need to get this working. Commit <code>appveyor.yml</code> and <code>clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
+write-host "id:$id branch:$br msg:$message date:$ts author:$authorname mail:$authormail" }  finally {
+popd } ```
+</code></pre>
+</div>
+
+<p>This is everything you need to get this working. Commit <code class="highlighter-rouge">appveyor.yml</code> and <code class="highlighter-rouge">clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
 
 <h2 id="changing-appveyor-build-info">Changing Appveyor build info</h2>
 
-<p>You may also want to include some information about  the status of your subrepo in Appveyor&#39;s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code>clone-subrepo.ps1</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">if ($env:appveyor -ne $null) {
-    Update-AppveyorBuild -message "subrepo [$br](https://bitbucket.org/$repo/commits/$id): $message" -Committed $ts -CommitterName $authorname -CommitterEmail $authorEmail 
-    #-CommitId $id
+<p>You may also want to include some information about  the status of your subrepo in Appveyor’s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code class="highlighter-rouge">clone-subrepo.ps1</code>:</p>
+
+<p><code class="highlighter-rouge">
+if ($env:appveyor -ne $null) {
+	Update-AppveyorBuild -message "subrepo [$br](https://bitbucket.org/$repo/commits/$id): $message" -Committed $ts -CommitterName $authorname -CommitterEmail $authorEmail 
+	#-CommitId $id
 } 
-</code></pre></div>
+</code></p>
+
 <h2 id="a-real-subrepo">A real subrepo</h2>
 
-<p>Until now, the inner repository was not a real <a href="https://www.mercurial-scm.org/wiki/Subrepository">hg subrepo</a> - the script determined it&#39;s location and branch. Let&#39;s now make it a subrepo and tie the exact revision to parent repository revision.</p>
+<p>Until now, the inner repository was not a real <a href="https://www.mercurial-scm.org/wiki/Subrepository">hg subrepo</a> - the script determined it’s location and branch. Let’s now make it a subrepo and tie the exact revision to parent repository revision.</p>
 
-<p>Add <code>.hgsub</code> to your public repo (this will be the &quot;parent&quot;):</p>
-<div class="highlight"><pre><code class="language-" data-lang="">top-secret = top-secret
+<p>Add <code class="highlighter-rouge">.hgsub</code> to your public repo (this will be the “parent”):</p>
 
-[subpaths]
-https://bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
-ssh://hg@bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
-</code></pre></div>
-<p><code>top-secret</code> is the name of the private repository. 
-The <code>subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it&#39;s name after slash, so we need to remap: <code>https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code>ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
+<p>```
+top-secret = top-secret</p>
 
-<p>After commiting, do a clean update: </p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg update -C
-</code></pre></div>
-<p>This will create <code>top-secret</code> directory and set it&#39;s default url to <code>ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code>top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo. </p>
+<p>[subpaths]
+https://bitbucket.org/([^/]<em>)/([^/]</em>)/([^/]<em>)$ = ssh://hg@bitbucket.org/\1/\3
+ssh://hg@bitbucket.org/([^/]</em>)/([^/]<em>)/([^/]</em>)$ = ssh://hg@bitbucket.org/\1/\3
+```</p>
 
-<p>One last thing we need to do is to move <code>id_rsa</code> initalization directly to <code>appveyor.yml</code>, to <code>init</code> phase. The reason for this is the chicken-egg problem we now have: <code>install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code>appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code>init</code> script without the repo being checked out.</p>
+<p><code class="highlighter-rouge">top-secret</code> is the name of the private repository. 
+The <code class="highlighter-rouge">subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it’s name after slash, so we need to remap: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code class="highlighter-rouge">ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
 
-<p><code>appveyor.yml</code> will now look like this (note that we don&#39;t need <code>subrepo_*</code> ariables any more):</p>
-<div class="highlight"><pre><code class="language-" data-lang="">environment:
+<p>After commiting, do a clean update:</p>
+
+<p><code class="highlighter-rouge">
+&gt; hg update -C
+</code></p>
+
+<p>This will create <code class="highlighter-rouge">top-secret</code> directory and set it’s default url to <code class="highlighter-rouge">ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code class="highlighter-rouge">top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo.</p>
+
+<p>One last thing we need to do is to move <code class="highlighter-rouge">id_rsa</code> initalization directly to <code class="highlighter-rouge">appveyor.yml</code>, to <code class="highlighter-rouge">init</code> phase. The reason for this is the chicken-egg problem we now have: <code class="highlighter-rouge">install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code class="highlighter-rouge">appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code class="highlighter-rouge">init</code> script without the repo being checked out.</p>
+
+<p><code class="highlighter-rouge">appveyor.yml</code> will now look like this (note that we don’t need <code class="highlighter-rouge">subrepo_*</code> ariables any more):</p>
+
+<p><code class="highlighter-rouge">
+environment:
   priv_key:
     secure: &lt;encryped-value&gt;
 init: 
@@ -616,7 +734,8 @@ init:
   - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
   - ps: $fileContent += "`n-----END RSA PRIVATE KEY-----`n"
   - ps: Set-Content c:\users\appveyor\.ssh\id_rsa $fileContent
-</code></pre></div>
+</code></p>
+
 <p>Finally, commit changes and push the parent repo. Appveyor should now detect a new commit and start building. Hopefully, everything will be built smoothly.</p>
 
 <p>Hapy hacking!</p>
@@ -624,9 +743,9 @@ init:
 <h2 id="notes-and-resources">Notes and resources</h2>
 
 <ul>
-<li>You can find sample repo at: <code>https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
-<li>The build status at <a href="https://ci.appveyor.com/project/qbikez/appveyor-wrapper">https://ci.appveyor.com/project/qbikez/appveyor-wrapper</a>. </li>
-<li>The private repo is at <code>https://bitbucket.org/heavymetaldev/top-secret</code>, but you won&#39;t find it there, because, well.. it&#39;s private :)</li>
+  <li>You can find sample repo at: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
+  <li>The build status at https://ci.appveyor.com/project/qbikez/appveyor-wrapper.</li>
+  <li>The private repo is at <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/top-secret</code>, but you won’t find it there, because, well.. it’s private :)</li>
 </ul>
 
 	  ]]></description>
@@ -639,7 +758,7 @@ init:
 	  <pubDate>2016-08-24T00:00:00+02:00</pubDate>
 	  <guid>//powershell-on-linux</guid>
 	  <description><![CDATA[
-	     <p>A few days ago <a href="https://azure.microsoft.com/en-us/blog/powershell-is-open-sourced-and-is-available-on-linux/">Microsoft has announced Powershell on Linux</a>. You can get it from <a href="https://github.com/powershell/powershell">Powershell&#39;s Github</a>. This is a big announcement and perfectly complies with “Microsoft loves Linux” philosophy.</p>
+	     <p>A few days ago <a href="https://azure.microsoft.com/en-us/blog/powershell-is-open-sourced-and-is-available-on-linux/">Microsoft has announced Powershell on Linux</a>. You can get it from <a href="https://github.com/powershell/powershell">Powershell’s Github</a>. This is a big announcement and perfectly complies with “Microsoft loves Linux” philosophy.</p>
 
 <p>The installation (here, for Ubuntu 14.04) is pretty straightforward:</p>
 
@@ -663,10 +782,10 @@ hello world!</code></pre></figure>
 <h1 id="what-works">What works?</h1>
 
 <blockquote>
-<p>Note: This is PowerShell <code>v6.0.0-alpha.9</code>, so you can expect &quot;Alpha-quality&quot; and &quot;things won&#39;t work&quot;.</p>
+  <p>Note: This is PowerShell <code class="highlighter-rouge">v6.0.0-alpha.9</code>, so you can expect “Alpha-quality” and “things won’t work”.</p>
 </blockquote>
 
-<p>Let&#39;s take a look at available preinstalled modules:</p>
+<p>Let’s take a look at available preinstalled modules:</p>
 
 <figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Get-Module -ListAvailable
 
@@ -701,28 +820,28 @@ Script     1.2        PSReadLine                          <span class="o">{</spa
 <figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="gp">$ </span>sudo <span class="nb">cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
 <span class="gp">$ </span>sudo <span class="nb">wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
 
-<p>And voila, <code>Install-Module</code> works.</p>
+<p>And voila, <code class="highlighter-rouge">Install-Module</code> works.</p>
 
 <blockquote>
-<p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code>Import-Module PathUtils</code> will work, whereas <code>Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
+  <p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code class="highlighter-rouge">Import-Module PathUtils</code> will work, whereas <code class="highlighter-rouge">Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
 </blockquote>
 
 <h1 id="open-source-everything">Open source everything</h1>
 
-<p>As excited as I am with running PowerShell scripts on Linux, I think that the most important thing here is the open sourcing of PowerShell. If Microsoft didn&#39;t prepare a version that runs on Linux, some other geek would probably do it (sooner or later).
-But the fact that I can now look into PS source code and see, how they do things, then tinker around and send a pull request is really amazing. I&#39;ve been using Asp.Net Core for some time now and the possibility to just look at the source code proven invaluable a cuple of times.</p>
+<p>As excited as I am with running PowerShell scripts on Linux, I think that the most important thing here is the open sourcing of PowerShell. If Microsoft didn’t prepare a version that runs on Linux, some other geek would probably do it (sooner or later).
+But the fact that I can now look into PS source code and see, how they do things, then tinker around and send a pull request is really amazing. I’ve been using Asp.Net Core for some time now and the possibility to just look at the source code proven invaluable a cuple of times.</p>
 
 <blockquote>
-<p>It&#39;s worth mentioning that there already exists an open source effort to reimplement Powershell: <a href="https://github.com/Pash-Project/Pash">Pash</a>. I wonder what will become of it now.</p>
+  <p>It’s worth mentioning that there already exists an open source effort to reimplement Powershell: <a href="https://github.com/Pash-Project/Pash">Pash</a>. I wonder what will become of it now.</p>
 </blockquote>
 
 <h1 id="possiblities">Possiblities</h1>
 
-<p>Taking aside the excitement of &quot;because I can&quot;, what are real benefits of using PowerShell on Linux, when you have Bash available at your disposal? </p>
+<p>Taking aside the excitement of “because I can”, what are real benefits of using PowerShell on Linux, when you have Bash available at your disposal?</p>
 
 <h2 id="build-scripts">Build scripts</h2>
 
-<p>Up until now, cross platform .Net projects, like Dotnet CLI itself, used separate build scripts for Linux and Windows. Now, it will be possible to write one PowerShell script to rule them all. I personally have tons of build/deploy/other DevOps scripts written in PowerShell (and DSC). I would rather gladly test them on Linux and work around the rough edges than rewrite all that stuff in Bash (and maintain two separate versions). </p>
+<p>Up until now, cross platform .Net projects, like Dotnet CLI itself, used separate build scripts for Linux and Windows. Now, it will be possible to write one PowerShell script to rule them all. I personally have tons of build/deploy/other DevOps scripts written in PowerShell (and DSC). I would rather gladly test them on Linux and work around the rough edges than rewrite all that stuff in Bash (and maintain two separate versions).</p>
 
 <p>If you think of dockerizing your services, the possibility to use the same scripts on Linux and Windows should make the transition much smoother.</p>
 
@@ -731,7 +850,7 @@ But the fact that I can now look into PS source code and see, how they do things
 <p>If you are managing multiple Linux and Windows machines, you will be able to use the same shell and scripts for all of them. Also, as MS announcement says:</p>
 
 <blockquote>
-<p>We will be extending the PowerShell Remoting Protocol (MS-PSRP) to use OpenSSH as a native transport. Users will have the option to use SSH or WINRM as a transport.</p>
+  <p>We will be extending the PowerShell Remoting Protocol (MS-PSRP) to use OpenSSH as a native transport. Users will have the option to use SSH or WINRM as a transport.</p>
 </blockquote>
 
 <p>So, you will be able to do something like:</p>
@@ -740,9 +859,9 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>And that will work over SSH, without the struggle of setting up WINRM.</p>
 
-<h1 id="whats-next">What&#39;s next</h1>
+<h1 id="whats-next">What’s next</h1>
 
-<p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it&#39;s &quot;production ready&quot;. But I&#39;m not waiting until then - I&#39;m starting to make my scripts and modules &quot;cross-platform&quot; with PowerShell 6 right now.</p>
+<p>As of today, there are <a href="https://github.com/powershell/powershell/issues">322 issues</a>, so Powershell 6 has some way to go before it’s “production ready”. But I’m not waiting until then - I’m starting to make my scripts and modules “cross-platform” with PowerShell 6 right now.</p>
 
 	  ]]></description>
 	</item>
@@ -754,105 +873,115 @@ But the fact that I can now look into PS source code and see, how they do things
 	  <pubDate>2016-08-07T00:00:00+02:00</pubDate>
 	  <guid>//iis-web-deploy-permissions</guid>
 	  <description><![CDATA[
-	     <p>Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company&#39;s infrastructure. </p>
+	     <p>Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company’s infrastructure.</p>
 
 <p>Why do I like it:</p>
 
 <ul>
-<li>It can be used from Visual Studio as well as from commandline - this means developers can publish right from VS, without any additional tools, but also script and commandline freaks like me can automate it</li>
-<li>It only syncs modified files - if you have low bandwith, deploy often or have large sites - it beats other methods that require full package to be deployed every time</li>
-<li>Active Directory can be used for authentication</li>
+  <li>It can be used from Visual Studio as well as from commandline - this means developers can publish right from VS, without any additional tools, but also script and commandline freaks like me can automate it</li>
+  <li>It only syncs modified files - if you have low bandwith, deploy often or have large sites - it beats other methods that require full package to be deployed every time</li>
+  <li>Active Directory can be used for authentication</li>
 </ul>
 
 <h1 id="allowing-a-user-to-publish-with-web-deploy">Allowing a user to publish with Web Deploy</h1>
 
-<p>The goal is to allow non-administrator user to publish IIS website using Web Deploy. </p>
+<p>The goal is to allow non-administrator user to publish IIS website using Web Deploy.</p>
 
 <p>There are two parts here:</p>
 
 <ol>
-<li>Add IIS Manager permissions</li>
-<li>Add File System permissions</li>
+  <li>Add IIS Manager permissions</li>
+  <li>Add File System permissions</li>
 </ol>
 
-<p>If you like clicking through it, see <a href="https://www.iis.net/learn/install/installing-publishing-technologies/installing-and-configuring-web-deploy-on-iis-80-or-later">Installing and Configuring Web Deploy on IIS 8.0 or Later</a>. Remember that you should also add appropriate permissions to site&#39;s physical folder or else the user won&#39;t be able to publish any files. </p>
+<p>If you like clicking through it, see <a href="https://www.iis.net/learn/install/installing-publishing-technologies/installing-and-configuring-web-deploy-on-iis-80-or-later">Installing and Configuring Web Deploy on IIS 8.0 or Later</a>. Remember that you should also add appropriate permissions to site’s physical folder or else the user won’t be able to publish any files.</p>
 
-<p>If you want to do it from commandline, here&#39;s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+<p>If you want to do it from commandline, here’s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
+
+<p><code class="highlighter-rouge">
+[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
 [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
-</code></pre></div>
-<p>Then, use <code>Set-Acl</code> to set physical path permissions. Here&#39;s a full script:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&lt;#
-.SYNOPSIS
+</code></p>
 
-adds ACL rules to specific path. it's a helper wrapper for Set-ACL from Microsoft.PowerShell.Security   
+<p>Then, use <code class="highlighter-rouge">Set-Acl</code> to set physical path permissions. Here’s a full script:</p>
 
-#&gt;
+<p>```
+&lt;#
+.SYNOPSIS</p>
 
-function set-acl2(
+<p>adds ACL rules to specific path. it’s a helper wrapper for Set-ACL from Microsoft.PowerShell.Security</p>
+
+<h1 id="section">&gt;</h1>
+
+<p>function set-acl2(
 [Parameter(Mandatory=$true)] $path, 
 [Parameter(Mandatory=$true)] [System.Security.AccessControl.FileSystemRights] $rights, 
 [Parameter(Mandatory=$true)] $user,
 [System.Security.AccessControl.InheritanceFlags]  $InheritanceFlag = [System.Security.AccessControl.InheritanceFlags]::None,
  [System.Security.AccessControl.PropagationFlags] $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None
 ) {
-    $colRights = $rights
+    $colRights = $rights</p>
 
-    $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
+<div class="highlighter-rouge"><pre class="highlight"><code>$PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
 
-    $objType =[System.Security.AccessControl.AccessControlType]::Allow 
+$objType =[System.Security.AccessControl.AccessControlType]::Allow 
 
-    $objUser = New-Object System.Security.Principal.NTAccount($user) 
+$objUser = New-Object System.Security.Principal.NTAccount($user) 
 
-    $objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
+$objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
 
-    $objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
-    $objACL.AddAccessRule($objACE) 
+$objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
+$objACL.AddAccessRule($objACE) 
 
-    Set-ACL -Path $path -AclObject $objACL
-}
+Set-ACL -Path $path -AclObject $objACL }
+</code></pre>
+</div>
 
-&lt;#
+<p>&lt;#</p>
 
-.SYNOPSIS 
-Allows the specified user to publish website through webdeploy
+<p>.SYNOPSIS 
+Allows the specified user to publish website through webdeploy</p>
 
-#&gt;    
-function allow-iiswebdeploy {
+<h1 id="section-1">&gt;</h1>
+<p>function allow-iiswebdeploy {
 param(
     [Parameter(Mandatory=$true)] $username,
     [Parameter(Mandatory=$true)] $site,
     [Switch][bool] $isgroup
-)
+)</p>
 
-    ipmo webadministration
+<div class="highlighter-rouge"><pre class="highlight"><code>ipmo webadministration
 
 
-    $iissite = get-item "iis:\sites\$site" -ErrorAction Stop
+$iissite = get-item "iis:\sites\$site" -ErrorAction Stop
 
-    if ($iissite -eq $null) { throw "site '$site' not found" }
+if ($iissite -eq $null) { throw "site '$site' not found" }
 
-    # add  IIS Manager Users and Permissions
-    # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
+# add  IIS Manager Users and Permissions
+# from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
 
-    [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
+[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
 
-    # grant file system permissions!
+# grant file system permissions!
 
-    $dir = $iissite.physicalPath
+$dir = $iissite.physicalPath
 
-    set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit 
-}
-</code></pre></div>
+set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit  } ```
+</code></pre>
+</div>
+
 <p>Just call:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
-</code></pre></div>
-<p>And that&#39;s it! Note that site&#39;s physical path is obtained directly from IIS.</p>
+
+<p><code class="highlighter-rouge">
+PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
+</code></p>
+
+<p>And that’s it! Note that site’s physical path is obtained directly from IIS.</p>
 
 <h1 id="resources">Resources</h1>
 
-<p><a href="https://www.iis.net/learn/publish/using-web-deploy/web-deploy-powershell-cmdlets">https://www.iis.net/learn/publish/using-web-deploy/web-deploy-powershell-cmdlets</a></p>
+<p>https://www.iis.net/learn/publish/using-web-deploy/web-deploy-powershell-cmdlets</p>
 
 	  ]]></description>
 	</item>
@@ -864,24 +993,24 @@ param(
 	  <pubDate>2016-07-30T12:18:00+02:00</pubDate>
 	  <guid>//dnx-to-dotnet-migration</guid>
 	  <description><![CDATA[
-	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it&#39;s time to move &quot;old&quot; <code>dnx</code> projects forward and switch to <code>dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
+	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
 
-<p><a href="http://www.smashinglists.com/top-10-barney-stinson-quotes/"><img src="assets/images/new-is-always-better.gif" alt="New is always better"></a></p>
+<p><a href="http://www.smashinglists.com/top-10-barney-stinson-quotes/"><img src="assets/images/new-is-always-better.gif" alt="New is always better" /></a></p>
 
 <p>There is a pretty good official <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration gude</a>, but if you want some more detailed explanation, read on.</p>
 
-<h2 id="whats-new">What&#39;s new?</h2>
+<h2 id="whats-new">What’s new?</h2>
 
-<p>The first change you will immediately notice are the commandline tools. <code>Dnu</code> and <code>dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code>dotnet</code></a> command. <code>Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code>dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code>dnvm use</code> - you have to specify the desired version in <code>global.json</code> file.</p>
+<p>The first change you will immediately notice are the commandline tools. <code class="highlighter-rouge">Dnu</code> and <code class="highlighter-rouge">dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code class="highlighter-rouge">dotnet</code></a> command. <code class="highlighter-rouge">Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code class="highlighter-rouge">dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code class="highlighter-rouge">dnvm use</code> - you have to specify the desired version in <code class="highlighter-rouge">global.json</code> file.</p>
 
 <h2 id="how-stable-is-stable">How stable is <em>stable</em>?</h2>
 
-<p>Versioning of .Net Core (the framework) and versioning of commandline tools (SDK) are two different stories now. As .Net Core by itself is RTM, CLI tools are still in preview. </p>
+<p>Versioning of .Net Core (the framework) and versioning of commandline tools (SDK) are two different stories now. As .Net Core by itself is RTM, CLI tools are still in preview.</p>
 
 <p>But you cannot compile anything without the toolchain, right? Right.. and once you manage to compile and run your code against .Net Core RTM, then it should be stable from there and can be safely deployed on a server.</p>
 
 <blockquote>
-<p>It&#39;s also worth noting that <a href="https://blogs.msdn.microsoft.com/webdev/2016/06/27/announcing-asp-net-core-1-0/">ASP.NET Core 1.0</a> and <a href="https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/">Entity Framework Core 1.0</a> have also been released - so you&#39;re not left with a stable core framework and unstable libraries.</p>
+  <p>It’s also worth noting that <a href="https://blogs.msdn.microsoft.com/webdev/2016/06/27/announcing-asp-net-core-1-0/">ASP.NET Core 1.0</a> and <a href="https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/">Entity Framework Core 1.0</a> have also been released - so you’re not left with a stable core framework and unstable libraries.</p>
 </blockquote>
 
 <h2 id="what-has-changed">What has changed?</h2>
@@ -889,68 +1018,72 @@ param(
 <p>These are a few areas that have changed. Some of them will require more work to get them working, some will be just a matter of simple find-and-replace:</p>
 
 <ul>
-<li><em>project.json</em>
-
-<ul>
-<li>project dependencies</li>
-<li>commands =&gt; tools</li>
-<li>framework monikers</li>
-<li>some minor section reorganizations</li>
-</ul></li>
-<li>application loading and startup model</li>
-<li>ASP.NET Core - namespace, nuget versions and some APIs</li>
+  <li><em>project.json</em>
+    <ul>
+      <li>project dependencies</li>
+      <li>commands =&gt; tools</li>
+      <li>framework monikers</li>
+      <li>some minor section reorganizations</li>
+    </ul>
+  </li>
+  <li>application loading and startup model</li>
+  <li>ASP.NET Core - namespace, nuget versions and some APIs</li>
 </ul>
 
-<h3 id="project-json-file"><em>Project.json</em> file</h3>
+<h3 id="projectjson-file"><em>Project.json</em> file</h3>
 
 <h4 id="project-dependencies">Project dependencies</h4>
 
-<p>For me, the most important breaking change in <code>project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">"dependencies": {
+<p>For me, the most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
     "my.other.project": { "target": "project" }
 }
-</code></pre></div>
-<p>This will instruct <code>dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
+</code></pre>
+</div>
+
+<p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
 
 <blockquote>
-<p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code>src</code> directories listed in <code>global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code>&quot;target&quot;: &quot;package&quot;</code>. </p>
+  <p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="highlighter-rouge">src</code> directories listed in <code class="highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="highlighter-rouge">"target": "package"</code>.</p>
 </blockquote>
 
 <h4 id="commands-vs-tools">Commands vs. Tools</h4>
 
-<p><code>Commands</code> section has now been removed - instead there is <code>tools</code> section now, but it works quite differently than old commands. Since the <a href="#application-startup">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work. </p>
+<p><code class="highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#application-startup">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
 
-<p>There are basically 3 types of tools that can extend <code>dotnet</code> command.</p>
+<p>There are basically 3 types of tools that can extend <code class="highlighter-rouge">dotnet</code> command.</p>
 
-<p>The simplest one is <code>PATH</code> tools - every executable file named <code>dotnet-something</code> that is on <code>PATH</code> can be called as <code>dotnet something</code> - pretty much how git does it with <a href="http://thediscoblog.com/blog/2014/03/29/custom-git-commands-in-3-steps/">git subcommands</a>. All the invocation arguments are passed to that command, then it&#39;s up to the tool to do it&#39;s work.</p>
+<p>The simplest one is <code class="highlighter-rouge">PATH</code> tools - every executable file named <code class="highlighter-rouge">dotnet-something</code> that is on <code class="highlighter-rouge">PATH</code> can be called as <code class="highlighter-rouge">dotnet something</code> - pretty much how git does it with <a href="http://thediscoblog.com/blog/2014/03/29/custom-git-commands-in-3-steps/">git subcommands</a>. All the invocation arguments are passed to that command, then it’s up to the tool to do it’s work.</p>
 
-<p>Second type of tools are the project tools that are specified in <code>tools</code> section. These are portable console appications, which are restored with <code>dotnet restore</code> and have a separate dependency graph. They can only be run in project&#39;s context. This means that when run, they can easily locate project files and outputs and manipulate them. An example of such command is <code>dotnet-publish-iis</code>.</p>
+<p>Second type of tools are the project tools that are specified in <code class="highlighter-rouge">tools</code> section. These are portable console appications, which are restored with <code class="highlighter-rouge">dotnet restore</code> and have a separate dependency graph. They can only be run in project’s context. This means that when run, they can easily locate project files and outputs and manipulate them. An example of such command is <code class="highlighter-rouge">dotnet-publish-iis</code>.</p>
 
-<p>This brings us to the third type of tools - tools that need to load project output binaries, like for example <code>dotnet-test-xunit</code>. As mentioned before, tools have a separate dependency graph. But in order to load project output binaries, the tool dependency graph and project dependency graph have to be unified - otherwise all sort of bad things may happen. In order to achieve this, a simple trick is made - the package in <code>tools</code> section is just a <a href="https://github.com/dotnet/cli/tree/rel/1.0.0-preview2/TestAssets/TestPackages/dotnet-dependency-tool-invoker">simple invoker</a> that loads a specific library (named excatly as the command, e.g. <code>dotnet-test-xunit</code>) from project dependencies. Because you have to add this library to project&#39;s dependencies, it is part of the overall dependency graph and is able to load project binaries. If there are any conflicts between the tool library and your project, they will come out during <code>restore</code>. </p>
+<p>This brings us to the third type of tools - tools that need to load project output binaries, like for example <code class="highlighter-rouge">dotnet-test-xunit</code>. As mentioned before, tools have a separate dependency graph. But in order to load project output binaries, the tool dependency graph and project dependency graph have to be unified - otherwise all sort of bad things may happen. In order to achieve this, a simple trick is made - the package in <code class="highlighter-rouge">tools</code> section is just a <a href="https://github.com/dotnet/cli/tree/rel/1.0.0-preview2/TestAssets/TestPackages/dotnet-dependency-tool-invoker">simple invoker</a> that loads a specific library (named excatly as the command, e.g. <code class="highlighter-rouge">dotnet-test-xunit</code>) from project dependencies. Because you have to add this library to project’s dependencies, it is part of the overall dependency graph and is able to load project binaries. If there are any conflicts between the tool library and your project, they will come out during <code class="highlighter-rouge">restore</code>.</p>
 
-<p>This works a little bit like the old <code>commands</code> section, but you cannot embed any commandline arguments in <code>project.json</code> (this part of functionality seem to be gone for good).</p>
+<p>This works a little bit like the old <code class="highlighter-rouge">commands</code> section, but you cannot embed any commandline arguments in <code class="highlighter-rouge">project.json</code> (this part of functionality seem to be gone for good).</p>
 
 <h4 id="scripts">Scripts</h4>
 
-<p>The <code>scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <strong>&#39;precompile&#39;</strong> and <strong>&#39;postcompile&#39;</strong>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>&#39;postrestore&#39;</em> was really useful and I don&#39;t fully understand why they&#39;re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
+<p>The <code class="highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <strong>‘precompile’</strong> and <strong>‘postcompile’</strong>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
 
 <h4 id="section-renames">Section renames</h4>
 
-<p>Other changes in <code>project.json</code> are rather cosmetic: </p>
+<p>Other changes in <code class="highlighter-rouge">project.json</code> are rather cosmetic:</p>
 
 <ul>
-<li><code>compileOptions</code> were renamed to <code>buildOptions</code></li>
-<li>metadata properties, like <code>summary</code>, <code>releaseNotes</code>, <code>iconUrl</code> were moved to <code>packOptions</code> section</li>
+  <li><code class="highlighter-rouge">compileOptions</code> were renamed to <code class="highlighter-rouge">buildOptions</code></li>
+  <li>metadata properties, like <code class="highlighter-rouge">summary</code>, <code class="highlighter-rouge">releaseNotes</code>, <code class="highlighter-rouge">iconUrl</code> were moved to <code class="highlighter-rouge">packOptions</code> section</li>
 </ul>
 
 <p>The renames are not breaking  (at least not yet) - you will just get a warning that a specific entry is deprecated and you should use the new one instead.</p>
 
 <h4 id="frameworks">Frameworks</h4>
 
-<p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code>dnx451</code> should be renamed to <code>net451</code>. In practice, <code>dnx451</code> still works just fine. <code>dnxcore50</code> should become <code>netcoreapp1.0</code> and must add a dependency to <code>Microsoft.NETCore.App</code> package.</p>
+<p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code class="highlighter-rouge">dnx451</code> should be renamed to <code class="highlighter-rouge">net451</code>. In practice, <code class="highlighter-rouge">dnx451</code> still works just fine. <code class="highlighter-rouge">dnxcore50</code> should become <code class="highlighter-rouge">netcoreapp1.0</code> and must add a dependency to <code class="highlighter-rouge">Microsoft.NETCore.App</code> package.</p>
 
-<p>A framework declaration in <em>project.json</em> may also include <code>imports</code> section:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">"frameworks": {
+<p>A framework declaration in <em>project.json</em> may also include <code class="highlighter-rouge">imports</code> section:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>"frameworks": {
   "netcoreapp1.0": { 
     "imports": [ 
         "dnxcore50",
@@ -958,55 +1091,73 @@ param(
       ] 
     }
 }
-</code></pre></div>
-<p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it&#39;s telling the package manager: <em>&quot;If you don&#39;t find a package version targeting <code>netcoreapp1.0</code> or other compatible framework, I wan&#39;t you to install a version that targets one of the imported frameworks&quot;</em>.</p>
+</code></pre>
+</div>
+
+<p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it’s telling the package manager: <em>“If you don’t find a package version targeting <code class="highlighter-rouge">netcoreapp1.0</code> or other compatible framework, I wan’t you to install a version that targets one of the imported frameworks”</em>.</p>
 
 <h3 id="tests">Tests</h3>
 
-<p>Unit testing seems to be the area that has the most moving pieces. It is depends strongly on how dotnet runs applications. It seems like with every preview of <code>dotnet</code> tool, a matching <code>xunit</code> runner is released. And it&#39;s really easy to get confused. Fortunately, xunit team keeps <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">xunit docs</a> up to date.</p>
+<p>Unit testing seems to be the area that has the most moving pieces. It is depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner is released. And it’s really easy to get confused. Fortunately, xunit team keeps <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">xunit docs</a> up to date.</p>
 
 <p>There are 2 things you have to do to configure a unit test project:</p>
 
 <ol>
-<li><p>Reference xunit and the test tool in project dependencies, like this:</p>
+  <li>
+    <p>Reference xunit and the test tool in project dependencies, like this:</p>
 
-<p>&quot;dependencies&quot;: {
-     &quot;xunit&quot;: &quot;2.1.0&quot;,<br>
-     &quot;dotnet-test-xunit&quot;: &quot;1.0.0-rc2-192208-24&quot;
-   }</p>
+    <div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
+  "xunit": "2.1.0",        
+  "dotnet-test-xunit": "1.0.0-rc2-192208-24"
+}
+</code></pre>
+    </div>
 
-<p>This will include testing tool in your dependency chain.</p></li>
-<li><p>Set <code>testRunner</code> property in <em>project.json</em>:</p>
+    <p>This will include testing tool in your dependency chain.</p>
+  </li>
+  <li>
+    <p>Set <code class="highlighter-rouge">testRunner</code> property in <em>project.json</em>:</p>
 
-<p>&quot;testRunner&quot;: &quot;xunit&quot;</p></li>
+    <div class="highlighter-rouge"><pre class="highlight"><code>"testRunner": "xunit"
+</code></pre>
+    </div>
+  </li>
 </ol>
 
-<p>That&#39;s it. If you now run <code>dotnet test</code>, dotnet will know it should invoke <code>dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code>dotnet new</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet new -t xunittest
-</code></pre></div>
+<p>That’s it. If you now run <code class="highlighter-rouge">dotnet test</code>, dotnet will know it should invoke <code class="highlighter-rouge">dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code class="highlighter-rouge">dotnet new</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new -t xunittest
+</code></pre>
+</div>
+
 <blockquote>
-<p>If you want to know more about <code>dotnet new</code>, there&#39;s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code>dotnet new</code></a> by Scott Hanselman.</p>
+  <p>If you want to know more about <code class="highlighter-rouge">dotnet new</code>, there’s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code class="highlighter-rouge">dotnet new</code></a> by Scott Hanselman.</p>
 </blockquote>
 
-<p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code>dotnet test</code> will run tests for all of them.</p>
+<p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
 
-<h2 id="application-startup">Application startup <a id="application-startup"></a></h2>
+<h2 id="application-startup-a-idapplication-startupa">Application startup <a id="application-startup"></a></h2>
 
-<p><code>RC1</code> supported two launch modes:</p>
+<p><code class="highlighter-rouge">RC1</code> supported two launch modes:</p>
 
 <ul>
-<li><code>&quot;emitEntryPoint&quot;:true</code> - the application is compiled to an <code>.exe</code>, and has to have a static <code>Main</code> method. This hasn&#39;t change.</li>
-<li><p><code>&quot;emitEntryPoint&quot;:false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code>project.json</code>, like this:</p>
+  <li><code class="highlighter-rouge">"emitEntryPoint":true</code> - the application is compiled to an <code class="highlighter-rouge">.exe</code>, and has to have a static <code class="highlighter-rouge">Main</code> method. This hasn’t change.</li>
+  <li>
+    <p><code class="highlighter-rouge">"emitEntryPoint":false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code class="highlighter-rouge">project.json</code>, like this:</p>
 
-<p>&quot;commands&quot;: { &quot;run&quot;: &quot;My.Project.Name&quot; }</p></li>
+    <div class="highlighter-rouge"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
+</code></pre>
+    </div>
+
+    <p>In this mode, the loading process was similiar to how Asp.Net <code class="highlighter-rouge">Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code class="highlighter-rouge">Main</code> method (non-static), create the containing class instance and inject dependencies into it’s constructor, then run <code class="highlighter-rouge">Main</code>. This was very convienient, because you had access to things like <code class="highlighter-rouge">IApplicationEnvironment</code> or <code class="highlighter-rouge">IServiceProvider</code>. This also meant that additional work had to be done by <code class="highlighter-rouge">dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of “magic” too.</p>
+  </li>
 </ul>
 
-<p>In this mode, the loading process was similiar to how Asp.Net <code>Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code>Main</code> method (non-static), create the containing class instance and inject dependencies into it&#39;s constructor, then run <code>Main</code>. This was very convienient, because you had access to things like <code>IApplicationEnvironment</code> or <code>IServiceProvider</code>. This also meant that additional work had to be done by <code>dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of &quot;magic&quot; too. </p>
+<p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code class="highlighter-rouge">IServiceProvider</code> is defined in <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won’t. That was a problem for <code class="highlighter-rouge">dnx</code> - versions of you’re dependencies and <code class="highlighter-rouge">dnx</code> version had to match (you couldn’t have <code class="highlighter-rouge">beta5</code> dependencies and use <code class="highlighter-rouge">dnx</code> <code class="highlighter-rouge">v.1.0.0-beta4</code>).</p>
 
-<p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code>IServiceProvider</code> is defined in <code>Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code>Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won&#39;t. That was a problem for <code>dnx</code> - versions of you&#39;re dependencies and <code>dnx</code> version had to match (you couldn&#39;t have <code>beta5</code> dependencies and use <code>dnx</code> <code>v.1.0.0-beta4</code>).</p>
+<p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
 
-<p>Because <code>dotnet</code> is aimed to be more universal, this mode is now gone. We&#39;re back to the &quot;raw&quot; <code>static void Main</code>. So is the automatic <code>Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">public static void Main(string[] args)
+<div class="highlighter-rouge"><pre class="highlight"><code>public static void Main(string[] args)
 {
     var host = new WebHostBuilder()
         .UseKestrel()
@@ -1016,76 +1167,82 @@ param(
 
     host.Run();
 }
-</code></pre></div>
-<p>Now, the <code>WebHostBuilder</code> is responsible for creating instance of <code>IApplicationEnvironment</code>, etc. and passing these dependencies to <code>Startup</code> class. So the <code>Startup</code> class does not have to change, the only change is in the <code>Main</code> method. </p>
+</code></pre>
+</div>
 
-<p>Some of these services that were provided in <code>dnx</code> has moved to other places, like <code>IApplicationEnvironment</code>:
-<a href="https://github.com/dotnet/cli/issues/216">https://github.com/dotnet/cli/issues/216</a>, <a href="https://github.com/aspnet/Announcements/issues/171">https://github.com/aspnet/Announcements/issues/171</a>, <a href="https://github.com/aspnet/PlatformAbstractions/issues/37">https://github.com/aspnet/PlatformAbstractions/issues/37</a>. Most of them, including <code>ApplicationBasePath</code> can now be accessed by a static field: <code>Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application</code>. That&#39;s it for &quot;dependency injection as a first class citizen&quot; (at least for barebone console apps) and we&#39;re back to static classes.</p>
+<p>Now, the <code class="highlighter-rouge">WebHostBuilder</code> is responsible for creating instance of <code class="highlighter-rouge">IApplicationEnvironment</code>, etc. and passing these dependencies to <code class="highlighter-rouge">Startup</code> class. So the <code class="highlighter-rouge">Startup</code> class does not have to change, the only change is in the <code class="highlighter-rouge">Main</code> method.</p>
+
+<p>Some of these services that were provided in <code class="highlighter-rouge">dnx</code> has moved to other places, like <code class="highlighter-rouge">IApplicationEnvironment</code>:
+https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcements/issues/171, https://github.com/aspnet/PlatformAbstractions/issues/37. Most of them, including <code class="highlighter-rouge">ApplicationBasePath</code> can now be accessed by a static field: <code class="highlighter-rouge">Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application</code>. That’s it for “dependency injection as a first class citizen” (at least for barebone console apps) and we’re back to static classes.</p>
 
 <h2 id="migration-process">Migration process</h2>
 
-<p>In the following section I will break down the process of migration from RC1 to RTM, along with some explanation of changes and problems you might encounter. If you wan&#39;t a more step-by-step approach, see Shawn Wildermuth&#39;s <a href="https://wildermuth.com/2016/05/17/Converting-an-ASP-NET-Core-RC1-Project-to-RC2">Converting an ASP.NET Core RC1 Project to RC2</a> (RC2 <a href="https://docs.asp.net/en/latest/migration/rc2-to-rtm.html">does not differ much</a> from RTM) and the <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Official migration guide</a>.</p>
+<p>In the following section I will break down the process of migration from RC1 to RTM, along with some explanation of changes and problems you might encounter. If you wan’t a more step-by-step approach, see Shawn Wildermuth’s <a href="https://wildermuth.com/2016/05/17/Converting-an-ASP-NET-Core-RC1-Project-to-RC2">Converting an ASP.NET Core RC1 Project to RC2</a> (RC2 <a href="https://docs.asp.net/en/latest/migration/rc2-to-rtm.html">does not differ much</a> from RTM) and the <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Official migration guide</a>.</p>
 
 <h2 id="using-dotnet-with-old-projects">Using dotnet with old projects</h2>
 
-<p>As mentioned before, the tooling/SDK is now completely separate from Core Framework libraries. This also means that you&#39;re dependencie versions does no longer have to match tooling version (previously, you weren&#39;t able to have a dependency on, say, <code>-beta8</code> libraries and compile with <code>-rc1</code> <em>dnu</em>). The consequence is that you can still depend on older <code>-rc1</code> libraries and use new <code>dotnet</code> commands. This gives you a little more flexibility in the migration process.</p>
+<p>As mentioned before, the tooling/SDK is now completely separate from Core Framework libraries. This also means that you’re dependencie versions does no longer have to match tooling version (previously, you weren’t able to have a dependency on, say, <code class="highlighter-rouge">-beta8</code> libraries and compile with <code class="highlighter-rouge">-rc1</code> <em>dnu</em>). The consequence is that you can still depend on older <code class="highlighter-rouge">-rc1</code> libraries and use new <code class="highlighter-rouge">dotnet</code> commands. This gives you a little more flexibility in the migration process.</p>
 
-<p>Let&#39;s get down to business and see, how does the migration process go. The experience can vary depending on how complicated is your project and how much (if any) dependencies does it have on .Net Core libraries. </p>
+<p>Let’s get down to business and see, how does the migration process go. The experience can vary depending on how complicated is your project and how much (if any) dependencies does it have on .Net Core libraries.</p>
 
-<p>We&#39;ll break it down into three types of projects:</p>
+<p>We’ll break it down into three types of projects:</p>
 
 <ol>
-<li>A simple library project that has no other project dependencies </li>
-<li>A console application</li>
-<li>Aspnet MVC application with some project dependencies</li>
-<li>Tests</li>
+  <li>A simple library project that has no other project dependencies</li>
+  <li>A console application</li>
+  <li>Aspnet MVC application with some project dependencies</li>
+  <li>Tests</li>
 </ol>
 
-<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
+<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451-a-namelibrary-appa">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
 
-<p>This is the simplest case - no dependencies on other projects, only nugets, no <code>dnxcore</code>, just good old .Net Framework.</p>
+<p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
 
-<p>Surprisingly (or maybe not), <code>dotnet restore</code> and <code>dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code>bin</code> folder. </p>
+<p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code class="highlighter-rouge">bin</code> folder.</p>
 
-<h3 id="a-console-app">A console app <a name="console-app"></a></h3>
+<h3 id="a-console-app-a-nameconsole-appa">A console app <a name="console-app"></a></h3>
 
-<p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code>emitEntryPoint</code></a>. In that case, you have to add a static <code>Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
+<p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code class="highlighter-rouge">emitEntryPoint</code></a>. In that case, you have to add a static <code class="highlighter-rouge">Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
 
-<h3 id="asp-net-mvc-application">ASP.NET MVC application <a name="mvc-app"></a></h3>
+<h3 id="aspnet-mvc-application-a-namemvc-appa">ASP.NET MVC application <a name="mvc-app"></a></h3>
 
 <p>A full ASP.NET MVC application will require some more work. Follow these steps:</p>
 
 <ol>
-<li>In <em>project.json</em> <code>dependendcies</code> section, make these renames:
+  <li>In <em>project.json</em> <code class="highlighter-rouge">dependendcies</code> section, make these renames:
+    <ul>
+      <li>AspNetCore namespace: <code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li>AspNet versions: <code class="highlighter-rouge">1.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
+      <li>MVC versions: <code class="highlighter-rouge">6.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
+      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+    </ul>
 
-<ul>
-<li>AspNetCore namespace: <code>Microsoft.AspNet.*</code> =&gt; <code>Microsoft.AspNetCore.*</code></li>
-<li>AspNet versions: <code>1.0.0-rc1*</code> =&gt; <code>1.0.0</code></li>
-<li>MVC versions: <code>6.0.0-rc1*</code> =&gt; <code>1.0.0</code></li>
-<li><code>Microsoft.Framework.*</code> =&gt; <code>Microsoft.Extensions.*</code></li>
-</ul></li>
+    <p>Some of the versions or namespaces may actually be incorrect. If there’s just an issue, just try referencing the newest one (preferrably stable). Continue to fix dependencies until <code class="highlighter-rouge">dotnet restore</code> suceeds.</p>
+  </li>
+  <li>Get rid of <em>project.json</em> <code class="highlighter-rouge">commands</code> section.</li>
+  <li>In code, rename namespaces:
+    <ul>
+      <li><code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+    </ul>
+  </li>
+  <li>Try doing <code class="highlighter-rouge">dotnet build</code> and fix the remaining compilation errors.</li>
+  <li>In <em>project.json</em> set <code class="highlighter-rouge">buildOptions:emitEntryPoint</code> to <code class="highlighter-rouge">true</code> and add <a href="#aspnet-main">static <code class="highlighter-rouge">Main</code> method</a> or fix the existing one.</li>
+  <li>In <em>projectJson</em>, set <a href="https://github.com/aspnet/cli-samples/issues/19"><code class="highlighter-rouge">buildOptions:preserveCompilationContext</code></a> to <code class="highlighter-rouge">true</code> - this is required for Razor views compilation.</li>
+  <li>If the project compiles, try running it. There will probably be some minor problems in views, but they should’n be hard to fix.</li>
 </ol>
 
-<p>Some of the versions or namespaces may actually be incorrect. If there&#39;s just an issue, just try referencing the newest one (preferrably stable). Continue to fix dependencies until <code>dotnet restore</code> suceeds.
-2. Get rid of <em>project.json</em> <code>commands</code> section.
-3. In code, rename namespaces:
-   * <code>Microsoft.AspNet.*</code> =&gt; <code>Microsoft.AspNetCore.*</code>
-   * <code>Microsoft.Framework.*</code> =&gt; <code>Microsoft.Extensions.*</code>
-4. Try doing <code>dotnet build</code> and fix the remaining compilation errors.
-5. In <em>project.json</em> set <code>buildOptions:emitEntryPoint</code> to <code>true</code> and add <a href="#aspnet-main">static <code>Main</code> method</a> or fix the existing one.
-6. In <em>projectJson</em>, set <a href="https://github.com/aspnet/cli-samples/issues/19"><code>buildOptions:preserveCompilationContext</code></a> to <code>true</code> - this is required for Razor views compilation.
-7. If the project compiles, try running it. There will probably be some minor problems in views, but they should&#39;n be hard to fix. </p>
+<p>If you encounter strange errors with loading dependency assemblies or anything that seems like <code class="highlighter-rouge">rc1</code> leftover, try <a href="#hunt-down-rc1">Hunting down rc1 references</a>.</p>
 
-<p>If you encounter strange errors with loading dependency assemblies or anything that seems like <code>rc1</code> leftover, try <a href="#hunt-down-rc1">Hunting down rc1 references</a>.</p>
+<h3 id="tests-1">Tests</h3>
 
-<h3 id="tests">Tests</h3>
-
-<p>Unit testing seems to be the most moving part of the whole thing. It is a part of tooling and depends strongly on how dotnet runs applications. It seems like with every preview of <code>dotnet</code> tool, a matching <code>xunit</code> runner has to be released. And it&#39;s really easy to get confused. Fortunately, xunit team keeps the docs up to date: <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">https://xunit.github.io/docs/getting-started-dotnet-core.html</a>.</p>
+<p>Unit testing seems to be the most moving part of the whole thing. It is a part of tooling and depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner has to be released. And it’s really easy to get confused. Fortunately, xunit team keeps the docs up to date: https://xunit.github.io/docs/getting-started-dotnet-core.html.</p>
 
 <h4 id="targeting-desktop-net">Targeting desktop .NET</h4>
 
 <p>The .NET CLI runner is capable of running tests which target desktop .NET (minimum version 4.5.1), in addition to .NET Core. To target desktop .NET, use this frameworks section instead:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"frameworks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"net451"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1094,33 +1251,39 @@ param(
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div>
+</span></code></pre>
+</div>
+
 <p>You can target both net4xx and netcoreapp simply by adding both frameworks together in your project.json file. When you run dotnet test with multiple framework entries, the system will run tests with <strong>all</strong> the frameworks, one after another.</p>
 
-<h2 id="hunt-down-old-references">Hunt down old references <a id="hunt-down-rc1"></a></h2>
+<h2 id="hunt-down-old-references-a-idhunt-down-rc1a">Hunt down old references <a id="hunt-down-rc1"></a></h2>
 
-<p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code>-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It&#39;s a json, and it&#39;s a big one - I don&#39;t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code>-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
+<p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
 
 <h2 id="net-core-on-server">.Net Core on server</h2>
 
-<p>If you want to run your app on IIS, there is a <em>&quot;windows (server hosting)&quot;</em> position on the <a href="https://www.microsoft.com/net/download#winserverhost">.Net Core download</a> page. This will install .Net Core and the <strong>ASP.NET Core Module for IIS</strong>, which is a <a href="https://github.com/aspnet/Announcements/issues/164">replacement for the old <code>HttpPaltformHandler</code></a> (and which I&#39;m waiting to see being <a href="https://github.com/aspnet/IISIntegration/issues/105#issuecomment-205082952">open sourced</a>).</p>
+<p>If you want to run your app on IIS, there is a <em>“windows (server hosting)”</em> position on the <a href="https://www.microsoft.com/net/download#winserverhost">.Net Core download</a> page. This will install .Net Core and the <strong>ASP.NET Core Module for IIS</strong>, which is a <a href="https://github.com/aspnet/Announcements/issues/164">replacement for the old <code class="highlighter-rouge">HttpPaltformHandler</code></a> (and which I’m waiting to see being <a href="https://github.com/aspnet/IISIntegration/issues/105#issuecomment-205082952">open sourced</a>).</p>
 
 <h3 id="publishing-to-iis">Publishing to IIS</h3>
 
-<p>There is a new tool: , which adds <code>dotnet-publish-iis</code> command. As promising as it may seem, it doesn&#39;t handle IIS deployment (i.e. with MSDeploy). What it does is just add or modify <em>web.config</em> file to inclide <em>Asp.Net Core Module for IIS</em> with the right parameters. The deployment part you have to handle yourself, but Visual Studio will make it easy for you.</p>
+<p>There is a new tool: , which adds <code class="highlighter-rouge">dotnet-publish-iis</code> command. As promising as it may seem, it doesn’t handle IIS deployment (i.e. with MSDeploy). What it does is just add or modify <em>web.config</em> file to inclide <em>Asp.Net Core Module for IIS</em> with the right parameters. The deployment part you have to handle yourself, but Visual Studio will make it easy for you.</p>
 
 <h3 id="server-mode-garbage-collection">Server-mode Garbage Collection</h3>
 
 <p>When targeting full .Net Framework, if you want <a href="https://msdn.microsoft.com/en-us/library/cc165011(v=office.11).aspx">server garbage collection</a>, you have to <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html#server-garbage-collection-gc">enable it</a> in  <em>project.json</em> or <em>app.config</em>:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"runtimeOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"configProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nt">"System.GC.Server"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code>runtimeOptions</code></a>.</p>
+</span></code></pre>
+</div>
+
+<p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="highlighter-rouge">runtimeOptions</code></a>.</p>
+
 
 	  ]]></description>
 	</item>
@@ -1132,23 +1295,30 @@ param(
 	  <pubDate>2016-06-28T00:00:00+02:00</pubDate>
 	  <guid>//net-core-1-0-released</guid>
 	  <description><![CDATA[
-	     <p>This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! <a href="http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx">.Net Core 1.0 is finally released</a>. </p>
+	     <p>This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! <a href="http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx">.Net Core 1.0 is finally released</a>.</p>
 
-<p>I suppose now I should migrate my rc1 projects to final version, since it&#39;s stable now...</p>
+<p>I suppose now I should migrate my rc1 projects to final version, since it’s stable now…</p>
 
 <h1 id="installation">Installation</h1>
 
-<p>If you don&#39;t mind installers, just go to <a href="http://dot.net">dot.net</a> and download the <a href="https://go.microsoft.com/fwlink/?LinkID=809122">.Net Core SDK Windows Installer</a>.</p>
+<p>If you don’t mind installers, just go to <a href="http://dot.net">dot.net</a> and download the <a href="https://go.microsoft.com/fwlink/?LinkID=809122">.Net Core SDK Windows Installer</a>.</p>
 
-<p>Otherwise, if you&#39;re a command-line freak, use the <code>dotnet-install.ps1</code> script (from PowerShell commandline):</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
-</code></pre></div>
-<p>You don&#39;t even need elevated access - by default <code>dotnet</code> will install in <code>%LOCALAPPDATA%\Microsoft\dotnet</code>. The install script also takes optional arguments, such as the required version of dotnet SDK, install location, and so on. If you want to fiddle with these options, just save it locally:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
+<p>Otherwise, if you’re a command-line freak, use the <code class="highlighter-rouge">dotnet-install.ps1</code> script (from PowerShell commandline):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
+</code></pre>
+</div>
+
+<p>You don’t even need elevated access - by default <code class="highlighter-rouge">dotnet</code> will install in <code class="highlighter-rouge">%LOCALAPPDATA%\Microsoft\dotnet</code>. The install script also takes optional arguments, such as the required version of dotnet SDK, install location, and so on. If you want to fiddle with these options, just save it locally:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
 &gt;  get-help .\dotnet-install.ps1 -Detailed
-</code></pre></div>
-<p>Let&#39;s verify <code>dotnet</code> installation:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet --info
+</code></pre>
+</div>
+
+<p>Let’s verify <code class="highlighter-rouge">dotnet</code> installation:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet --info
 .NET Command Line Tools (1.0.0-preview2-003121)
 
 Product Information:
@@ -1160,7 +1330,9 @@ OS Name:     Windows
 OS Version:  10.0.10586
 OS Platform: Windows
 RID:         win10-x64
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>Cool, now we can get to work.</p>
 
 <h3 id="net-core-vs-net-core-sdk">.Net Core vs .Net Core SDK</h3>
@@ -1168,14 +1340,15 @@ RID:         win10-x64
 <p>If you head to <a href="https://www.microsoft.com/net/download">Downloads</a> on dot.net site, you will notice there are two separate components, that are versioned separately:</p>
 
 <ul>
-<li>.NET Core = Run apps with .NET Core runtime</li>
-<li>.NET Core SDK = Develop apps with .NET Core and the SDK+CLI (Software Development Kit/Command Line Interface) tools</li>
+  <li>.NET Core = Run apps with .NET Core runtime</li>
+  <li>.NET Core SDK = Develop apps with .NET Core and the SDK+CLI (Software Development Kit/Command Line Interface) tools</li>
 </ul>
 
-<p>This may seem confusing, but think of it this way: <code>.Net Core</code> is like another version of .Net Framework. You need it in order to run applications that target <code>.Net Core</code> (like on the server). <code>.Net Core SDK</code> contains <code>.Net Core</code> plus additional (CLI tooling)[<a href="https://github.com/dotnet/cli">https://github.com/dotnet/cli</a>] - so you can actually develop and compile apps (like on your dev machine). </p>
+<p>This may seem confusing, but think of it this way: <code class="highlighter-rouge">.Net Core</code> is like another version of .Net Framework. You need it in order to run applications that target <code class="highlighter-rouge">.Net Core</code> (like on the server). <code class="highlighter-rouge">.Net Core SDK</code> contains <code class="highlighter-rouge">.Net Core</code> plus additional (CLI tooling)[https://github.com/dotnet/cli] - so you can actually develop and compile apps (like on your dev machine).</p>
 
-<p>The <code>dotnet</code> command is still available after <code>.Net Core</code> installation (without the SDK), but if you run it:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet restore
+<p>The <code class="highlighter-rouge">dotnet</code> command is still available after <code class="highlighter-rouge">.Net Core</code> installation (without the SDK), but if you run it:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet restore
 Did you mean to run dotnet SDK commands? Please install dotnet SDK from:
  http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 
@@ -1202,11 +1375,14 @@ If you are debugging the Shared Framework Host, set 'COREHOST_TRACE' to '1' in y
 
 To get started on developing applications for .NET Core, install .NET SDK from:
 http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
-</code></pre></div>
-<h3 id="whats-in-the-box">What&#39;s in the box?</h3>
+</code></pre>
+</div>
 
-<p>The <code>dotnet</code> directory layout looks like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">dotnet
+<h3 id="whats-in-the-box">What’s in the box?</h3>
+
+<p>The <code class="highlighter-rouge">dotnet</code> directory layout looks like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dotnet
  \- shared/
      \- Microsoft.NETCore.App/
          \- 1.0.0/
@@ -1235,18 +1411,21 @@ http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
          \- 1.0.1
              \- hostfxr.dll
  \- dotnet.exe
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>Something to note:</p>
 
 <ul>
-<li>Each directory in <code>runtimes</code> contains only a few runtime-specific dlls.</li>
-<li><code>hostfxr.dll</code> - wonder what&#39;s this for...</li>
+  <li>Each directory in <code class="highlighter-rouge">runtimes</code> contains only a few runtime-specific dlls.</li>
+  <li><code class="highlighter-rouge">hostfxr.dll</code> - wonder what’s this for…</li>
 </ul>
 
 <h1 id="getting-started">Getting started</h1>
 
-<p><code>dotnet</code> command is announced to be the one which you will ever need to operate in .Net Core space. That is, including creating a new project:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet new
+<p><code class="highlighter-rouge">dotnet</code> command is announced to be the one which you will ever need to operate in .Net Core space. That is, including creating a new project:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new
 
 Welcome to .NET Core!
 ---------------------
@@ -1262,21 +1441,30 @@ A command is running to initially populate your local package cache, to improve 
 Decompressing 100% 5206 ms
 Expanding 100% 104448 ms
 Created new C# project in C:\src\dotnet\test.
-</code></pre></div>
-<p>That gives us a simple &quot;Hello world&quot; program and a <code>project.json</code> file. Just type <code>dotnet run</code> and...</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet run
+</code></pre>
+</div>
+
+<p>That gives us a simple “Hello world” program and a <code class="highlighter-rouge">project.json</code> file. Just type <code class="highlighter-rouge">dotnet run</code> and…</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet run
 The current project is not valid because of the following errors:
 C:\src\dotnet\test\project.lock.json(1,0): error NU1009: The expected lock file doesn't exist. Please run "dotnet restore" to generate a new lock file.
-</code></pre></div>
-<p>Ok, sure, <code>dotnet restore</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet restore    
+</code></pre>
+</div>
+
+<p>Ok, sure, <code class="highlighter-rouge">dotnet restore</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet restore    
 log  : Restoring packages for C:\src\dotnet\test\project.json...
 log  : Writing lock file to disk. Path: C:\src\dotnet\test\project.lock.json
 log  : C:\src\dotnet\test\project.json
 log  : Restore completed in 2118ms.
-</code></pre></div>
-<p>Fine, <code>project.lock.json</code> is created and up to date.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dotnet run
+</code></pre>
+</div>
+
+<p>Fine, <code class="highlighter-rouge">project.lock.json</code> is created and up to date.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet run
 Project test (.NETCoreApp,Version=v1.0) will be compiled because expected outputs are missing
 Compiling test for .NETCoreApp,Version=v1.0
 
@@ -1288,8 +1476,10 @@ Time elapsed 00:00:03.1092630
 
 
 Hello World!
-</code></pre></div>
-<p>Great! Now you can checkout all the resources at <a href="https://www.microsoft.com/net">https://www.microsoft.com/net</a> and start hacking. And I&#39;m gonna start migrating my RC1 projects to <code>.Net Core 1.0</code>...</p>
+</code></pre>
+</div>
+
+<p>Great! Now you can checkout all the resources at https://www.microsoft.com/net and start hacking. And I’m gonna start migrating my RC1 projects to <code class="highlighter-rouge">.Net Core 1.0</code>…</p>
 
 	  ]]></description>
 	</item>
@@ -1301,79 +1491,92 @@ Hello World!
 	  <pubDate>2015-12-03T00:00:00+01:00</pubDate>
 	  <guid>//aspnet5-reference-csproj</guid>
 	  <description><![CDATA[
-	     <p>If you want to share some common code between <code>aspnet5</code> and regular <code>csproj</code> projects, you basically have three options:
- * create a nuget from the common library and push it to a shared nuget repository<br>
- * use <code>dnu wrap</code> to wrap existing <code>csproj</code> into aspnet5 <code>project.json</code> 
- * maintain two versions of your shared project - a  <code>project.json</code> for aspnet5 and a <code>csproj</code> for regular .net</p>
+	     <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:
+ * create a nuget from the common library and push it to a shared nuget repository<br />
+ * use <code class="highlighter-rouge">dnu wrap</code> to wrap existing <code class="highlighter-rouge">csproj</code> into aspnet5 <code class="highlighter-rouge">project.json</code> 
+ * maintain two versions of your shared project - a  <code class="highlighter-rouge">project.json</code> for aspnet5 and a <code class="highlighter-rouge">csproj</code> for regular .net</p>
 
-<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.   </p>
+<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
 
 <h3 id="shared-nuget-package">Shared nuget package</h3>
 
 <p>Sharing a library through nuget has many benefits:
  * versioning
- * easy restoration (devs don&#39;t need to compile anything, just restore nuget packaget)
+ * easy restoration (devs don’t need to compile anything, just restore nuget packaget)
  * less projects to compile - shorter compilation time</p>
 
-<p>If the shared code doesn&#39;t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
+<p>If the shared code doesn’t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
 
-<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code>dnu wrap</code></h3>
+<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="highlighter-rouge">dnu wrap</code></h3>
 
-<p>There is one other way - <code>dnu</code> has a handy command named <code>wrap</code>. It wraps your existing <code>.csproj</code> files into <code>project.json</code> files that can be then referenced by aspnet5 projects.</p>
+<p>There is one other way - <code class="highlighter-rouge">dnu</code> has a handy command named <code class="highlighter-rouge">wrap</code>. It wraps your existing <code class="highlighter-rouge">.csproj</code> files into <code class="highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
 
 <p>You can do something like this:</p>
 
 <ol>
-<li><p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code>global.json</code></a> file in the some top-level directory that contains your projects. In the <code>projects</code> section, list directories that contain your source-code, for example:</p>
+  <li>
+    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
 
-<!-- language: lang-json -->
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
-    </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w"> </span><span class="s2">"test"</span><span class="w"> </span><span class="p">],</span><span class="w">
-    </span><span class="nt">"sdk"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0-rc1-final"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></li>
-<li><p>In the same directory that contains <code>global.json</code> execute <code>dnu wrap</code> for each existing <code>.csproj</code> project.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">dnu wrap src/my.project/my.project.csproj  
-</code></pre></div></li>
+    <p><!-- language: lang-json --></p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"src"</span><span class="p">,</span><span class="w"> </span><span class="s2">"test"</span><span class="w"> </span><span class="p">],</span><span class="w">
+     </span><span class="nt">"sdk"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0-rc1-final"</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre>
+    </div>
+  </li>
+  <li>
+    <p>In the same directory that contains <code class="highlighter-rouge">global.json</code> execute <code class="highlighter-rouge">dnu wrap</code> for each existing <code class="highlighter-rouge">.csproj</code> project.</p>
+  </li>
 </ol>
 
-<p>This should create a directory <code>wrap</code> containing <code>project.json</code> files that wrap <code>.csprojs</code>. A sample file  looks like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&lt;!-- language: lang-json --&gt;
+ 		dnu wrap src/my.project/my.project.csproj<br />
 
-    {
-        "version": "1.0.0-*",
-        "frameworks": {
-            "net45": {
-                "wrappedProject": "../../src/my.project/my.project.csproj",
-                "bin": {
-                    "assembly": "../../src/my.project/obj/{configuration}/my.project.dll",
-                    "pdb": "../../src/my.project/obj/{configuration}/my.project.pdb"
-                }
-            }
-        }
-    }
-</code></pre></div>
-<p>Note that <code>wrap</code> directory is also added to <code>projects</code> section in <code>global.json</code>.</p>
+<p>This should create a directory <code class="highlighter-rouge">wrap</code> containing <code class="highlighter-rouge">project.json</code> files that wrap <code class="highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
+
+	{
+		"version": "1.0.0-*",
+		"frameworks": {
+			"net45": {
+				"wrappedProject": "../../src/my.project/my.project.csproj",
+				"bin": {
+					"assembly": "../../src/my.project/obj/{configuration}/my.project.dll",
+					"pdb": "../../src/my.project/obj/{configuration}/my.project.pdb"
+				}
+			}
+		}
+	}
+</code></pre>
+</div>
+
+<p>Note that <code class="highlighter-rouge">wrap</code> directory is also added to <code class="highlighter-rouge">projects</code> section in <code class="highlighter-rouge">global.json</code>.</p>
 
 <ol>
-<li><p>In your solution, add a new aspnet project and add a reference to the wrapped project. Just add:</p>
+  <li>
+    <p>In your solution, add a new aspnet project and add a reference to the wrapped project. Just add:</p>
 
-<!-- language: lang-json -->
-<div class="highlight"><pre><code class="language-" data-lang="">"my.project": ""
-</code></pre></div></li>
+    <p><!-- language: lang-json --></p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> "my.project": ""
+</code></pre>
+    </div>
+  </li>
 </ol>
 
-<p>to <code>dependencies</code> section. Aspnet should automatically pick up <code>global.json</code> file in root directory, and will look for projects in all directories listed there, including <code>wrap</code> directory.</p>
+<p>to <code class="highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="highlighter-rouge">wrap</code> directory.</p>
 
 <ol>
-<li>Now you&#39;re good to go - you can use all classes from <code>my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code>csproj</code>.</li>
+  <li>Now you’re good to go - you can use all classes from <code class="highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="highlighter-rouge">csproj</code>.</li>
 </ol>
 
-<p>You can find a sample code here: <a href="https://github.com/heavymetaldev/aspnet5-wrap">https://github.com/heavymetaldev/aspnet5-wrap</a>. </p>
+<p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
 
-<p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.    </p>
+<p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.</p>
 
 	  ]]></description>
 	</item>
@@ -1385,8 +1588,10 @@ Hello World!
 	  <pubDate>2015-11-26T00:00:00+01:00</pubDate>
 	  <guid>//aspnet5-reflectiontypeloadexception</guid>
 	  <description><![CDATA[
-	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I&#39;m using aspnet version <code>1.0.0-beta8</code>) This is what happened:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dnx web
+	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnx web
 Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
    at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
    at System.Reflection.RuntimeAssembly.get_DefinedTypes()
@@ -1397,63 +1602,74 @@ Application startup exception: System.Reflection.ReflectionTypeLoadException: Un
 Hosting environment: Production
 Now listening on: http://localhost:5000
 Application started. Press Ctrl+C to shut down.
-</code></pre></div>
-<p>The exception occurs in <code>FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code>dnvm list</code>. Then I ran <code>dnu restore</code> to be sure:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dnu restore
+</code></p>
+
+<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
+
+<p><code class="highlighter-rouge">
+&gt; dnu restore
 (...)
 Done, without errors.
 Restore complete, 18523ms elapsed
-</code></pre></div>
-<p>I also tried removing all packages from <code>%UserProfile%\.dnx\packages</code> and restoring them again, but that didn&#39;t help either.</p>
+</code></p>
+
+<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
 
 <p>Try to compile then:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; dnu build
-(...)
+
+<p>```
+&gt; dnu build
+(…)
 Build succeeded.
     0 Warning(s)
-    0 Error(s)
+    0 Error(s)</p>
 
-Time elapsed 00:00:01.9781471
+<p>Time elapsed 00:00:01.9781471
 Total build time elapsed: 00:00:02.0094707
 Total projects built: 1
-</code></pre></div>
-<p>Seems ok to me. What the hell is causing the problem then? </p>
-
-<p>How can I debug this exception, when my code isn&#39;t even running yet? Turns out that  <code>dnx</code> has a little option called <code>--debug</code>. Let&#39;s try this:
 ```</p>
 
-<blockquote>
-<p>dnx --debug web
+<p>Seems ok to me. What the hell is causing the problem then?</p>
+
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:
+<code class="highlighter-rouge">
+&gt; dnx --debug web
 Process Id: 15396
 Waiting for the debugger to attach...
-```</p>
-</blockquote>
+</code></p>
 
-<p>Ok, Let&#39;s attach Visual studio and see what happens. In VS, do <code>Debug -&gt; Attach to Process</code>, then find <code>dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
-In the <code>dnx</code> console window you should now see:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">Debugger attached.
-</code></pre></div>
-<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code>Debug -&gt; Windows -&gt; Exception Settings</code> and make sure &quot;Common Language Runtime Exceptions&quot; is checked. (Remember to uncheck it after you&#39;re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
-Now, repeat the process - restart <code>dnx --debug web</code> and attach VS debugger to it.</p>
+<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
+In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
+
+<p><code class="highlighter-rouge">
+Debugger attached.
+</code></p>
+
+<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
+Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
 
 <p>And voila, we have our exception caught. What now? How to get details for this exception? 
-Click OK, then open a Watch window (<code>Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code>Name</code> column, type <code>$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
-If caught exception is of type <code>ReflectionTypeLoadException</code>, look for <code>LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
-In fact, you may have already caught the exception which is the real cause of error, even before <code>ReflectionTypeLoadException</code> is thrown.</p>
+Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
+If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
+In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
 
 <p>In my case the problem was:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
 
-Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
-</code></pre></div>
-<p>The compilation error came from a project that my main app was referencing. Why did <code>dnu build</code> succeed then? 
-It seems like <code>dnu</code> doesn&#39;t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
-I&#39;m sure there&#39;s a reason for such behavior, but I think there should be also a way to compile everything, something like <code>dnu build --recursive</code>, or running <code>dnu</code> at the root directory level. 
-Of corse, if you&#39;re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
-I currently don&#39;t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn&#39;t something like that be included &#39;out of the box&#39;? 
-If the runtime exception was at least a little bit more meaningfull - just <code>RoslynCompilationException</code> instead of cryptic <code>ReflectionTypeLoadException</code> - that would be enough. </p>
+<p>```
+Exception thrown: ‘Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException’ in Microsoft.Dnx.Compilation.CSharp.dll</p>
+
+<p>Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
+```</p>
+
+<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
+It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
+I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
+Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
+I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
+If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
 
 <p>I hope that will be fixed in next releases!</p>
+
 
 	  ]]></description>
 	</item>

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- [[! Page Meta ]] -->
-    <title>gimnazjum.ebooki.nowaera.pl</title>
+    <title>Heavy Metal Dev</title>
     <meta name="description" content="Heavy Metal Dev - Developer stories from the trenches." />
 
     <meta name="HandheldFriendly" content="True" />
@@ -31,7 +31,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
+    <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -74,7 +74,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 </head>
 
-<body class="home-template nav-closed">
+<body class="page-template nav-closed">
     
     
 
@@ -87,7 +87,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <nav class="main-nav nav-top topbar clearfix">
                 
-        <a class="icon-arrow-left blog-logo" href="/portfolio">Portfolio</a>
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
         
     </nav>
@@ -110,20 +110,83 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <header class="post-header">
          
-          <h1 class="post-title">gimnazjum.ebooki.nowaera.pl</h1>
+          <h1 class="post-title"></h1>
          
         </header>
+
         <section class="post-content">
-            <p><a href="gim.ebooki.nowaera.pl">gim.ebooki.nowaera.pl</a></p>
+            <h1 id="powershell-modules">Powershell modules</h1>
 
-<p>An online e-book reader for students’ books. Designed for scalability in the cloud.</p>
+<p>Some of my powershell modules.</p>
 
-<ul>
-<li>System Architecture</li>
-<li>Online EPUB reader (typescript)</li>
-<li>performance &amp; scaling</li>
-<li>infrastructure</li>
-</ul>
+<h3 id="publishmap">Publishmap</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-publishmap">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/publishmap">Powershell Gallery</a></p>
+
+<p>Processes Powershell hashmaps, enriching them with features like inheritance and variable substitution. Helps writing consice, readable configuraton files that can be easily consumed in Powershell.</p>
+
+<h3 id="pathutils">Pathutils</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-pathutils">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/pathutils">Powershell Gallery</a></p>
+
+<p>Provides some basic PATH manipulation helpers: add/remove entries to PATH, check if a command is available on PATH, etc.</p>
+
+<h3 id="cache">Cache</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Cache">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Cache">Powershell Gallery</a></p>
+
+<p>Facilitates caching data. Store data in local disk cache, safely store credentials, use in-memory cache to avoid costly file loading.</p>
+
+<h3 id="remoting">Remoting</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Remoting">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Remoting">Powershell Gallery</a></p>
+
+<p>Provides aliases for connecting with remote powershell and remote desktop. Supports configuration files for storing remote machines info.</p>
+
+<h3 id="require">Require</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Require">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Require">Powershell Gallery</a></p>
+
+<p>Module installation and loading in one simple command: <code class="highlighter-rouge">require Some-Module</code>.</p>
+
+<h3 id="newtonsoftjson">Newtonsoft.Json</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Newtonsoft.Json">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Newtonsoft.Json">Powershell Gallery</a></p>
+
+<p>A wrapper for <code class="highlighter-rouge">Newtonsoft.Json</code> library serialization.</p>
+
+<h3 id="beam">Beam</h3>
+
+<p class="project-info"><i class="fa fa-bitbucket" aria-hidden="true"></i><a href="https://bitbucket.org/qbik/ps-beam">Project site</a></p>
+
+<p>Automated .Net deployment with powershell.</p>
+
+<h3 id="csproj">Csproj</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-pathutils">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/pathutils">Powershell Gallery</a></p>
+
+<p>Manipulates csproj files.</p>
+
+<h3 id="process">Process</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/ps-csproj/tree/master/src/Process">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Process">Powershell Gallery</a></p>
+
+<p>Utils for invoking external executables.</p>
+
+<h3 id="nupkg">Nupkg</h3>
+
+<p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-csproj/tree/master/src/Nupkg">Project site</a>
+<i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Nupkg">Powershell Gallery</a></p>
+
+<p>Easily update, pack and push nugets.</p>
 
         </section>
 

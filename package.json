@@ -1,7 +1,11 @@
 {
   "name": "hmdev",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "preinstall": "bundle install",
+    "build": "bundle exec jekyll build -d _site",
+    "start": "bundle exec jekyll serve --drafts --port 4001 --incremental --livereload"
+  },
   "repository": {
     "type": "git",
     "url": "http://bitbucket.org/qbik/hmdev-jekyll"

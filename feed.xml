@@ -25,7 +25,8 @@
         
           <description>&lt;p&gt;Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
 Or maybe your repo contains too many (possibly unrelated) projects? 
-Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
+Or has grown so big that you can’t even clone it?&lt;/p&gt;
+
 </description>
         
         <pubDate>Sun, 22 Jan 2017 00:00:00 +0100</pubDate>
@@ -39,7 +40,8 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>Configuring mercurial keyring</title>
         
-          <description>&lt;p&gt;If you don&amp;#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline &lt;code&gt;hg&lt;/code&gt; does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in &lt;em&gt;mercurial.ini&lt;/em&gt; file. This is not the most secure way to do it, and mercurial will even warn you about that. &lt;/p&gt;
+          <description>&lt;p&gt;If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline &lt;code class=&quot;highlighter-rouge&quot;&gt;hg&lt;/code&gt; does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in &lt;em&gt;mercurial.ini&lt;/em&gt; file. This is not the most secure way to do it, and mercurial will even warn you about that.&lt;/p&gt;
+
 </description>
         
         <pubDate>Mon, 09 Jan 2017 00:00:00 +0100</pubDate>
@@ -53,7 +55,8 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>Build private mercurial subrepos on Appveyor</title>
         
-          <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It&amp;#39;s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.&lt;/p&gt;
+          <description>&lt;p&gt;Appveyor is a great CI service for Windows apps. It’s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.&lt;/p&gt;
+
 </description>
         
         <pubDate>Sun, 08 Jan 2017 00:00:00 +0100</pubDate>
@@ -80,7 +83,9 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>Adding Web Deploy permissions using PowerShell</title>
         
-          <description>&lt;p&gt;Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company&amp;#39;s infrastructure. &lt;/p&gt;
+          <description>&lt;p&gt;Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company’s infrastructure.&lt;/p&gt;
+
+&lt;p&gt;[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, “$site”, $false)&lt;/p&gt;
 </description>
         
         <pubDate>Sun, 07 Aug 2016 00:00:00 +0200</pubDate>
@@ -94,7 +99,8 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>Migrating Asp.Net 5 rc1 to Asp.Net Core 1.0.0</title>
         
-          <description>&lt;p&gt;Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it&amp;#39;s time to move &amp;quot;old&amp;quot; &lt;code&gt;dnx&lt;/code&gt; projects forward and switch to &lt;code&gt;dotnet&lt;/code&gt;? Because, as someone avesome said: &lt;em&gt;new is always better!&lt;/em&gt;&lt;/p&gt;
+          <description>&lt;p&gt;Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” &lt;code class=&quot;highlighter-rouge&quot;&gt;dnx&lt;/code&gt; projects forward and switch to &lt;code class=&quot;highlighter-rouge&quot;&gt;dotnet&lt;/code&gt;? Because, as someone avesome said: &lt;em&gt;new is always better!&lt;/em&gt;&lt;/p&gt;
+
 </description>
         
         <pubDate>Sat, 30 Jul 2016 12:18:00 +0200</pubDate>
@@ -108,7 +114,8 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>.Net Core 1.0 Released!</title>
         
-          <description>&lt;p&gt;This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! &lt;a href=&quot;http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx&quot;&gt;.Net Core 1.0 is finally released&lt;/a&gt;. &lt;/p&gt;
+          <description>&lt;p&gt;This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! &lt;a href=&quot;http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx&quot;&gt;.Net Core 1.0 is finally released&lt;/a&gt;.&lt;/p&gt;
+
 </description>
         
         <pubDate>Tue, 28 Jun 2016 00:00:00 +0200</pubDate>
@@ -122,12 +129,13 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>Sharing code between aspnet5 and &quot;old&quot; .net</title>
         
-          <description>&lt;p&gt;If you want to share some common code between &lt;code&gt;aspnet5&lt;/code&gt; and regular &lt;code&gt;csproj&lt;/code&gt; projects, you basically have three options:
- * create a nuget from the common library and push it to a shared nuget repository&lt;br&gt;
- * use &lt;code&gt;dnu wrap&lt;/code&gt; to wrap existing &lt;code&gt;csproj&lt;/code&gt; into aspnet5 &lt;code&gt;project.json&lt;/code&gt; 
- * maintain two versions of your shared project - a  &lt;code&gt;project.json&lt;/code&gt; for aspnet5 and a &lt;code&gt;csproj&lt;/code&gt; for regular .net&lt;/p&gt;
+          <description>&lt;p&gt;If you want to share some common code between &lt;code class=&quot;highlighter-rouge&quot;&gt;aspnet5&lt;/code&gt; and regular &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; projects, you basically have three options:
+ * create a nuget from the common library and push it to a shared nuget repository&lt;br /&gt;
+ * use &lt;code class=&quot;highlighter-rouge&quot;&gt;dnu wrap&lt;/code&gt; to wrap existing &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; into aspnet5 &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; 
+ * maintain two versions of your shared project - a  &lt;code class=&quot;highlighter-rouge&quot;&gt;project.json&lt;/code&gt; for aspnet5 and a &lt;code class=&quot;highlighter-rouge&quot;&gt;csproj&lt;/code&gt; for regular .net&lt;/p&gt;
 
-&lt;p&gt;The last option is the most error-prone and harder to maintain, so I will just ignore it.   &lt;/p&gt;
+&lt;p&gt;The last option is the most error-prone and harder to maintain, so I will just ignore it.&lt;/p&gt;
+
 </description>
         
         <pubDate>Thu, 03 Dec 2015 00:00:00 +0100</pubDate>
@@ -141,7 +149,8 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
       <item>
         <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
         
-          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I&amp;#39;m using aspnet version &lt;code&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
+          <description>&lt;p&gt;Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0-beta8&lt;/code&gt;) This is what happened:&lt;/p&gt;
+
 </description>
         
         <pubDate>Thu, 26 Nov 2015 00:00:00 +0100</pubDate>
@@ -156,6 +165,7 @@ Or has grown so big that you can&amp;#39;t even clone it? &lt;/p&gt;
         <title>Azure MIME mapping</title>
         
           <description>&lt;p&gt;It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.&lt;/p&gt;
+
 </description>
         
         <pubDate>Wed, 18 Nov 2015 00:00:00 +0100</pubDate>

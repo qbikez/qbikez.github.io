@@ -3,7 +3,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
    
-      <title>https://github.com/qbikez</title>
+      <title></title>
    
    <link>http://heavymetaldev.com</link>
    <description>Developer stories from the trenches.</description>
@@ -18,7 +18,7 @@
 	  <pubDate>2017-01-09T00:00:00+01:00</pubDate>
 	  <guid>//configuring-mercurial-keyring</guid>
 	  <description><![CDATA[
-	     <p>If you don&#39;t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code>hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that. </p>
+	     <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
 
 <h1 id="keyring">Keyring</h1>
 
@@ -26,51 +26,71 @@
 
 <h1 id="installing-keyring-on-windows">Installing keyring on Windows</h1>
 
-<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code>mercurial_keyring</code></a> says that installation &quot;in some cases (Windows…) requires more care&quot;. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
-What we will do is install <code>python2</code> from chocolatey, use <code>pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
+<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code class="highlighter-rouge">mercurial_keyring</code></a> says that installation “in some cases (Windows…) requires more care”. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
+What we will do is install <code class="highlighter-rouge">python2</code> from chocolatey, use <code class="highlighter-rouge">pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
 
 <ol>
-<li><p>If you don&#39;t have it already, install <code>python2</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; choco install -y python2
-&gt; refreshenv
-</code></pre></div>
-<blockquote>
-<p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
-</blockquote></li>
-<li><p>install <code>mercurial_keyring</code></p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; pip install --user mercurial_keyring
-</code></pre></div>
-<blockquote>
-<p>pip will handle installation of all dependencies, including <code>keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code>mercurial_extension_utils</code></a>, etc.</p>
-</blockquote></li>
-<li><p>Configure exension in <em>mercurial.ini</em>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[extensions]
-mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
-</code></pre></div></li>
+  <li>
+    <p>If you don’t have it already, install <code class="highlighter-rouge">python2</code>:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; choco install -y python2
+ &gt; refreshenv
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>install <code class="highlighter-rouge">mercurial_keyring</code></p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>pip will handle installation of all dependencies, including <code class="highlighter-rouge">keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code class="highlighter-rouge">mercurial_extension_utils</code></a>, etc.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Configure exension in <em>mercurial.ini</em>:</p>
+
+    <p><code class="highlighter-rouge">
+ [extensions]
+ mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
+</code></p>
+  </li>
 </ol>
 
 <h1 id="verify-it">Verify it</h1>
 
-<p>Let&#39;s try it out:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
+<p>Let’s try it out:</p>
+
+<p><code class="highlighter-rouge">
+&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
 keyring: username not specified in hgrc (or in url). Password will not be saved.
 http authorization required
 realm: Bitbucket.org HTTP
 url: https://bitbucket.org/heavymetaldev/top-secret
 user:
-</code></pre></div>
-<p>Note that <code>keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  <a href="https://qbik@bitbucket.org/heavymetaldev/top-secret">https://qbik@bitbucket.org/heavymetaldev/top-secret</a>) or configure in <code>mercurial.ini</code>:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">[auth]
+</code></p>
+
+<p>Note that <code class="highlighter-rouge">keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  https://qbik@bitbucket.org/heavymetaldev/top-secret) or configure in <code class="highlighter-rouge">mercurial.ini</code>:</p>
+
+<p>````
+[auth]
 bitbucket.org.prefix = bitbucket.org
 bitbucket.org.username = qbik
-</code></pre></div>
-<p>TortoiseHG does exactly that when you configure credentials there (with <code>mercurial_keyring</code> enabled).</p>
+```</p>
+
+<p>TortoiseHG does exactly that when you configure credentials there (with <code class="highlighter-rouge">mercurial_keyring</code> enabled).</p>
 
 <p>Now, you can safely store your credentials, not worrying about it leaking somewhere.</p>
 
 <h1 id="use-ssh">Use SSH</h1>
 
-<p>If you use a hostin service that provides SSH access (like bitbucket), you may also want to <a href="/appveyor-private-subrepos#cloning-hg-over-ssh-from-bitbucket">configure SSH private key</a> instead of storing usernamee and password.  </p>
+<p>If you use a hostin service that provides SSH access (like bitbucket), you may also want to <a href="/appveyor-private-subrepos#cloning-hg-over-ssh-from-bitbucket">configure SSH private key</a> instead of storing usernamee and password.</p>
 
 	  ]]></description>
 	</item>

@@ -22,75 +22,96 @@
 /* ==========================================================================
    0. Normalize.css v2.1.3 | MIT License | git.io/normalize | (minified)
    ========================================================================== */
+/* line 30 */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
 
+/* line 34 */
 audio, canvas, video {
   display: inline-block; }
 
+/* line 38 */
 audio:not([controls]) {
   display: none;
   height: 0; }
 
+/* line 43 */
 [hidden], template {
   display: none; }
 
+/* line 47 */
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%; }
 
+/* line 53 */
 body {
   margin: 0; }
 
+/* line 57 */
 a {
   background: transparent; }
+  /* line 59 */
   a:focus {
     outline: thin dotted; }
+  /* line 62 */
   a:active, a:hover {
     outline: 0; }
 
+/* line 67 */
 h1 {
   font-size: 2em;
   margin: 0.67em 0; }
 
+/* line 72 */
 abbr[title] {
   border-bottom: 1px dotted; }
 
+/* line 76 */
 b, strong {
   font-weight: 700; }
 
+/* line 80 */
 dfn {
   font-style: italic; }
 
+/* line 84 */
 hr {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 0; }
 
+/* line 90 */
 mark {
   background: #FF0;
   color: #000; }
 
+/* line 95 */
 code, kbd, pre, samp {
   font-family: monospace, serif;
   font-size: 1em; }
 
+/* line 100 */
 pre {
   white-space: pre-wrap; }
 
+/* line 104 */
 q {
   quotes: "\201C" "\201D" "\2018" "\2019"; }
 
+/* line 108 */
 small {
   font-size: 80%; }
 
+/* line 112 */
 sub {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline; }
 
+/* line 119 */
 sup {
   font-size: 75%;
   line-height: 0;
@@ -98,68 +119,86 @@ sup {
   vertical-align: baseline;
   top: -0.5em; }
 
+/* line 127 */
 sub {
   bottom: -0.25em; }
 
+/* line 131 */
 img {
   border: 0; }
 
+/* line 135 */
 svg:not(:root) {
   overflow: hidden; }
 
+/* line 139 */
 figure {
   margin: 0; }
 
+/* line 143 */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
+/* line 149 */
 legend {
   border: 0;
   padding: 0; }
 
+/* line 154 */
 button, input, select, textarea {
   font-family: inherit;
   font-size: 100%;
   margin: 0; }
 
+/* line 160 */
 button, input {
   line-height: normal; }
 
+/* line 164 */
 button, select {
   text-transform: none; }
 
+/* line 168 */
 button, html input[type="button"] {
   -webkit-appearance: button;
   cursor: pointer; }
 
+/* line 174 */
 input[type="reset"], input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer; }
 
+/* line 180 */
 button[disabled], html input[disabled] {
   cursor: default; }
 
+/* line 185 */
 input[type="checkbox"], input[type="radio"] {
   box-sizing: border-box;
   padding: 0; }
+/* line 189 */
 input[type="search"] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   box-sizing: content-box; }
+  /* line 194 */
   input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
     -webkit-appearance: none; }
 
+/* line 200 */
 button::-moz-focus-inner, input::-moz-focus-inner {
   border: 0;
   padding: 0; }
 
+/* line 205 */
 textarea {
   overflow: auto;
   vertical-align: top; }
 
+/* line 210 */
 table {
   border-collapse: collapse;
   border-spacing: 0; }
@@ -175,6 +214,7 @@ table {
   font-weight: normal;
   font-style: normal; }
 /* Apply these base styles to all icons */
+/* line 231 */
 [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "casper-icons", "Open Sans", sans-serif;
   speak: none;
@@ -189,36 +229,46 @@ table {
 
 /* Each icon is created by inserting the correct character into the
    content of the :before pseudo element. Like a boss. */
+/* line 247 */
 .icon-ghost:before {
   content: "\f600"; }
 
+/* line 251 */
 .icon-feed:before {
   content: "\f601"; }
 
+/* line 255 */
 .icon-twitter:before {
   content: "\f602";
   font-size: 1.1em; }
 
+/* line 260 */
 .icon-google-plus:before {
   content: "\f603"; }
 
+/* line 264 */
 .icon-facebook:before {
   content: "\f604"; }
 
+/* line 268 */
 .icon-arrow-left:before {
   content: "\f605"; }
 
+/* line 272 */
 .icon-stats:before {
   content: "\f606"; }
 
+/* line 276 */
 .icon-location:before {
   content: "\f607";
   margin-left: -3px;
   /* Tracking fix */ }
 
+/* line 282 */
 .icon-link:before {
   content: "\f608"; }
 
+/* line 286 */
 .icon-menu:before {
   content: "\f609"; }
 
@@ -230,12 +280,14 @@ table {
 /* ==========================================================================
    2. General - Setting up some base styles
    ========================================================================== */
+/* line 300 */
 html {
   height: 100%;
   max-height: 100%;
   font-size: 62.5%;
   -webkit-tap-highlight-color: transparent; }
 
+/* line 307 */
 body {
   height: 100%;
   max-height: 100%;
@@ -250,9 +302,11 @@ body {
   -o-font-feature-settings: 'kern' 1;
   text-rendering: geometricPrecision; }
 
+/* line 322 */
 ::-moz-selection, ::selection {
   background: #D6EDFF; }
 
+/* line 326 */
 h1, h2, h3, h4, h5, h6 {
   font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
   -webkit-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
@@ -265,30 +319,38 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", sans-serif;
   text-rendering: geometricPrecision; }
 
+/* line 339 */
 h1 {
   font-size: 3.2rem;
   letter-spacing: -2px;
   text-indent: -3px; }
 
+/* line 345 */
 h2 {
   font-size: 2.8rem;
   letter-spacing: -1px; }
 
+/* line 350 */
 h3 {
   font-size: 2.4rem; }
 
+/* line 354 */
 h4 {
   font-size: 2.0rem; }
 
+/* line 358 */
 h5, h6 {
   font-size: 1.6rem; }
 
+/* line 362 */
 a {
   color: #4A4A4A;
   transition: color 0.3s ease; }
+  /* line 365 */
   a:hover {
     color: #111; }
 
+/* line 370 */
 p, ul, ol, dl {
   -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
   -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
@@ -296,21 +358,26 @@ p, ul, ol, dl {
   margin: 0 0 1.5em 0;
   text-rendering: geometricPrecision; }
 
+/* line 378 */
 ol, ul {
   padding-left: 3rem; }
 
+/* line 382 */
 ol ol {
   margin: 0 0 0.4em 0;
   padding-left: 2em; }
 
+/* line 388 */
 ul ul, ul ol {
   margin: 0 0 0.4em 0;
   padding-left: 2em; }
 
+/* line 394 */
 ol ul {
   margin: 0 0 0.4em 0;
   padding-left: 2em; }
 
+/* line 400 */
 dl dt {
   float: left;
   width: 180px;
@@ -321,15 +388,19 @@ dl dt {
   white-space: nowrap;
   font-weight: 700;
   margin-bottom: 1em; }
+/* line 411 */
 dl dd {
   margin-left: 200px;
   margin-bottom: 1em; }
 
+/* line 417 */
 li {
   margin: 0.4em 0; }
+  /* line 419 */
   li li {
     margin: 0; }
 
+/* line 424 */
 hr {
   display: block;
   height: 1px;
@@ -338,6 +409,7 @@ hr {
   margin: 3.2em 0;
   padding: 0; }
 
+/* line 433 */
 blockquote {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -345,24 +417,31 @@ blockquote {
   padding: 0 0 0 1.75em;
   border-left: #4A4A4A 0.4em solid;
   margin-left: 0; }
+  /* line 440 */
   blockquote p {
     margin: 0.8em 0;
     font-style: italic; }
+  /* line 444 */
   blockquote small {
     display: inline-block;
     margin: 0.8em 0 0.8em 1.5em;
     font-size: 0.9em;
     color: #CCC; }
+    /* line 449 */
     blockquote small:before {
       content: "\2014 \00A0"; }
+  /* line 453 */
   blockquote cite {
     font-weight: 700; }
+    /* line 455 */
     blockquote cite a {
       font-weight: normal; }
 
+/* line 461 */
 mark {
   background-color: #fdffb6; }
 
+/* line 465 */
 code, tt {
   padding: 1px 3px;
   font-family: Inconsolata, monospace, sans-serif;
@@ -372,6 +451,7 @@ code, tt {
   background: #F7FAFB;
   border-radius: 2px; }
 
+/* line 475 */
 pre {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -386,6 +466,7 @@ pre {
   background: #F7FAFB;
   border-radius: 3px;
   line-height: 1em; }
+  /* line 489 */
   pre code, pre tt {
     font-size: inherit;
     white-space: pre-wrap;
@@ -393,6 +474,7 @@ pre {
     border: none;
     padding: 0; }
 
+/* line 498 */
 kbd {
   display: inline-block;
   margin-bottom: 0.4em;
@@ -406,6 +488,7 @@ kbd {
   border-radius: 4px;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 0 #fff inset; }
 
+/* line 512 */
 table {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -413,36 +496,48 @@ table {
   width: 100%;
   max-width: 100%;
   background-color: transparent; }
+  /* line 519 */
   table th, table td {
     padding: 8px;
     line-height: 20px;
     text-align: left;
     vertical-align: top;
     border-top: #EFEFEF 1px solid; }
+  /* line 526 */
   table th {
     color: #000; }
+  /* line 530 */
   table caption + thead tr:first-child th, table caption + thead tr:first-child td {
     border-top: 0; }
+  /* line 535 */
   table colgroup + thead tr:first-child th, table colgroup + thead tr:first-child td {
     border-top: 0; }
+  /* line 540 */
   table thead:first-child tr:first-child th, table thead:first-child tr:first-child td {
     border-top: 0; }
+  /* line 544 */
   table tbody + tbody {
     border-top: #EFEFEF 2px solid; }
+  /* line 547 */
   table table table {
     background-color: #FFF; }
+  /* line 551 */
   table tbody > tr:nth-child(odd) > td, table tbody > tr:nth-child(odd) > th {
     background-color: #F6F6F6; }
+  /* line 556 */
   table.plain tbody > tr:nth-child(odd) > td, table.plain tbody > tr:nth-child(odd) > th {
     background: transparent; }
 
+/* line 562 */
 iframe {
   display: block;
   margin: 1.75em 0; }
 
+/* line 567 */
 .fluid-width-video-wrapper {
   display: block;
   margin: 1.75em 0; }
+  /* line 570 */
   .fluid-width-video-wrapper iframe {
     margin: 0; }
 
@@ -452,23 +547,28 @@ margin on the iframe, cause it breaks stuff. */
    3. Utilities - These things get used a lot
    ========================================================================== */
 /* Clears shit */
+/* line 584 */
 .clearfix {
   zoom: 1; }
+  /* line 585 */
   .clearfix:before {
     content: " ";
     display: table; }
+  /* line 589 */
   .clearfix:after {
     content: " ";
     display: table;
     clear: both; }
 
 /* Hides shit */
+/* line 599 */
 .hidden {
   text-indent: -9999px;
   visibility: hidden;
   display: none; }
 
 /* Creates a responsive wrapper that makes our content scale nicely */
+/* line 607 */
 .inner {
   position: relative;
   width: 80%;
@@ -476,11 +576,13 @@ margin on the iframe, cause it breaks stuff. */
   margin: 0 auto; }
 
 /* Centres vertically yo. (IE8+) */
+/* line 616 */
 .vertical {
   display: table-cell;
   vertical-align: middle; }
 
 /* Wraps the main content & footer */
+/* line 623 */
 .site-wrapper {
   position: relative;
   z-index: 10;
@@ -489,6 +591,7 @@ margin on the iframe, cause it breaks stuff. */
   -webkit-transition: -webkit-transform 0.5s ease;
   transition: transform 0.5s ease; }
 
+/* line 632 */
 body.nav-opened .site-wrapper {
   overflow-x: hidden;
   -webkit-transform: translate3D(-240px, 0, 0);
@@ -501,6 +604,7 @@ body.nav-opened .site-wrapper {
    4. General - The main styles for the the theme
    ========================================================================== */
 /* Big cover image on the home page */
+/* line 647 */
 .main-header {
   position: relative;
   display: table;
@@ -511,28 +615,34 @@ body.nav-opened .site-wrapper {
   background: #222 no-repeat center center;
   background-size: cover;
   overflow: hidden; }
+  /* line 657 */
   .main-header .inner {
     width: 80%; }
 
+/* line 662 */
 .main-nav {
   position: relative;
   padding: 35px 40px;
   margin: 0 0 30px 0; }
+  /* line 666 */
   .main-nav a {
     text-decoration: none;
     font-family: 'Open Sans', sans-serif; }
 
+/* line 672 */
 .no-cover .main-nav {
   position: relative;
   padding: 5px 40px;
   margin: 0 0 0 0;
   background: black;
   color: white; }
+  /* line 678 */
   .no-cover .main-nav a {
     text-decoration: none;
     font-family: 'Open Sans', sans-serif; }
 
 /* Navigation */
+/* line 687 */
 body.nav-opened .nav-cover {
   position: fixed;
   top: 0;
@@ -541,6 +651,7 @@ body.nav-opened .nav-cover {
   bottom: 0;
   z-index: 200; }
 
+/* line 696 */
 .nav {
   position: fixed;
   top: 0;
@@ -556,13 +667,16 @@ body.nav-opened .nav-cover {
   -webkit-transition: -webkit-transform 0.5s ease, opacity 0.3s ease 0.7s;
   transition: transform 0.5s ease, opacity 0.3s ease 0.7s; }
 
+/* line 712 */
 .nav-top {
   background: #111; }
 
+/* line 717 */
 body.nav-closed .nav {
   -webkit-transform: translate3D(97px, 0, 0);
   -ms-transform: translate3D(97px, 0, 0);
   transform: translate3D(97px, 0, 0); }
+/* line 722 */
 body.nav-opened .nav {
   opacity: 1;
   -webkit-transition: -webkit-transform 0.3s ease, opacity 0s ease 0s;
@@ -571,6 +685,7 @@ body.nav-opened .nav {
   -ms-transform: translate3D(0, 0, 0);
   transform: translate3D(0, 0, 0); }
 
+/* line 732 */
 .nav-title {
   position: absolute;
   top: 45px;
@@ -580,6 +695,7 @@ body.nav-opened .nav {
   text-transform: uppercase;
   color: #fff; }
 
+/* line 742 */
 .nav-close {
   position: absolute;
   top: 38px;
@@ -588,8 +704,10 @@ body.nav-opened .nav {
   height: 20px;
   padding: 0;
   font-size: 10px; }
+  /* line 750 */
   .nav-close:focus {
     outline: 0; }
+  /* line 753 */
   .nav-close:before, .nav-close:after {
     content: '';
     position: absolute;
@@ -600,23 +718,29 @@ body.nav-opened .nav {
     top: 15px;
     -webkit-transition: background 0.15s ease;
     transition: background 0.15s ease; }
+  /* line 764 */
   .nav-close:before {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg); }
+  /* line 769 */
   .nav-close:after {
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg); }
+  /* line 775 */
   .nav-close:hover:before, .nav-close:hover:after {
     background: white; }
 
+/* line 782 */
 .nav ul, .nav-top ul {
   padding: 90px 9% 5%;
   list-style: none;
   counter-reset: item; }
+/* line 787 */
 .nav li, .nav-top li {
   margin: 0; }
+  /* line 788 */
   .nav li:before, .nav-top li:before {
     display: block;
     float: right;
@@ -628,6 +752,7 @@ body.nav-opened .nav {
     color: #B8B8B8;
     content: counter(item,lower-roman);
     counter-increment: item; }
+  /* line 801 */
   .nav li a, .nav-top li a {
     text-decoration: none;
     line-height: 1.4;
@@ -637,25 +762,32 @@ body.nav-opened .nav {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; }
+    /* line 810 */
     .nav li a:after, .nav-top li a:after {
       display: inline-block;
       content: " .......................................................";
       color: rgba(255, 255, 255, 0.2);
       margin-left: 5px; }
+/* line 819 */
 .nav .nav-current:before, .nav-top .nav-current:before {
   color: #fff; }
+/* line 822 */
 .nav .nav-current a:after, .nav-top .nav-current a:after {
   content: " ";
   border-bottom: rgba(255, 255, 255, 0.5) 1px solid;
   width: 100%;
   height: 1px; }
+/* line 830 */
 .nav a:link, .nav a:visited, .nav-top a:link, .nav-top a:visited {
   color: #B8B8B8; }
+/* line 834 */
 .nav li.nav-current a, .nav-top li.nav-current a {
   color: #fff; }
+/* line 838 */
 .nav a:hover, .nav a:active, .nav a:focus, .nav-top a:hover, .nav-top a:active, .nav-top a:focus {
   color: #fff; }
 
+/* line 844 */
 .subscribe-button {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -678,10 +810,12 @@ body.nav-opened .nav {
   border-radius: 3px;
   background: #fff;
   transition: all ease 0.3s; }
+  /* line 866 */
   .subscribe-button:before {
     font-size: 9px;
     margin-right: 6px; }
 
+/* line 872 */
 .coffee-button {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -703,11 +837,13 @@ body.nav-opened .nav {
   line-height: 35px;
   border-radius: 3px;
   transition: all ease 0.3s; }
+  /* line 894 */
   .coffee-button:before {
     font-size: 9px;
     margin-right: 6px; }
 
 /* Create a bouncing scroll-down arrow on homepage with cover image */
+/* line 902 */
 .scroll-down {
   display: block;
   position: absolute;
@@ -726,6 +862,7 @@ body.nav-opened .nav {
   transform: rotate(-90deg);
   -webkit-animation: bounce 4s 2s infinite;
   animation: bounce 4s 2s infinite; }
+  /* line 920 */
   .scroll-down:hover {
     color: #fff;
     -webkit-animation: none;
@@ -734,6 +871,7 @@ body.nav-opened .nav {
 /* Stop it bouncing and increase contrast when hovered */
 /* Put a semi-opaque radial gradient behind the icon to make it more visible
    on photos which happen to have a light background. */
+/* line 932 */
 .home-template .main-header:after {
   display: block;
   content: " ";
@@ -747,13 +885,16 @@ body.nav-opened .nav {
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, transparent 70%, transparent 100%); }
 
 /* Hide when there's no cover image or on page2+ */
+/* line 948 */
 .no-cover .scroll-down, .no-cover.main-header:after {
   display: none; }
 
+/* line 954 */
 .archive-template .scroll-down, .archive-template .main-header:after {
   display: none; }
 
 /* Appears in the top left corner of your home page */
+/* line 961 */
 .blog-logo {
   display: block;
   float: left;
@@ -761,6 +902,7 @@ body.nav-opened .nav {
   /* Makes sure there is never a background */
   border: none !important;
   /* Makes sure there is never a border */ }
+  /* line 968 */
   .blog-logo img {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -770,6 +912,7 @@ body.nav-opened .nav {
     padding: 1px 0 5px 0;
     width: auto; }
 
+/* line 979 */
 .menu-button {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -788,32 +931,40 @@ body.nav-opened .nav {
   white-space: nowrap;
   border-radius: 3px;
   transition: all 0.5s ease; }
+  /* line 997 */
   .menu-button:before {
     font-size: 12px;
     font-weight: bold;
     margin-right: 6px;
     position: relative;
     top: 1px; }
+  /* line 1004 */
   .menu-button:hover {
     background: #fff; }
+  /* line 1007 */
   .menu-button:focus {
     outline: 0; }
 
 /* When the navigation is closed */
+/* line 1015 */
 .nav-closed .menu-button {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.6); }
+  /* line 1018 */
   .nav-closed .menu-button:hover {
     color: #222; }
+/* line 1022 */
 .nav-closed .no-cover .menu-button {
   border-color: #BFC8CD;
   color: #9EABB3; }
+  /* line 1025 */
   .nav-closed .no-cover .menu-button:hover {
     border-color: #555;
     color: #555; }
 
 /* When the navigation is closed and there is no cover image */
 /* When the navigation is opened */
+/* line 1036 */
 .nav-opened .menu-button {
   padding: 0 12px;
   background: #111;
@@ -823,11 +974,13 @@ body.nav-opened .nav {
   -ms-transform: translate3D(94px, 0, 0);
   transform: translate3D(94px, 0, 0);
   transition: all 0.3s ease; }
+  /* line 1045 */
   .nav-opened .menu-button .word {
     opacity: 0;
     transition: all 0.3s ease; }
 
 /* Special styles when overlaid on an image*/
+/* line 1053 */
 .main-nav.overlay {
   position: absolute;
   top: 0;
@@ -837,10 +990,12 @@ body.nav-opened .nav {
   border: none;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, transparent 100%); }
 
+/* line 1063 */
 .no-cover .main-nav.overlay {
   background: none; }
 
 /* The details of your blog. Defined in ghost/settings/ */
+/* line 1069 */
 .page-title {
   margin: 10px 0 10px 0;
   font-size: 5rem;
@@ -849,6 +1004,7 @@ body.nav-opened .nav {
   font-family: "Open Sans", sans-serif;
   color: #fff; }
 
+/* line 1078 */
 .page-description {
   margin: 0;
   font-size: 2rem;
@@ -858,21 +1014,26 @@ body.nav-opened .nav {
   letter-spacing: 0.01rem;
   color: rgba(255, 255, 255, 0.8); }
 
+/* line 1089 */
 .no-cover.main-header {
   min-height: 40px;
   max-height: 40px;
   background: #f5f8fa; }
+/* line 1094 */
 .no-cover .page-title {
   color: rgba(0, 0, 0, 0.8); }
+/* line 1097 */
 .no-cover .page-description {
   color: rgba(0, 0, 0, 0.5); }
 
 /* Add subtle load-in animation for content on the home page */
+/* line 1105 */
 .home-template .page-title {
   -webkit-animation: fade-in-down 0.6s;
   animation: fade-in-down 0.6s;
   -webkit-animation-delay: 0.2s;
   animation-delay: 0.2s; }
+/* line 1111 */
 .home-template .page-description {
   -webkit-animation: fade-in-down 0.9s;
   animation: fade-in-down 0.9s;
@@ -880,6 +1041,7 @@ body.nav-opened .nav {
   animation-delay: 0.1s; }
 
 /* Every post, on every page, gets this style on its <article> tag */
+/* line 1121 */
 .post {
   position: relative;
   width: 80%;
@@ -905,22 +1067,27 @@ body.nav-opened .nav {
 /*border-radius: 100%;*/
 /*box-shadow: #FFF 0 0 0 5px;*/
 /*}*/
+/* line 1148 */
 body:not(.post-template) .post-title {
   font-size: 3.8rem;
   text-transform: none;
   margin-bottom: 0.1rem; }
 
+/* line 1154 */
 .post-title a {
   text-decoration: none; }
 
+/* line 1158 */
 .post-excerpt p {
   margin: 0;
   font-size: 0.9em;
   line-height: 1.7em; }
 
+/* line 1164 */
 .read-more {
   text-decoration: none; }
 
+/* line 1168 */
 .post-meta {
   display: block;
   margin: 0.5rem 0 1.75rem 0;
@@ -929,6 +1096,7 @@ body:not(.post-template) .post-title {
   line-height: 2.2rem;
   color: #9EABB3; }
 
+/* line 1177 */
 .author-thumb {
   width: 24px;
   height: 24px;
@@ -936,17 +1104,21 @@ body:not(.post-template) .post-title {
   margin-right: 9px;
   border-radius: 100%; }
 
+/* line 1185 */
 .post-meta a {
   color: #9EABB3;
   text-decoration: none; }
+  /* line 1188 */
   .post-meta a:hover {
     text-decoration: underline; }
 
+/* line 1193 */
 .user-meta {
   position: relative;
   padding: 0.3rem 40px 0 100px;
   min-height: 77px; }
 
+/* line 1199 */
 .post-date {
   display: inline-block;
   margin-left: 8px;
@@ -956,21 +1128,25 @@ body:not(.post-template) .post-title {
   font-size: 1.3rem;
   white-space: nowrap; }
 
+/* line 1209 */
 .user-image {
   position: absolute;
   top: 0;
   left: 0; }
 
+/* line 1215 */
 .user-name {
   display: block;
   font-weight: 700; }
 
+/* line 1220 */
 .user-bio {
   display: block;
   max-width: 440px;
   font-size: 1.4rem;
   line-height: 1.5em; }
 
+/* line 1227 */
 .publish-meta {
   position: absolute;
   top: 0;
@@ -978,10 +1154,12 @@ body:not(.post-template) .post-title {
   padding: 4.3rem 0 4rem 0;
   text-align: right; }
 
+/* line 1235 */
 .publish-heading {
   display: block;
   font-weight: 700; }
 
+/* line 1240 */
 .publish-date {
   display: block;
   font-size: 1.4rem;
@@ -990,22 +1168,29 @@ body:not(.post-template) .post-title {
 /* ==========================================================================
    5. Single Post - When you click on an individual post
    ========================================================================== */
+/* line 1251 */
 .post-template .post-header {
   margin-bottom: 3.4rem; }
+/* line 1254 */
 .post-template .post-title {
   margin-bottom: 0; }
+/* line 1257 */
 .post-template .post-meta {
   margin: 0; }
+/* line 1260 */
 .post-template .post-date {
   padding: 0;
   margin: 0;
   border: none; }
+/* line 1265 */
 .post-template .content {
   overflow: hidden; }
+/* line 1268 */
 .post-template .post {
   margin-top: 0;
   border-bottom: none;
   padding-bottom: 0; }
+  /* line 1272 */
   .post-template .post:after {
     display: none; }
 
@@ -1016,6 +1201,7 @@ body:not(.post-template) .post-title {
 /* Kill that stylish little circle that was on the border, too */
 /* Keep images centered, and allow images wider than the main
    text column to break out. */
+/* line 1289 */
 .post-content img {
   display: block;
   max-width: 126%;
@@ -1033,32 +1219,40 @@ body:not(.post-template) .post-title {
   /* for IE9 */
   transform: translateX(-50%); }
 
+/* line 1307 */
 .footnotes {
   font-style: italic;
   font-size: 1.3rem;
   line-height: 1.6em; }
+  /* line 1311 */
   .footnotes li {
     margin: 0.6rem 0; }
+  /* line 1314 */
   .footnotes p {
     margin: 0; }
+    /* line 1316 */
     .footnotes p a:last-child {
       text-decoration: none; }
 
 /* The author credit area after the post */
+/* line 1324 */
 .post-footer {
   position: relative;
   margin: 6rem 0 0 0;
   padding: 6rem 0 0 0;
   border-top: #EBF2F6 1px solid; }
+  /* line 1329 */
   .post-footer h4 {
     font-size: 1.8rem;
     margin: 0; }
+  /* line 1333 */
   .post-footer p {
     margin: 1rem 0;
     font-size: 1.4rem;
     line-height: 1.75em; }
 
 /* list of author links - location / url */
+/* line 1342 */
 .author-meta {
   padding: 0;
   margin: 0;
@@ -1067,34 +1261,44 @@ body:not(.post-template) .post-title {
   line-height: 1;
   font-style: italic;
   color: #9EABB3; }
+  /* line 1350 */
   .author-meta a {
     color: #9EABB3; }
+    /* line 1352 */
     .author-meta a:hover {
       color: #111; }
 
 /* Create some space to the right for the share links */
+/* line 1361 */
 .post-footer .author {
   margin-right: 180px; }
+/* line 1364 */
 .post-footer h4 a {
   color: #2e2e2e;
   text-decoration: none; }
+  /* line 1367 */
   .post-footer h4 a:hover {
     text-decoration: underline; }
+/* line 1371 */
 .post-footer .share {
   position: absolute;
   top: 6rem;
   right: 0;
   width: 140px; }
+  /* line 1376 */
   .post-footer .share a {
     font-size: 1.8rem;
     display: inline-block;
     margin: 1rem 1.6rem 1.6rem 0;
     color: #BBC7CC;
     text-decoration: none; }
+  /* line 1383 */
   .post-footer .share .icon-twitter:hover {
     color: #55acee; }
+  /* line 1386 */
   .post-footer .share .icon-facebook:hover {
     color: #3b5998; }
+  /* line 1389 */
   .post-footer .share .icon-google-plus:hover {
     color: #dd4b39; }
 
@@ -1105,29 +1309,35 @@ body:not(.post-template) .post-title {
 /* ==========================================================================
    6. Author profile
    ========================================================================== */
+/* line 1404 */
 .post-head.main-header {
   height: 45vh;
   min-height: 180px; }
 
+/* line 1409 */
 .no-cover.post-head.main-header {
   height: 85px;
   min-height: 0;
   margin-bottom: 0;
   background: transparent; }
 
+/* line 1416 */
 .tag-head.main-header, .author-head.main-header {
   height: 40vh;
   min-height: 180px; }
 
+/* line 1421 */
 .no-cover.author-head.main-header {
   height: 10vh;
   min-height: 100px;
   background: transparent; }
 
+/* line 1427 */
 .author-profile {
   padding: 0 15px 5rem 15px;
   border-bottom: #EBF2F6 1px solid;
   text-align: center; }
+  /* line 1431 */
   .author-profile:after {
     display: block;
     content: "";
@@ -1143,6 +1353,7 @@ body:not(.post-template) .post-title {
     box-shadow: #FFF 0 0 0 5px; }
 
 /* Add a little circle in the middle of the border-bottom */
+/* line 1449 */
 .author-image {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1160,6 +1371,7 @@ body:not(.post-template) .post-title {
   background: #fff;
   z-index: 2;
   box-shadow: #E7EEF2 0 0 0 1px; }
+  /* line 1466 */
   .author-image .img {
     position: relative;
     display: block;
@@ -1169,6 +1381,7 @@ body:not(.post-template) .post-title {
     background-position: center center;
     border-radius: 100%; }
 
+/* line 1477 */
 .author-profile .author-image {
   position: relative;
   left: auto;
@@ -1179,9 +1392,11 @@ body:not(.post-template) .post-title {
   margin: -100px auto 0 auto;
   box-shadow: none; }
 
+/* line 1488 */
 .author-title {
   margin: 1.5rem 0 1rem; }
 
+/* line 1492 */
 .author-bio {
   font-size: 1.8rem;
   line-height: 1.5em;
@@ -1191,31 +1406,37 @@ body:not(.post-template) .post-title {
   text-indent: 0;
   text-align: justify; }
 
+/* line 1502 */
 .author-meta {
   margin: 1.6rem 0; }
 
 /* Location, website, and link */
+/* line 1508 */
 .author-profile .author-meta {
   margin: 2rem 0;
   font-family: "Merriweather", serif;
   letter-spacing: 0.01rem;
   font-size: 1.7rem; }
 
+/* line 1516 */
 .author-meta span {
   display: inline-block;
   margin: 0 2rem 1rem 0;
   word-wrap: break-word; }
+/* line 1521 */
 .author-meta a {
   text-decoration: none; }
 
 /* Turn off meta for page2+ to make room for extra
    pagination prev/next links */
+/* line 1529 */
 .archive-template .author-profile .author-meta {
   display: none; }
 
 /* ==========================================================================
    7. Read More - Next/Prev Post Links
    ========================================================================== */
+/* line 1537 */
 .read-next {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1227,6 +1448,7 @@ body:not(.post-template) .post-title {
   align-items: stretch;
   margin-top: 10rem; }
 
+/* line 1549 */
 .read-next-story {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1244,13 +1466,16 @@ body:not(.post-template) .post-title {
   background: #222 no-repeat center center;
   background-size: cover;
   overflow: hidden; }
+  /* line 1567 */
   .read-next-story:hover:before {
     background: rgba(0, 0, 0, 0.8);
     transition: all 0.2s ease; }
+  /* line 1571 */
   .read-next-story:hover .post:before {
     color: #222;
     background: #fff;
     transition: all 0.2s ease; }
+  /* line 1577 */
   .read-next-story:before {
     content: "";
     display: block;
@@ -1261,9 +1486,11 @@ body:not(.post-template) .post-title {
     left: 0;
     background: rgba(0, 0, 0, 0.7);
     transition: all 0.5s ease; }
+  /* line 1588 */
   .read-next-story .post {
     padding-top: 6rem;
     padding-bottom: 6rem; }
+    /* line 1591 */
     .read-next-story .post:before {
       content: "Read This Next";
       padding: 4px 10px 5px;
@@ -1274,25 +1501,34 @@ body:not(.post-template) .post-title {
       border: rgba(255, 255, 255, 0.5) 1px solid;
       border-radius: 4px;
       transition: all 0.5s ease; }
+  /* line 1603 */
   .read-next-story.prev .post:before {
     content: "You Might Enjoy"; }
+  /* line 1606 */
   .read-next-story h2 {
     margin-top: 1rem;
     color: #fff; }
+  /* line 1610 */
   .read-next-story p {
     margin: 0;
     color: rgba(255, 255, 255, 0.8); }
+  /* line 1614 */
   .read-next-story.no-cover {
     background: #f5f8fa; }
+    /* line 1616 */
     .read-next-story.no-cover:before {
       display: none; }
+    /* line 1619 */
     .read-next-story.no-cover .post:before {
       color: rgba(0, 0, 0, 0.5);
       border-color: rgba(0, 0, 0, 0.2); }
+    /* line 1623 */
     .read-next-story.no-cover h2 {
       color: rgba(0, 0, 0, 0.8); }
+    /* line 1626 */
     .read-next-story.no-cover p {
       color: rgba(0, 0, 0, 0.5); }
+    /* line 1629 */
     .read-next-story.no-cover + .read-next-story.no-cover {
       border-left: rgba(0, 0, 100, 0.04) 1px solid;
       -webkit-box-sizing: border-box;
@@ -1302,6 +1538,7 @@ body:not(.post-template) .post-title {
 /* Special styles for posts with no cover images */
 /* if there are two posts without covers, put a border between them */
 /* Correctly position site-footer when next to the .read-next container */
+/* line 1644 */
 .read-next + .site-footer {
   position: absolute;
   bottom: 0;
@@ -1313,15 +1550,19 @@ body:not(.post-template) .post-title {
    8. Third Party Elements - Embeds from other services
    ========================================================================== */
 /* Github */
+/* line 1659 */
 .gist table {
   margin: 0;
   font-size: 1.4rem; }
+/* line 1663 */
 .gist td {
   line-height: 1.4; }
+/* line 1666 */
 .gist .line-number {
   min-width: 25px; }
 
 /* Pastebin */
+/* line 1673 */
 .content .embedPastebin {
   margin-bottom: 1.75em; }
 
@@ -1329,6 +1570,7 @@ body:not(.post-template) .post-title {
    9. Pagination - Tools to let you flick between pages
    ========================================================================== */
 /* The main wrapper for our pagination links */
+/* line 1683 */
 .pagination {
   position: relative;
   width: 80%;
@@ -1338,11 +1580,13 @@ body:not(.post-template) .post-title {
   font-size: 1.3rem;
   color: #9EABB3;
   text-align: center; }
+  /* line 1692 */
   .pagination a {
     color: #9EABB3;
     transition: all 0.2s ease; }
 
 /* Push the previous/next links out to the left/right */
+/* line 1700 */
 .older-posts, .newer-posts {
   position: absolute;
   display: inline-block;
@@ -1352,24 +1596,30 @@ body:not(.post-template) .post-title {
   border-radius: 4px;
   transition: border 0.3s ease; }
 
+/* line 1710 */
 .older-posts {
   right: 0; }
 
+/* line 1714 */
 .page-number {
   display: inline-block;
   padding: 2px 0;
   min-width: 100px; }
 
+/* line 1720 */
 .newer-posts {
   left: 0; }
 
+/* line 1724 */
 .older-posts:hover, .newer-posts:hover {
   color: #889093;
   border-color: #98a0a4; }
 
+/* line 1729 */
 .extra-pagination {
   display: none;
   border-bottom: #EBF2F6 1px solid; }
+  /* line 1732 */
   .extra-pagination:after {
     display: block;
     content: "";
@@ -1383,12 +1633,15 @@ body:not(.post-template) .post-title {
     background: #FFF;
     border-radius: 100%;
     box-shadow: #FFF 0 0 0 5px; }
+  /* line 1746 */
   .extra-pagination .pagination {
     width: auto; }
 
 /* On page2+ make all the headers smaller */
+/* line 1754 */
 .archive-template .main-header {
   max-height: 30vh; }
+/* line 1757 */
 .archive-template .extra-pagination {
   display: block; }
 
@@ -1396,6 +1649,7 @@ body:not(.post-template) .post-title {
 /* ==========================================================================
    10. Footer - The bottom of every page
    ========================================================================== */
+/* line 1768 */
 .site-footer {
   position: relative;
   margin: 8rem 0 0 0;
@@ -1404,19 +1658,23 @@ body:not(.post-template) .post-title {
   font-size: 1rem;
   line-height: 1.75em;
   color: #BBC7CC; }
+  /* line 1776 */
   .site-footer a {
     color: #BBC7CC;
     text-decoration: none;
     font-weight: bold; }
+    /* line 1780 */
     .site-footer a:hover {
       border-bottom: #bbc7cc 1px solid; }
 
+/* line 1786 */
 .poweredby {
   display: block;
   width: 45%;
   float: right;
   text-align: right; }
 
+/* line 1793 */
 .copyright {
   display: block;
   width: 45%;
@@ -1426,6 +1684,7 @@ body:not(.post-template) .post-title {
    11. Media Queries - Smaller than 900px
    ========================================================================== */
 @media only screen and (max-width: 900px) {
+  /* line 1804 */
   .main-header {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -1435,81 +1694,105 @@ body:not(.post-template) .post-title {
     height: 60vh;
     padding: 15% 0; }
 
+  /* line 1813 */
   .scroll-down, .home-template .main-header:after {
     display: none; }
 
+  /* line 1816 */
   .archive-template .main-header {
     min-height: 180px;
     padding: 10% 0; }
 
+  /* line 1820 */
   .blog-logo img {
     padding: 4px 0; }
 
+  /* line 1823 */
   .page-title {
     font-size: 4rem;
     letter-spacing: -1px; }
 
+  /* line 1827 */
   .page-description {
     font-size: 1.8rem;
     line-height: 1.5em; }
 
+  /* line 1831 */
   .post {
     font-size: 0.95em; }
 
+  /* line 1834 */
   body:not(.post-template) .post-title {
     font-size: 3.4rem;
     text-transform: none;
     margin-bottom: 0.1rem; }
 
+  /* line 1839 */
   hr {
     margin: 2.4em 0; }
 
+  /* line 1842 */
   ol, ul {
     padding-left: 2em; }
 
+  /* line 1845 */
   h1 {
     font-size: 4.5rem;
     text-indent: -2px; }
 
+  /* line 1849 */
   h2 {
     font-size: 3.6rem; }
 
+  /* line 1852 */
   h3 {
     font-size: 3.1rem; }
 
+  /* line 1855 */
   h4 {
     font-size: 2.5rem; }
 
+  /* line 1858 */
   h5 {
     font-size: 2.2rem; }
 
+  /* line 1861 */
   h6 {
     font-size: 1.8rem; }
 
+  /* line 1864 */
   .author-profile {
     padding-bottom: 4rem; }
+    /* line 1866 */
     .author-profile .author-bio {
       font-size: 1.6rem; }
 
+  /* line 1870 */
   .author-meta span {
     display: block;
     margin: 1.5rem 0; }
 
+  /* line 1874 */
   .author-profile .author-meta span {
     font-size: 1.6rem; }
 
+  /* line 1877 */
   .post-head.main-header {
     height: 45vh; }
 
+  /* line 1880 */
   .tag-head.main-header, .author-head.main-header {
     height: 30vh; }
 
+  /* line 1884 */
   .no-cover.post-head.main-header {
     height: 55px;
     padding: 0; }
+  /* line 1888 */
   .no-cover.author-head.main-header {
     padding: 0; }
 
+  /* line 1892 */
   .read-next {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -1517,9 +1800,11 @@ body:not(.post-template) .post-title {
     -ms-flex-direction: column;
     flex-direction: column;
     margin-top: 4rem; }
+    /* line 1899 */
     .read-next p {
       display: none; }
 
+  /* line 1903 */
   .read-next-story.no-cover + .read-next-story.no-cover {
     border-top: rgba(0, 0, 100, 0.06) 1px solid;
     border-left: none; } }
@@ -1527,69 +1812,87 @@ body:not(.post-template) .post-title {
    12. Media Queries - Smaller than 500px
    ========================================================================== */
 @media only screen and (max-width: 500px) {
+  /* line 1914 */
   .main-header {
     margin-bottom: 15px;
     height: 40vh; }
 
+  /* line 1918 */
   .no-cover.main-header {
     height: 30vh; }
 
+  /* line 1921 */
   .archive-template .main-header {
     max-height: 20vh;
     min-height: 160px;
     padding: 10% 0; }
 
+  /* line 1926 */
   .main-nav {
     padding: 5px;
     margin-bottom: 2rem; }
 
+  /* line 1930 */
   .blog-logo {
     padding: 5px; }
+    /* line 1932 */
     .blog-logo img {
       height: 30px; }
 
+  /* line 1936 */
   .menu-button {
     padding: 0 5px;
     border-radius: 0;
     border-width: 0;
     color: #2e2e2e;
     background: transparent; }
+    /* line 1942 */
     .menu-button:hover {
       color: #2e2e2e;
       border-color: transparent;
       background: none; }
 
+  /* line 1948 */
   body.nav-opened .menu-button {
     background: none;
     border: transparent; }
 
+  /* line 1952 */
   .main-nav.overlay a:hover {
     color: #fff;
     border-color: transparent;
     background: transparent; }
 
+  /* line 1957 */
   .no-cover .main-nav.overlay {
     background: none; }
+    /* line 1959 */
     .no-cover .main-nav.overlay .menu-button {
       border: none; }
 
+  /* line 1963 */
   .main-nav.overlay .menu-button {
     border-color: transparent; }
 
+  /* line 1966 */
   .nav-title {
     top: 25px; }
 
+  /* line 1969 */
   .nav-close {
     position: absolute;
     top: 18px; }
 
+  /* line 1973 */
   .nav ul {
     padding: 60px 9% 5%; }
 
+  /* line 1976 */
   .inner, .pagination {
     width: auto;
     margin: 2rem auto; }
 
+  /* line 1980 */
   .post {
     width: auto;
     margin-top: 2rem;
@@ -1599,58 +1902,75 @@ body:not(.post-template) .post-title {
     padding-bottom: 2rem;
     line-height: 1.65em; }
 
+  /* line 1989 */
   .post-date {
     display: none; }
 
+  /* line 1993 */
   .post-template .post-header {
     margin-bottom: 2rem; }
+  /* line 1996 */
   .post-template .post-date {
     display: inline-block; }
 
+  /* line 2000 */
   hr {
     margin: 1.75em 0; }
 
+  /* line 2003 */
   p, ul, ol, dl {
     font-size: 0.95em;
     margin: 0 0 2.5rem 0; }
 
+  /* line 2007 */
   .page-title {
     font-size: 3rem; }
 
+  /* line 2010 */
   .post-excerpt p {
     font-size: 0.85em; }
 
+  /* line 2013 */
   .page-description {
     font-size: 1.6rem; }
 
+  /* line 2016 */
   h1, h2, h3, h4, h5, h6 {
     margin: 0 0 0.3em 0; }
 
+  /* line 2019 */
   h1 {
     font-size: 2.8rem;
     letter-spacing: -1px; }
 
+  /* line 2023 */
   h2 {
     font-size: 2.4rem;
     letter-spacing: 0; }
 
+  /* line 2027 */
   h3 {
     font-size: 2.1rem; }
 
+  /* line 2030 */
   h4 {
     font-size: 1.9rem; }
 
+  /* line 2033 */
   h5, h6 {
     font-size: 1.8rem; }
 
+  /* line 2036 */
   body:not(.post-template) .post-title {
     font-size: 2.5rem;
     text-transform: none;
     margin-bottom: 0.1rem; }
 
+  /* line 2041 */
   .post-template .site-footer {
     margin-top: 0; }
 
+  /* line 2044 */
   .post-content img {
     padding: 0;
     width: calc(100% + 32px);
@@ -1659,60 +1979,78 @@ body:not(.post-template) .post-title {
     max-width: 112%;
     /* fallback when calc doesn't work */ }
 
+  /* line 2052 */
   .post-meta {
     font-size: 1.3rem;
     margin-top: 1rem; }
 
+  /* line 2056 */
   .post-footer {
     padding: 5rem 0 3rem 0;
     text-align: center; }
+    /* line 2059 */
     .post-footer .author {
       margin: 0 0 2rem 0;
       padding: 0 0 1.6rem 0;
       border-bottom: #EBF2F6 1px dashed; }
+    /* line 2064 */
     .post-footer .share {
       position: static;
       width: auto; }
+      /* line 2067 */
       .post-footer .share a {
         margin: 1.4rem 0.8rem 0 0.8rem; }
 
+  /* line 2072 */
   .author-meta li {
     float: none;
     margin: 0;
     line-height: 1.75em; }
+    /* line 2076 */
     .author-meta li:before {
       display: none; }
 
+  /* line 2080 */
   .older-posts, .newer-posts {
     position: static;
     margin: 10px 0; }
 
+  /* line 2084 */
   .page-number {
     display: block; }
 
+  /* line 2087 */
   .site-footer {
     margin-top: 3rem; }
 
+  /* line 2090 */
   .author-profile {
     padding-bottom: 2rem; }
 
+  /* line 2093 */
   .post-head.main-header {
     height: 30vh; }
 
+  /* line 2096 */
   .tag-head.main-header, .author-head.main-header {
     height: 20vh; }
 
+  /* line 2100 */
   .author-profile .author-image {
     margin-top: -70px; }
+  /* line 2103 */
   .author-profile .author-meta span {
     font-size: 1.4rem; }
 
+  /* line 2107 */
   .archive-template .main-header .page-description {
     display: none; }
 
+  /* line 2110 */
   .read-next {
     margin-top: 2rem;
     margin-bottom: -37px; }
+    /* line 2113 */
     .read-next .post {
       width: 100%; } }
 /* ==========================================================================
@@ -1758,14 +2096,18 @@ body:not(.post-template) .post-title {
   60% {
     -webkit-transform: translateY(-5px) rotate(-90deg);
     transform: translateY(-5px) rotate(-90deg); } }
+/* line 2190 */
 .shields {
   display: flex; }
+  /* line 2192 */
   .shields div {
     margin: 1rem; }
 
+/* line 2197 */
 .inline {
   display: inline; }
 
+/* line 2201 */
 .center {
   display: flex;
   align-items: center;
@@ -1775,3 +2117,16 @@ body:not(.post-template) .post-title {
    End of file. Animations should be the last thing here. Do not add stuff
    below this point, or it will probably fuck everything up.
    ========================================================================== */
+/* line 2214 */
+.project-info {
+  color: #666;
+  font-size: 1.2rem;
+  font-weight: 100; }
+  /* line 2218 */
+  .project-info .fa {
+    padding-right: 0.5rem; }
+  /* line 2221 */
+  .project-info a {
+    color: #666;
+    text-decoration: none;
+    padding-right: 1.5rem; }

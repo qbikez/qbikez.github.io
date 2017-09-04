@@ -31,7 +31,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
+    <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
@@ -134,91 +134,109 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <section class="post-content">
             
-            <p>Usually, Powershell is used as a &quot;glue&quot; to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
-But there are cases, where your doing seemingly trivial things, but your script just takes years to finish. </p>
+            <p>Usually, Powershell is used as a “glue” to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
+But there are cases, where your doing seemingly trivial things, but your script just takes years to finish.</p>
 
-<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">$timespan = Measure-Command {
+<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
+
+<p><code class="highlighter-rouge">
+$timespan = Measure-Command {
     # do whatever you want to measure here
 }
-</code></pre></div>
-<p>That&#39;s nice if you know or suspect which part of code is slow. But I would like to have something that&#39;s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+</code></p>
 
-<p>That&#39;s why I created a little wrapper around <code>Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code>Measure-function</code></a>, that&#39;s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+<p>That’s nice if you know or suspect which part of code is slow. But I would like to have something that’s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
+
+<p>That’s why I created a little wrapper around <code class="highlighter-rouge">Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code class="highlighter-rouge">Measure-function</code></a>, that’s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
+
+<p><code class="highlighter-rouge">
+  function Get-Something {
     # i'm doing some heavy loading here
     return $something
   }
-</code></pre></div>
-<p>I just wrap the body with <code>Measure-Function</code> like this:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  function Get-Something {
+</code></p>
+
+<p>I just wrap the body with <code class="highlighter-rouge">Measure-Function</code> like this:</p>
+
+<p><code class="highlighter-rouge">
+  function Get-Something {
     Measure-Function "$($MyInvocation.MyCommand.Name)" {
       # i'm doing some heavy loading here
       return $something
     }
   }
-</code></pre></div>
-<p><code>Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-</code></pre></div>
+</code></p>
+
+<p><code class="highlighter-rouge">Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
+
+<p><code class="highlighter-rouge">
+$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></p>
+
 <p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
 
 <ol>
-<li>Start with the entry point of your script and add <code>Measure-Function</code> to it and functions that it calls. </li>
-<li>Run the code and see, which function takes the most time.</li>
-<li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
+  <li>Start with the entry point of your script and add <code class="highlighter-rouge">Measure-Function</code> to it and functions that it calls.</li>
+  <li>Run the code and see, which function takes the most time.</li>
+  <li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
 </ol>
 
 <h1 id="powershell-hashtable-quircks">Powershell Hashtable quircks</h1>
 
-<p>One of the things I discovered using aforementioned method was in a place I really wasn&#39;t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you&#39;re not careful enough.</p>
+<p>One of the things I discovered using aforementioned method was in a place I really wasn’t expecting - enumerating through a hashtable. It should be blazingly fast even in Powershell! As it turns out, it can be awfully slow - if you’re not careful enough.</p>
 
 <p>Take a look at these three simple scenarios :</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># $h is a hastable of size 10000 
+
+<p>```
+# $h is a hastable of size 10000 
 $size = 10000
 $h = @{
 }
 for($i = 0; $i -lt $size; $i++) {
-    $h += @{ "key$i" = "value$i"  }
-}
+    $h += @{ “key$i” = “value$i”  }
+}</p>
 
-measure-function "enumerating $($h.count) items by enumerator" {
+<p>measure-function “enumerating $($h.count) items by enumerator” {
     foreach ($e in $h.GetEnumerator()) {
         $k = $e.key
         $v = $e.value
     }
-}
+}</p>
 
-measure-function "enumerating $($h.count) items by keys" {
+<p>measure-function “enumerating $($h.count) items by keys” {
     foreach ($k in $h.keys) {
         $v = $h[$k]
     }
 }
-measure-function "enumerating $($h.count) items with property accessor" {
+measure-function “enumerating $($h.count) items with property accessor” {
     foreach ($k in $h.keys) {
         $v = $h.$k
     }
-}
+}</p>
 
-$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-</code></pre></div>
-<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let&#39;s see...</p>
-<div class="highlight"><pre><code class="language-" data-lang="">name                                           elapsed          count
+<p>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+```</p>
+
+<p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let’s see…</p>
+
+<p><code class="highlighter-rouge">
+name                                           elapsed          count
 ----                                           -------          -----
 enumerating 10000 items with property accessor 00:00:30.4342957     1
 enumerating 10000 items by keys                00:00:00.0479557     1
 enumerating 10000 items by enumerator          00:00:00.1173057     1
-</code></pre></div>
-<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer! </p>
+</code></p>
 
-<p>At a first glance, I would think that the form <code>$h.$k</code> would be just a syntactic sugar for <code>$h[$k]</code>. But it really isn&#39;t (and can&#39;t) be that simple. <code>$k</code> may not only be a key inside hashtable - it may as well be a property, like <code>Count</code> or a method like <code>ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+<p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer!</p>
 
-<p>The conclusion is simple: if you know you&#39;re working with a potentially big hashtable, don&#39;t go for shortcuts and use plain old <code>$h[$k]</code>. But if you&#39;re not in a tight loop - just go with what you think is more readable.</p>
+<p>At a first glance, I would think that the form <code class="highlighter-rouge">$h.$k</code> would be just a syntactic sugar for <code class="highlighter-rouge">$h[$k]</code>. But it really isn’t (and can’t) be that simple. <code class="highlighter-rouge">$k</code> may not only be a key inside hashtable - it may as well be a property, like <code class="highlighter-rouge">Count</code> or a method like <code class="highlighter-rouge">ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+
+<p>The conclusion is simple: if you know you’re working with a potentially big hashtable, don’t go for shortcuts and use plain old <code class="highlighter-rouge">$h[$k]</code>. But if you’re not in a tight loop - just go with what you think is more readable.</p>
 
 <p>Reference:
-* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code>Measure-Command</code></a>
+* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a>
 * There is also 
-<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>. </p>
+<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>.</p>
 
 
         </section>
