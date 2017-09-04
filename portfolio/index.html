@@ -1,0 +1,84 @@
+--- layout: portfolio title: Portfolio cover: 'assets/images/cover7.jpg' #class: 'home-template' navigation: true #current:
+home #headerClass: main-header titleOnCover: true ---
+
+<main id="content" class="content" role="main">
+
+    <!-- Page Header -->
+    <!-- <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Page Heading
+                    <small>Secondary Text</small>
+                </h1>
+            </div>
+        </div> -->
+    <!-- /.row -->
+
+    {% assign i = 0 %} {% for portfolio in site.portfolio %} {% assign project_url = portfolio.url | remove_first: '/' | prepend:
+    site.baseurl %}
+    <!-- Projects Row -->
+    {% if i | modulo: 3 == 0 %}
+    <div class="row">
+        { %endif }
+        <div class="col-md-4 portfolio-item">
+            <a href="{{project_url}}">
+                            <img class="img-responsive" src="http://placehold.it/700x400" alt="">
+                        </a>
+            <h3>
+                <a href="{{project_url}}">{{ portfolio.title }}</a>
+            </h3>
+            <p>{{ portfolio.excerpt }}</p>
+        </div>
+        {% if i | modulo: 3 == 0 %}
+    </div>
+    {% endif %} {% assign i = i | plus: 1 %}
+    <!-- /.row -->
+
+    <!-- <div class="row">
+            <a href="{{ portfolio.url | remove_first: '/' | prepend: site.baseurl }}">
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            {{ portfolio.title }}
+                        </div>
+                        <div class="panel-body">
+                            {{ portfolio.excerpt }}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div> -->
+
+    {% endfor %}
+
+    <!-- Pagination -->
+    <!-- <div class="row text-center">
+            <div class="col-lg-12">
+                <ul class="pagination">
+                    <li>
+                        <a href="{{project_url}}">&laquo;</a>
+                    </li>
+                    <li class="active">
+                        <a href="{{project_url}}">1</a>
+                    </li>
+                    <li>
+                        <a href="{{project_url}}">2</a>
+                    </li>
+                    <li>
+                        <a href="{{project_url}}">3</a>
+                    </li>
+                    <li>
+                        <a href="{{project_url}}">4</a>
+                    </li>
+                    <li>
+                        <a href="{{project_url}}">5</a>
+                    </li>
+                    <li>
+                        <a href="{{project_url}}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+    <!-- /.row -->
+
+
+</main>
