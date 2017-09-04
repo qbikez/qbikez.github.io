@@ -122,9 +122,10 @@
 <p>There are 2 things you have to do to configure a unit test project:</p>
 
 <ol>
-<li><p>Reference the test tool in project dependencies, like this:</p>
+<li><p>Reference xunit and the test tool in project dependencies, like this:</p>
 
 <p>&quot;dependencies&quot;: {
+     &quot;xunit&quot;: &quot;2.1.0&quot;,<br>
      &quot;dotnet-test-xunit&quot;: &quot;1.0.0-rc2-192208-24&quot;
    }</p>
 

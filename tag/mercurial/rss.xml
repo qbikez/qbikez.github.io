@@ -333,9 +333,9 @@ bitbucket.org.username = qbik
 <h2 id="cloning-hg-over-ssh-from-bitbucket">Cloning HG over SSH (from Bitbucket)</h2>
 
 <p>Let&#39;s start with a simple thing: clone a repository over ssh. I&#39;ll use BitBucket for mercurial hosting and Appveyor for cloning and building.
-BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
+BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Mercurial">setting up ssh</a>. Unfortunatelly, the Windows guide uses Putty and Pageant for managing SSH keys, which requires a GUI and isn&#39;t commandline-friendly. We cannot use it from Appveyor scripts (plink can also be run in <a href="https://www.mercurial-scm.org/wiki/AccessingSshRepositoriesFromWindows">batch mode</a>, but I will stick to plain ssh).</p>
 
-<p>Lucky for me, a similar guide for git (<a href="https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html">https://confluence.atlassian.com/bitbucket/set-up-ssh-for-git-728138079.html</a>) doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
+<p>Lucky for me, a <a href="https://confluence.atlassian.com/display/BITBUCKET/Set+up+SSH+for+Git">similar guide for git</a> doesn&#39;t include putty at all. We can use the same steps to configure mercurials ssh.</p>
 
 <ol>
 <li><p>Install Git for Windows: </p>
@@ -391,7 +391,7 @@ BitBucket has a guide on setting up ssh: <a href="https://confluence.atlassian.c
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
 <div class="highlight"><pre><code class="language-" data-lang="">&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
 </code></pre></div>
-<p>Instead of configuring it at account level, add it as a <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html">deployment key</a> to specific repo that you will be cloning.</p>
+<p>Instead of configuring it at account level, add it as <a href="https://confluence.atlassian.com/display/BITBUCKET/Use+access+keys">read-only access key</a> to specific repo that you will be cloning.</p>
 
 <p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
 

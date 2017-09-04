@@ -43,7 +43,7 @@
 
 <p>If you want to do it from commandline, here&#39;s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $true) 
+[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
 </code></pre></div>
 <p>Then, use <code>Set-Acl</code> to set physical path permissions. Here&#39;s a full script:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">&lt;#
@@ -85,7 +85,8 @@ Allows the specified user to publish website through webdeploy
 function allow-iiswebdeploy {
 param(
     [Parameter(Mandatory=$true)] $username,
-    [Parameter(Mandatory=$true)] $site
+    [Parameter(Mandatory=$true)] $site,
+    [Switch][bool] $isgroup
 )
 
     ipmo webadministration
@@ -99,7 +100,7 @@ param(
     # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
 
     [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $true) 
+    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
 
     # grant file system permissions!
 
