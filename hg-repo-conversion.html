@@ -163,10 +163,9 @@ Or has grown so big that you can’t even clone it?</p>
   <li>
     <p>Enable the <code class="highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> [extensions]
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
  convert =
-</code></pre>
-    </div>
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there.</p>
@@ -182,8 +181,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>Let’s use the repo at https://bitbucket.org/heavymetaldev/convert-me as an example. The structure looks like this:</p>
 
-<p><code class="highlighter-rouge">
-|-- convert-me
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- convert-me
     |-- .hgignore
     |-- top-secret.txt
     |-- sln
@@ -200,7 +198,7 @@ Or has grown so big that you can’t even clone it?</p>
         |   |-- MyProject.Core.Utils.csproj
         |-- MyProject.Desktop.WinForms
             |-- MyProject.Desktop.WinForms.csproj
-</code></p>
+</code></pre></div></div>
 
 <blockquote>
   <p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
@@ -210,8 +208,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p><code class="highlighter-rouge">Repo A</code> should look like this:</p>
 
-<p><code class="highlighter-rouge">
-|-- Repo-A
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-A
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Core
@@ -223,12 +220,11 @@ Or has grown so big that you can’t even clone it?</p>
         |   |-- MyProject.Core.Model.csproj
         |-- MyProject.Core.Utils
         |   |-- MyProject.Core.Utils.csproj
-</code></p>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
 
-<p><code class="highlighter-rouge">
-|-- Repo-B
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-B
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Desktop
@@ -236,7 +232,7 @@ Or has grown so big that you can’t even clone it?</p>
     |-- src
         |-- MyProject.Desktop.WinForms
             |-- MyProject.Desktop.WinForms.csproj
-</code></p>
+</code></pre></div></div>
 
 <h2 id="filemap-on-steroids">Filemap on steroids</h2>
 
@@ -244,19 +240,18 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>The extended filemap format supports lines in the following forms:</p>
 
-<p>```
-# this is th basic mercurial stuff:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
 include path/to/file
 exclude path/to/file
-rename from/file to/file</p>
+rename from/file to/file
 
-<h1 id="this-is-extended-format">this is extended format:</h1>
-<p>include r:regex/to/.<em>/include
-include r:!regex/to/.</em>/include/if/not/match
-exclude r:regex/to/.<em>/exclude
-exclude r:!regex/to/.</em>/exclude/if/not/match
+# this is extended format:
+include r:regex/to/.*/include
+include r:!regex/to/.*/include/if/not/match
+exclude r:regex/to/.*/exclude
+exclude r:!regex/to/.*/exclude/if/not/match
 include sln:path/to/something.sln
-```</p>
+</code></pre></div></div>
 
 <ul>
   <li><code class="highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
@@ -265,11 +260,10 @@ include sln:path/to/something.sln
 
 <p>Let’s look at our sample repo. For converting to <code class="highlighter-rouge">repo-a</code>, we can use the following <code class="highlighter-rouge">filemap.txt</code> content:</p>
 
-<p><code class="highlighter-rouge">
-include .hgignore
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include r:.*/MyProject\.Core(\..*){0,1}/
 exclude top-secret.txt
-</code></p>
+</code></pre></div></div>
 
 <blockquote>
   <p>By default, everything that’s not included gets excluded, so the last line isn’t really necessary, but we’ll leave it there for verbosity.</p>
@@ -277,8 +271,7 @@ exclude top-secret.txt
 
 <p>This will generate the following <code class="highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
 
-<p><code class="highlighter-rouge">
-include ".hgignore"
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ".hgignore"
 include "sln/MyProject.Core"
 include "src/MyProject.Core.Api"
 include "src/MyProject.Core.Model"
@@ -293,7 +286,7 @@ include "src/MyProject.Core.Api/Service References/Application Insights"
 include "src/MyProject.Core.Model/Properties"
 include "src/MyProject.Core.Utils/Properties"
 remove top-secret.txt
-</code></p>
+</code></pre></div></div>
 
 <blockquote>
   <p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it’s subdirectories. But since the file is autogenerated, this is not a worry.</p>
@@ -301,19 +294,17 @@ remove top-secret.txt
 
 <p>For <code class="highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="highlighter-rouge">sln:</code> prefix:</p>
 
-<p><code class="highlighter-rouge">
-include .hgignore
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include sln:sln/MyProject.Desktop/MyProject.Desktop.sln
 exclude top-secret.txt
-</code></p>
+</code></pre></div></div>
 
 <h1 id="conversion-process">Conversion Process</h1>
 
 <p>We will use <code class="highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
+</code></pre></div></div>
 
 <p>This script takes care of configuring and calling <code class="highlighter-rouge">hg convert</code>. It will:</p>
 
@@ -331,9 +322,8 @@ exclude top-secret.txt
   <li>
     <p>Convert only the newest revision, using <code class="highlighter-rouge">startrev</code> parameter, i.e:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
+</code></pre></div>    </div>
   </li>
   <li>Check the converted repository - try to build everything</li>
   <li>Copy missing files from old repo to the new repo and add them to filemap, until the new repo builds properly</li>
@@ -341,9 +331,8 @@ exclude top-secret.txt
   <li>
     <p>Start full conversion from revision 0</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
+</code></pre></div>    </div>
   </li>
 </ol>
 
@@ -355,25 +344,23 @@ exclude top-secret.txt
 
 <p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="highlighter-rouge">branchmap.txt</code> support the following line format:</p>
 
-<p>```
-# this is th basic mercurial stuff:
-original_branch_name new_branch_name</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
+original_branch_name new_branch_name
 
-<h1 id="this-is-extended-format-1">this is extended format:</h1>
-<p>r:release/.* release
+# this is extended format:
+r:release/.* release
 r:!release default
 * default
-```</p>
+</code></pre></div></div>
 
 <p>Similar to filemap, <code class="highlighter-rouge">r:</code> and <code class="highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
 
 <p>For example, my <code class="highlighter-rouge">branchmap.txt</code> could look like this:</p>
 
-<p><code class="highlighter-rouge">
-* default
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default
 r:release/.* release
 dev dev
-</code></p>
+</code></pre></div></div>
 
 <p>All branches that match <code class="highlighter-rouge">release/*</code> pattern will be renamed to <code class="highlighter-rouge">release</code>. Branch <code class="highlighter-rouge">dev</code> will remain <code class="highlighter-rouge">dev</code>. Everything else will be renamed to <code class="highlighter-rouge">default</code>.</p>
 

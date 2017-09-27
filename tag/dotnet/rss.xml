@@ -61,11 +61,10 @@
 
 <p>For me, the most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
     "my.other.project": { "target": "project" }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
 
@@ -108,7 +107,7 @@
 
 <p>A framework declaration in <em>project.json</em> may also include <code class="highlighter-rouge">imports</code> section:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>"frameworks": {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"frameworks": {
   "netcoreapp1.0": { 
     "imports": [ 
         "dnxcore50",
@@ -116,8 +115,7 @@
       ] 
     }
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it’s telling the package manager: <em>“If you don’t find a package version targeting <code class="highlighter-rouge">netcoreapp1.0</code> or other compatible framework, I wan’t you to install a version that targets one of the imported frameworks”</em>.</p>
 
@@ -131,29 +129,26 @@
   <li>
     <p>Reference xunit and the test tool in project dependencies, like this:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>"dependencies": {
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
   "xunit": "2.1.0",        
   "dotnet-test-xunit": "1.0.0-rc2-192208-24"
 }
-</code></pre>
-    </div>
+</code></pre></div>    </div>
 
     <p>This will include testing tool in your dependency chain.</p>
   </li>
   <li>
     <p>Set <code class="highlighter-rouge">testRunner</code> property in <em>project.json</em>:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>"testRunner": "xunit"
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"testRunner": "xunit"
+</code></pre></div>    </div>
   </li>
 </ol>
 
 <p>That’s it. If you now run <code class="highlighter-rouge">dotnet test</code>, dotnet will know it should invoke <code class="highlighter-rouge">dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code class="highlighter-rouge">dotnet new</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new -t xunittest
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new -t xunittest
+</code></pre></div></div>
 
 <blockquote>
   <p>If you want to know more about <code class="highlighter-rouge">dotnet new</code>, there’s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code class="highlighter-rouge">dotnet new</code></a> by Scott Hanselman.</p>
@@ -161,7 +156,7 @@
 
 <p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
 
-<h2 id="application-startup-a-idapplication-startupa">Application startup <a id="application-startup"></a></h2>
+<h2 id="application-startup-">Application startup <a id="application-startup"></a></h2>
 
 <p><code class="highlighter-rouge">RC1</code> supported two launch modes:</p>
 
@@ -170,9 +165,8 @@
   <li>
     <p><code class="highlighter-rouge">"emitEntryPoint":false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code class="highlighter-rouge">project.json</code>, like this:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
+</code></pre></div>    </div>
 
     <p>In this mode, the loading process was similiar to how Asp.Net <code class="highlighter-rouge">Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code class="highlighter-rouge">Main</code> method (non-static), create the containing class instance and inject dependencies into it’s constructor, then run <code class="highlighter-rouge">Main</code>. This was very convienient, because you had access to things like <code class="highlighter-rouge">IApplicationEnvironment</code> or <code class="highlighter-rouge">IServiceProvider</code>. This also meant that additional work had to be done by <code class="highlighter-rouge">dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of “magic” too.</p>
   </li>
@@ -182,7 +176,7 @@
 
 <p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>public static void Main(string[] args)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public static void Main(string[] args)
 {
     var host = new WebHostBuilder()
         .UseKestrel()
@@ -192,8 +186,7 @@
 
     host.Run();
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Now, the <code class="highlighter-rouge">WebHostBuilder</code> is responsible for creating instance of <code class="highlighter-rouge">IApplicationEnvironment</code>, etc. and passing these dependencies to <code class="highlighter-rouge">Startup</code> class. So the <code class="highlighter-rouge">Startup</code> class does not have to change, the only change is in the <code class="highlighter-rouge">Main</code> method.</p>
 
@@ -219,17 +212,17 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
   <li>Tests</li>
 </ol>
 
-<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451-a-namelibrary-appa">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
+<h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451-">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
 
 <p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
 
 <p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code class="highlighter-rouge">bin</code> folder.</p>
 
-<h3 id="a-console-app-a-nameconsole-appa">A console app <a name="console-app"></a></h3>
+<h3 id="a-console-app-">A console app <a name="console-app"></a></h3>
 
 <p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code class="highlighter-rouge">emitEntryPoint</code></a>. In that case, you have to add a static <code class="highlighter-rouge">Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
 
-<h3 id="aspnet-mvc-application-a-namemvc-appa">ASP.NET MVC application <a name="mvc-app"></a></h3>
+<h3 id="aspnet-mvc-application-">ASP.NET MVC application <a name="mvc-app"></a></h3>
 
 <p>A full ASP.NET MVC application will require some more work. Follow these steps:</p>
 
@@ -267,21 +260,20 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <p>The .NET CLI runner is capable of running tests which target desktop .NET (minimum version 4.5.1), in addition to .NET Core. To target desktop .NET, use this frameworks section instead:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"frameworks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"net451"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"dependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"Microsoft.NETCore.Platforms"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.1"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "frameworks": {
+        "net451": {
+            "dependencies": {
+                "Microsoft.NETCore.Platforms": "1.0.1"
+            }
+        }
+    }
+}
+</code></pre></div></div>
 
 <p>You can target both net4xx and netcoreapp simply by adding both frameworks together in your project.json file. When you run dotnet test with multiple framework entries, the system will run tests with <strong>all</strong> the frameworks, one after another.</p>
 
-<h2 id="hunt-down-old-references-a-idhunt-down-rc1a">Hunt down old references <a id="hunt-down-rc1"></a></h2>
+<h2 id="hunt-down-old-references-">Hunt down old references <a id="hunt-down-rc1"></a></h2>
 
 <p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
 
@@ -297,15 +289,14 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <p>When targeting full .Net Framework, if you want <a href="https://msdn.microsoft.com/en-us/library/cc165011(v=office.11).aspx">server garbage collection</a>, you have to <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html#server-garbage-collection-gc">enable it</a> in  <em>project.json</em> or <em>app.config</em>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"runtimeOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"configProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"System.GC.Server"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "runtimeOptions": {
+        "configProperties": {
+            "System.GC.Server": true
+        }
+    }
+}
+</code></pre></div></div>
 
 <p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="highlighter-rouge">runtimeOptions</code></a>.</p>
 
@@ -330,20 +321,18 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <p>Otherwise, if you’re a command-line freak, use the <code class="highlighter-rouge">dotnet-install.ps1</code> script (from PowerShell commandline):</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
+</code></pre></div></div>
 
 <p>You don’t even need elevated access - by default <code class="highlighter-rouge">dotnet</code> will install in <code class="highlighter-rouge">%LOCALAPPDATA%\Microsoft\dotnet</code>. The install script also takes optional arguments, such as the required version of dotnet SDK, install location, and so on. If you want to fiddle with these options, just save it locally:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
 &gt;  get-help .\dotnet-install.ps1 -Detailed
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Let’s verify <code class="highlighter-rouge">dotnet</code> installation:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet --info
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet --info
 .NET Command Line Tools (1.0.0-preview2-003121)
 
 Product Information:
@@ -355,8 +344,7 @@ OS Name:     Windows
 OS Version:  10.0.10586
 OS Platform: Windows
 RID:         win10-x64
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Cool, now we can get to work.</p>
 
@@ -373,7 +361,7 @@ RID:         win10-x64
 
 <p>The <code class="highlighter-rouge">dotnet</code> command is still available after <code class="highlighter-rouge">.Net Core</code> installation (without the SDK), but if you run it:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet restore
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore
 Did you mean to run dotnet SDK commands? Please install dotnet SDK from:
  http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 
@@ -400,14 +388,13 @@ If you are debugging the Shared Framework Host, set 'COREHOST_TRACE' to '1' in y
 
 To get started on developing applications for .NET Core, install .NET SDK from:
 http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="whats-in-the-box">What’s in the box?</h3>
 
 <p>The <code class="highlighter-rouge">dotnet</code> directory layout looks like this:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>dotnet
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet
  \- shared/
      \- Microsoft.NETCore.App/
          \- 1.0.0/
@@ -436,8 +423,7 @@ http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
          \- 1.0.1
              \- hostfxr.dll
  \- dotnet.exe
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Something to note:</p>
 
@@ -450,7 +436,7 @@ http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 
 <p><code class="highlighter-rouge">dotnet</code> command is announced to be the one which you will ever need to operate in .Net Core space. That is, including creating a new project:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet new
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new
 
 Welcome to .NET Core!
 ---------------------
@@ -466,30 +452,27 @@ A command is running to initially populate your local package cache, to improve 
 Decompressing 100% 5206 ms
 Expanding 100% 104448 ms
 Created new C# project in C:\src\dotnet\test.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>That gives us a simple “Hello world” program and a <code class="highlighter-rouge">project.json</code> file. Just type <code class="highlighter-rouge">dotnet run</code> and…</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet run
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
 The current project is not valid because of the following errors:
 C:\src\dotnet\test\project.lock.json(1,0): error NU1009: The expected lock file doesn't exist. Please run "dotnet restore" to generate a new lock file.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Ok, sure, <code class="highlighter-rouge">dotnet restore</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet restore    
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore    
 log  : Restoring packages for C:\src\dotnet\test\project.json...
 log  : Writing lock file to disk. Path: C:\src\dotnet\test\project.lock.json
 log  : C:\src\dotnet\test\project.json
 log  : Restore completed in 2118ms.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Fine, <code class="highlighter-rouge">project.lock.json</code> is created and up to date.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&gt; dotnet run
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
 Project test (.NETCoreApp,Version=v1.0) will be compiled because expected outputs are missing
 Compiling test for .NETCoreApp,Version=v1.0
 
@@ -501,8 +484,7 @@ Time elapsed 00:00:03.1092630
 
 
 Hello World!
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Great! Now you can checkout all the resources at https://www.microsoft.com/net and start hacking. And I’m gonna start migrating my RC1 projects to <code class="highlighter-rouge">.Net Core 1.0</code>…</p>
 

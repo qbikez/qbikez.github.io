@@ -23,39 +23,35 @@ But there are cases, where your doing seemingly trivial things, but your script 
 
 <p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
 
-<p><code class="highlighter-rouge">
-$timespan = Measure-Command {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$timespan = Measure-Command {
     # do whatever you want to measure here
 }
-</code></p>
+</code></pre></div></div>
 
 <p>That’s nice if you know or suspect which part of code is slow. But I would like to have something that’s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
 
 <p>That’s why I created a little wrapper around <code class="highlighter-rouge">Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code class="highlighter-rouge">Measure-function</code></a>, that’s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
 
-<p><code class="highlighter-rouge">
-  function Get-Something {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
     # i'm doing some heavy loading here
     return $something
   }
-</code></p>
+</code></pre></div></div>
 
 <p>I just wrap the body with <code class="highlighter-rouge">Measure-Function</code> like this:</p>
 
-<p><code class="highlighter-rouge">
-  function Get-Something {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
     Measure-Function "$($MyInvocation.MyCommand.Name)" {
       # i'm doing some heavy loading here
       return $something
     }
   }
-</code></p>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
 
-<p><code class="highlighter-rouge">
-$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div></div>
 
 <p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
 
@@ -71,45 +67,43 @@ $global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
 
 <p>Take a look at these three simple scenarios :</p>
 
-<p>```
-# $h is a hastable of size 10000 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># $h is a hastable of size 10000 
 $size = 10000
 $h = @{
 }
 for($i = 0; $i -lt $size; $i++) {
-    $h += @{ “key$i” = “value$i”  }
-}</p>
+    $h += @{ "key$i" = "value$i"  }
+}
 
-<p>measure-function “enumerating $($h.count) items by enumerator” {
+measure-function "enumerating $($h.count) items by enumerator" {
     foreach ($e in $h.GetEnumerator()) {
         $k = $e.key
         $v = $e.value
     }
-}</p>
+}
 
-<p>measure-function “enumerating $($h.count) items by keys” {
+measure-function "enumerating $($h.count) items by keys" {
     foreach ($k in $h.keys) {
         $v = $h[$k]
     }
 }
-measure-function “enumerating $($h.count) items with property accessor” {
+measure-function "enumerating $($h.count) items with property accessor" {
     foreach ($k in $h.keys) {
         $v = $h.$k
     }
-}</p>
+}
 
-<p>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
-```</p>
+$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+</code></pre></div></div>
 
 <p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let’s see…</p>
 
-<p><code class="highlighter-rouge">
-name                                           elapsed          count
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name                                           elapsed          count
 ----                                           -------          -----
 enumerating 10000 items with property accessor 00:00:30.4342957     1
 enumerating 10000 items by keys                00:00:00.0479557     1
 enumerating 10000 items by enumerator          00:00:00.1173057     1
-</code></p>
+</code></pre></div></div>
 
 <p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer!</p>
 
@@ -117,10 +111,12 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
 
 <p>The conclusion is simple: if you know you’re working with a potentially big hashtable, don’t go for shortcuts and use plain old <code class="highlighter-rouge">$h[$k]</code>. But if you’re not in a tight loop - just go with what you think is more readable.</p>
 
-<p>Reference:
-* <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a>
-* There is also 
-<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>.</p>
+<p>Reference:</p>
+<ul>
+  <li><a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a></li>
+  <li>There is also 
+<a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>.</li>
+</ul>
 
 	  ]]></description>
 	</item>

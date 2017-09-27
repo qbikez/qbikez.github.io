@@ -149,10 +149,9 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
   <li>
     <p>If you don’t have it already, install <code class="highlighter-rouge">python2</code>:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; choco install -y python2
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y python2
  &gt; refreshenv
-</code></pre>
-    </div>
+</code></pre></div>    </div>
 
     <blockquote>
       <p>chocolatey package python2 installs to <em>c:/Python27</em> by default</p>
@@ -161,9 +160,8 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
   <li>
     <p>install <code class="highlighter-rouge">mercurial_keyring</code></p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
+</code></pre></div>    </div>
 
     <blockquote>
       <p>pip will handle installation of all dependencies, including <code class="highlighter-rouge">keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code class="highlighter-rouge">mercurial_extension_utils</code></a>, etc.</p>
@@ -172,10 +170,9 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
   <li>
     <p>Configure exension in <em>mercurial.ini</em>:</p>
 
-    <p><code class="highlighter-rouge">
- [extensions]
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
  mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
-</code></p>
+</code></pre></div>    </div>
   </li>
 </ol>
 
@@ -183,22 +180,20 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
 
 <p>Let’s try it out:</p>
 
-<p><code class="highlighter-rouge">
-&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
 keyring: username not specified in hgrc (or in url). Password will not be saved.
 http authorization required
 realm: Bitbucket.org HTTP
 url: https://bitbucket.org/heavymetaldev/top-secret
 user:
-</code></p>
+</code></pre></div></div>
 
 <p>Note that <code class="highlighter-rouge">keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  https://qbik@bitbucket.org/heavymetaldev/top-secret) or configure in <code class="highlighter-rouge">mercurial.ini</code>:</p>
 
-<p>````
-[auth]
+<pre><code class="language-`">[auth]
 bitbucket.org.prefix = bitbucket.org
 bitbucket.org.username = qbik
-```</p>
+</code></pre>
 
 <p>TortoiseHG does exactly that when you configure credentials there (with <code class="highlighter-rouge">mercurial_keyring</code> enabled).</p>
 

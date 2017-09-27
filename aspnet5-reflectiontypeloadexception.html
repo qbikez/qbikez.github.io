@@ -132,8 +132,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
             <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
 
-<p><code class="highlighter-rouge">
-&gt; dnx web
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
 Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
    at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
    at System.Reflection.RuntimeAssembly.get_DefinedTypes()
@@ -144,48 +143,44 @@ Application startup exception: System.Reflection.ReflectionTypeLoadException: Un
 Hosting environment: Production
 Now listening on: http://localhost:5000
 Application started. Press Ctrl+C to shut down.
-</code></p>
+</code></pre></div></div>
 
 <p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
 
-<p><code class="highlighter-rouge">
-&gt; dnu restore
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
 (...)
 Done, without errors.
 Restore complete, 18523ms elapsed
-</code></p>
+</code></pre></div></div>
 
 <p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
 
 <p>Try to compile then:</p>
 
-<p>```
-&gt; dnu build
-(…)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
+(...)
 Build succeeded.
     0 Warning(s)
-    0 Error(s)</p>
+    0 Error(s)
 
-<p>Time elapsed 00:00:01.9781471
+Time elapsed 00:00:01.9781471
 Total build time elapsed: 00:00:02.0094707
 Total projects built: 1
-```</p>
+</code></pre></div></div>
 
 <p>Seems ok to me. What the hell is causing the problem then?</p>
 
-<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:
-<code class="highlighter-rouge">
-&gt; dnx --debug web
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
 Process Id: 15396
 Waiting for the debugger to attach...
-</code></p>
+</code></pre></div></div>
 
 <p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
 In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
 
-<p><code class="highlighter-rouge">
-Debugger attached.
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
+</code></pre></div></div>
 
 <p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
 Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
@@ -197,11 +192,10 @@ In fact, you may have already caught the exception which is the real cause of er
 
 <p>In my case the problem was:</p>
 
-<p>```
-Exception thrown: ‘Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException’ in Microsoft.Dnx.Compilation.CSharp.dll</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
 
-<p>Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
-```</p>
+Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
+</code></pre></div></div>
 
 <p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
 It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 

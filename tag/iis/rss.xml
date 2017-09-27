@@ -43,84 +43,80 @@
 
 <p>If you want to do it from commandline, here’s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
 
-<p><code class="highlighter-rouge">
-[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
 [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
-</code></p>
+</code></pre></div></div>
 
 <p>Then, use <code class="highlighter-rouge">Set-Acl</code> to set physical path permissions. Here’s a full script:</p>
 
-<p>```
-&lt;#
-.SYNOPSIS</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;#
+.SYNOPSIS
 
-<p>adds ACL rules to specific path. it’s a helper wrapper for Set-ACL from Microsoft.PowerShell.Security</p>
+adds ACL rules to specific path. it's a helper wrapper for Set-ACL from Microsoft.PowerShell.Security   
 
-<h1 id="section">&gt;</h1>
+#&gt;
 
-<p>function set-acl2(
+function set-acl2(
 [Parameter(Mandatory=$true)] $path, 
 [Parameter(Mandatory=$true)] [System.Security.AccessControl.FileSystemRights] $rights, 
 [Parameter(Mandatory=$true)] $user,
 [System.Security.AccessControl.InheritanceFlags]  $InheritanceFlag = [System.Security.AccessControl.InheritanceFlags]::None,
  [System.Security.AccessControl.PropagationFlags] $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None
 ) {
-    $colRights = $rights</p>
+    $colRights = $rights
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
+    $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
 
-$objType =[System.Security.AccessControl.AccessControlType]::Allow 
+    $objType =[System.Security.AccessControl.AccessControlType]::Allow 
 
-$objUser = New-Object System.Security.Principal.NTAccount($user) 
+    $objUser = New-Object System.Security.Principal.NTAccount($user) 
 
-$objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
+    $objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
 
-$objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
-$objACL.AddAccessRule($objACE) 
+    $objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
+    $objACL.AddAccessRule($objACE) 
 
-Set-ACL -Path $path -AclObject $objACL }
-</code></pre>
-</div>
+    Set-ACL -Path $path -AclObject $objACL
+}
 
-<p>&lt;#</p>
+&lt;#
 
-<p>.SYNOPSIS 
-Allows the specified user to publish website through webdeploy</p>
+.SYNOPSIS 
+Allows the specified user to publish website through webdeploy
 
-<h1 id="section-1">&gt;</h1>
-<p>function allow-iiswebdeploy {
+#&gt;    
+function allow-iiswebdeploy {
 param(
     [Parameter(Mandatory=$true)] $username,
     [Parameter(Mandatory=$true)] $site,
     [Switch][bool] $isgroup
-)</p>
+)
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ipmo webadministration
+    ipmo webadministration
 
 
-$iissite = get-item "iis:\sites\$site" -ErrorAction Stop
+    $iissite = get-item "iis:\sites\$site" -ErrorAction Stop
 
-if ($iissite -eq $null) { throw "site '$site' not found" }
+    if ($iissite -eq $null) { throw "site '$site' not found" }
 
-# add  IIS Manager Users and Permissions
-# from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
+    # add  IIS Manager Users and Permissions
+    # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
 
-[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
+    [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
+    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
 
-# grant file system permissions!
+    # grant file system permissions!
 
-$dir = $iissite.physicalPath
-
-set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit  } ```
-</code></pre>
-</div>
+    $dir = $iissite.physicalPath
+    
+    set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit 
+}
+</code></pre></div></div>
 
 <p>Just call:</p>
 
-<p><code class="highlighter-rouge">
-PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
-</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
+</code></pre></div></div>
 
 <p>And that’s it! Note that site’s physical path is obtained directly from IIS.</p>
 

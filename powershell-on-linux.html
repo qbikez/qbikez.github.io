@@ -140,17 +140,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>The installation (here, for Ubuntu 14.04) is pretty straightforward:</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.9/powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb
-<span class="gp">$ </span>sudo apt-get install libunwind8 libicu52
-<span class="gp">$ </span>sudo dpkg -i powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.9/powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb
+<span class="nv">$ </span><span class="nb">sudo </span>apt-get install libunwind8 libicu52
+<span class="nv">$ </span><span class="nb">sudo </span>dpkg <span class="nt">-i</span> powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb</code></pre></figure>
 
 <p>So now, I can do this:</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">&gt; </span>c:<span class="se">\w</span>indows<span class="se">\s</span>ystem32<span class="se">\b</span>ash
-<span class="gp">$ </span>whereis powershell
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">&gt;</span> c:<span class="se">\w</span>indows<span class="se">\s</span>ystem32<span class="se">\b</span>ash
+<span class="nv">$ </span>whereis powershell
 powershell: /usr/bin/powershell
-<span class="gp">$ </span>powershell
-<span class="gp">PS&gt; </span>write-host <span class="s2">"hello world!"</span>
+<span class="nv">$ </span>powershell
+PS&gt; write-host <span class="s2">"hello world!"</span>
 hello world!</code></pre></figure>
 
 <p>Yay, look at that: Powershell on Bash on Windows :)</p>
@@ -165,16 +165,16 @@ hello world!</code></pre></figure>
 
 <p>Let’s take a look at available preinstalled modules:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Get-Module -ListAvailable
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Get-Module -ListAvailable
 
     Directory: /opt/microsoft/powershell/6.0.0-alpha.9/Modules
 
 
 ModuleType Version    Name                                ExportedCommands
 ---------- -------    ----                                ----------------
-Manifest   1.0.1.0    Microsoft.PowerShell.Archive        <span class="o">{</span>Compress-Archive, Expand-Archive<span class="o">}</span>
+Manifest   1.0.1.0    Microsoft.PowerShell.Archive        <span class="o">{</span><span class="nb">Compress-Archive</span>, <span class="nb">Expand-Archive</span><span class="o">}</span>
 Manifest   3.0.0.0    Microsoft.PowerShell.Host           <span class="o">{</span><span class="nb">Start-Transcript</span>, <span class="nb">Stop-Transcript</span><span class="o">}</span>
-Manifest   3.1.0.0    Microsoft.PowerShell.Management     <span class="o">{</span><span class="nb">Add-Content</span>, <span class="nb">Clear-Content</span>, <span class="nb">Clear</span>-ItemProperty, Join-Path...<span class="o">}</span>
+Manifest   3.1.0.0    Microsoft.PowerShell.Management     <span class="o">{</span><span class="nb">Add-Content</span>, <span class="nb">Clear-Content</span>, <span class="nb">Clear-ItemProperty</span>, Join-Path...<span class="o">}</span>
 Manifest   3.0.0.0    Microsoft.PowerShell.Security       <span class="o">{</span><span class="nb">Get-Credential</span>, <span class="nb">Get-ExecutionPolicy</span>, <span class="nb">Set-ExecutionPolicy</span>, ConvertFrom-SecureString...<span class="o">}</span>
 Manifest   3.1.0.0    Microsoft.PowerShell.Utility        <span class="o">{</span><span class="nb">Format-List</span>, <span class="nb">Format-Custom</span>, <span class="nb">Format-Table</span>, Format-Wide...<span class="o">}</span>
 Binary     1.0.0.1    PackageManagement                   <span class="o">{</span>Find-Package, Get-Package, Get-PackageProvider, Get-PackageSource...<span class="o">}</span>
@@ -185,18 +185,18 @@ Script     1.2        PSReadLine                          <span class="o">{</spa
 
 <p>Note that PowerShellGet is available, so you should be able to install modules from <a href="http://powershellgallery.com">Powershell Gallery</a>:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Install-Module PathUtils</code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Install-Module PathUtils</code></pre></figure>
 
 <p>But this seem to be broken for now:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">    PackageManagement<span class="se">\I</span>nstall-Package : Could not <span class="nb">compare</span> <span class="s2">"6.0.0-alpha"</span> to <span class="s2">"5.0"</span>. Error:
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">    PackageManagement\Install-Package : Could not <span class="nb">compare</span> <span class="s2">"6.0.0-alpha"</span> to <span class="s2">"5.0"</span><span class="nb">.</span> Error:
     <span class="s2">"Cannot convert value "</span>5.0<span class="s2">" to type "</span>System.Management.Automation.SemanticVersion<span class="s2">". Error:
     "</span>Cannot <span class="k">process </span>argument because the value of argument <span class="s2">"version"</span> is not valid. Change the value of the <span class="s2">"version"</span> argument and run the operation again.</code></pre></figure>
 
 <p>There already is a <a href="https://github.com/bmanikm/PowerShell/commit/97eb76cf9841faf1754028842ee5a1eb11516538">fix for this particular problem</a>. If you want to use that patch:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="gp">$ </span>sudo <span class="nb">cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
-<span class="gp">$ </span>sudo <span class="nb">wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nv">$ </span><span class="nb">sudo cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
+<span class="nv">$ </span><span class="nb">sudo wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
 
 <p>And voila, <code class="highlighter-rouge">Install-Module</code> works.</p>
 
@@ -233,7 +233,7 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>So, you will be able to do something like:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span>&gt; Invoke-Command -ComputerName MyLinux <span class="o">{</span> wtite-host <span class="s2">"this is me executing remotely"</span> <span class="o">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Invoke-Command -ComputerName MyLinux <span class="o">{</span> wtite-host <span class="s2">"this is me executing remotely"</span> <span class="o">}</span></code></pre></figure>
 
 <p>And that will work over SSH, without the struggle of setting up WINRM.</p>
 
