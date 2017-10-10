@@ -10,9 +10,7 @@
       <item>
         <title>OpenVPN server inside docker container</title>
         
-          <description>&lt;h2 id=&quot;the-problem&quot;&gt;The problem&lt;/h2&gt;
-
-</description>
+          <description>Start an OpenVPN server inside docker container so that other users (i.e. workers) can connect to internal network.</description>
         
         <pubDate>Thu, 28 Sep 2017 00:00:00 +0200</pubDate>
         <link>
