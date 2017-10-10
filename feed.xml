@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>OpenVPN server inside docker container</title>
+        
+          <description>&lt;h2 id=&quot;the-problem&quot;&gt;The problem&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Thu, 28 Sep 2017 00:00:00 +0200</pubDate>
+        <link>
+        http://heavymetaldev.com/openvpn-with-docker</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/openvpn-with-docker</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Measuring PowerShell hashtables performance</title>
         
           <description>How to instrument PowerShell scripts and find performance bottlenecks? And how PS hashtables can bite you.</description>

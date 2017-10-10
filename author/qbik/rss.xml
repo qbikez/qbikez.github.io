@@ -12,6 +12,197 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>OpenVPN server inside docker container</title>
+	  <link>//openvpn-with-docker</link>
+	  <author>qbik</author>
+	  <pubDate>2017-09-28T00:00:00+02:00</pubDate>
+	  <guid>//openvpn-with-docker</guid>
+	  <description><![CDATA[
+	     <h2 id="the-problem">The problem</h2>
+
+<p>Start an OpenVPN server so that other users (i.e. workers) can connect to your internal network.</p>
+
+<p>The network architecture looks like this:</p>
+
+<pre><code class="language-mermaid">graph LR
+    subgraph Internal Network
+    subgraph Docker Host&lt;br/&gt;192.168.13.20
+        GW[OpenVpn gateway &lt;br/&gt; 172.0.0.2 &lt;br/&gt; 192.168.255.1]
+    end
+    A[Host A &lt;br/&gt; 192.168.13.1]
+    B[Host B &lt;br/&gt; 192.168.13.2]
+    end
+    Client[Client &lt;br/&gt; 192.168.255.2] --&gt; GW
+    GW --- A
+    GW --- B
+</code></pre>
+
+<p>We’ve got three separate subnets:</p>
+<ul>
+  <li><code class="highlighter-rouge">192.168.13.0/24</code> - the target internal network (i.e. company network)</li>
+  <li><code class="highlighter-rouge">172.17.0.0/16</code> - docker internal bridge network</li>
+  <li><code class="highlighter-rouge">192.168.255.0/24</code> - openvpn network, from which addresses are assigned to clients</li>
+</ul>
+
+<p>We want to be able to connect through OpenVPN and access any host in the internal network. This will be achieved through routing and NAT (as opposed to bridging, where VPN clients would get IP addreses from internal network).</p>
+
+<h2 id="docker-to-the-rescue">Docker to the rescue</h2>
+
+<p>Let’s start with OpenVPN docker image. The heavy lifting has already been done and there is an image at  <a href="https://github.com/kylemanna/docker-openvpn/tree/master">https://github.com/kylemanna/docker-openvpn/tree/master</a> that not only starts OpenVPN server, but also facilitates registering new clients and generating profiles for them. There’s also a <a href="https://github.com/kylemanna/docker-openvpn/blob/909744dd7899870df764c2cc0a33ef01e9189849/docs/docker-compose.md">guide on how to use it with docker-compose</a>. Sweet.</p>
+
+<p>The <code class="highlighter-rouge">docker-compose.yml</code> looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '2'
+services:
+  openvpn:
+    cap_add:
+     - NET_ADMIN
+    image: kylemanna/openvpn
+    container_name: openvpn
+    ports:
+     - "1194:1194/udp"
+    restart: always
+    volumes:
+     - ./openvpn-data/conf:/etc/openvpn
+</code></pre></div></div>
+
+<p>Before running openvpn server itself, we need to generate it’s config and certificates, using scripts provided in the image.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose run --rm openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+&gt; docker-compose run --rm openvpn ovpn_initpki
+</code></pre></div></div>
+
+<p>You will be asked for private key passphrace and Common Name for server certificate, then DH keypairs will be generated. When it says it’s going to take a long time - it really is. Go make yourself a tea.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p><code class="highlighter-rouge">ovpn_genconfig</code> script that we used in previous step generates two config files: <code class="highlighter-rouge">openvpn.config</code> and <code class="highlighter-rouge">ovpn_env.sh</code>. It takes a bunch of additional arguments to help you customize the config. You can either play along with it or edit the generated config manually. <code class="highlighter-rouge">ovpn_genconfig</code> also does some basic <code class="highlighter-rouge">iptables</code> configuration, which otherwise you would have to edit by hand, so I’ll stick with the script.</p>
+
+<p>Let’s see what <code class="highlighter-rouge">ovpn_genconfig</code> can do for us:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up -d openvpn 
+&gt; docker-compose exec openvpn bash
+bash-4.3# ovpn_genconfig -?
+Invalid option: -?
+usage: /usr/local/bin/ovpn_genconfig [-d]
+                  -u SERVER_PUBLIC_URL
+                 [-e EXTRA_SERVER_CONFIG ]
+                 [-E EXTRA_CLIENT_CONFIG ]
+                 [-f FRAGMENT ]
+                 [-n DNS_SERVER ...]
+                 [-p PUSH ...]
+                 [-r ROUTE ...]
+                 [-s SERVER_SUBNET]
+
+optional arguments:
+ -2    Enable two factor authentication using Google Authenticator.
+ -a    Authenticate  packets with HMAC using the given message digest algorithm (auth).
+ -b    Disable 'push block-outside-dns'
+ -c    Enable client-to-client option
+ -C    A list of allowable TLS ciphers delimited by a colon (cipher).
+ -d    Disable default route
+ -D    Do not push dns servers
+ -k    Set keepalive. Default: '10 60'
+ -m    Set client MTU
+ -N    Configure NAT to access external server network
+ -t    Use TAP device (instead of TUN device)
+ -T    Encrypt packets with the given cipher algorithm instead of the default one (tls-cipher).
+ -z    Enable comp-lzo compression.
+</code></pre></div></div>
+
+<p>In this scenario, we want to:</p>
+<ul>
+  <li>enable NAT (<code class="highlighter-rouge">-N</code>)</li>
+  <li>push (<code class="highlighter-rouge">-p</code>) routes to the client, so it knows to it should use vpn network to connect to company network</li>
+  <li>use company’s internal dns for name resolution (<code class="highlighter-rouge">-n</code>) and set default domain to <code class="highlighter-rouge">mycompany.net</code> (push adequate <code class="highlighter-rouge">dhcp-option</code> to client)</li>
+</ul>
+
+<p>Here’s the command to do that:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># remove old ovpn_env.sh
+&gt; docker-compose run --rm openvpn rm /etc/openvpn/ovpn_env.sh
+
+# generate new config files
+&gt; docker-compose run --rm openvpn ovpn_genconfig -N -d -n 192.168.13.6 -u udp://vpn.mycompany.net -p "dhcp-option DOMAIN mycompany.net" -p "route 192.168.13.0 255.255.255.0" -p "route 172.17.0.0 255.255.0.0"
+</code></pre></div></div>
+
+<p>The generated config will be in <code class="highlighter-rouge">./openvpn-data/conf</code> and it should look like this (you may also want to take a look at <code class="highlighter-rouge">ovpn_env.sh</code>):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server 192.168.255.0 255.255.255.0
+verb 3
+key /etc/openvpn/pki/private/dev.legimi.com.key
+ca /etc/openvpn/pki/ca.crt
+cert /etc/openvpn/pki/issued/dev.legimi.com.crt
+dh /etc/openvpn/pki/dh.pem
+tls-auth /etc/openvpn/pki/ta.key
+key-direction 0
+keepalive 10 60
+persist-key
+persist-tun
+
+proto udp
+# Rely on Docker to do port mapping, internally always 1194
+port 1194
+dev tun0
+status /tmp/openvpn-status.log
+
+user nobody
+group nogroup
+
+### Push Configurations Below
+push "dhcp-option DNS 192.168.13.6"
+push "dhcp-option DOMAIN legimi.com"
+push "route 192.168.13.0 255.255.255.0"
+push "route 172.17.0.0 255.255.0.0"
+</code></pre></div></div>
+
+<h2 id="client-profiles">Client profiles</h2>
+
+<p>Now that openvpn server is configured, make sure it is up and running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up
+</code></pre></div></div>
+
+<p>To connect, we’ll need a client profile.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generate a client certificate (you will be asked for a passphrase)
+&gt; export CLIENTNAME="your_client_name"
+&gt; docker-compose run --rm openvpn easyrsa build-client-full $CLIENTNAME
+
+# Generate client profile for openvpn
+&gt; docker-compose run --rm openvpn ovpn_getclient $CLIENTNAME &gt; $CLIENTNAME.ovpn
+</code></pre></div></div>
+
+<p>Finally, connect to openvpn:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; openvpn -c your_client_name.ovpn
+</code></pre></div></div>
+
+<p>If everything goes fine, you should be able to ping the internal network (i.e. 192.168.13.1 host).</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>If you cannot connect to openvpn:</p>
+
+<ul>
+  <li>make sure <code class="highlighter-rouge">openvpn</code> container starts without errors and port 1194 is exposed at docker host</li>
+  <li>make sure port 1194 is open at vpn url you specified when configuring (vpn.mycompany.net)</li>
+</ul>
+
+<p>If you can connect to openvpn, but cannot ping internal network:</p>
+
+<ul>
+  <li>check if the client machine has an IP address from openvpn network assigned (<code class="highlighter-rouge">192.168.255.x</code>)</li>
+  <li>ping <code class="highlighter-rouge">192.168.255.1</code> (that’s the default gateway for openvpn connections). If you can’t, there’s probably something wrong with openvpn config.</li>
+  <li>check <code class="highlighter-rouge">openvpn</code> container’s internal IP (<code class="highlighter-rouge">172.17.0.x</code>) and ping it.</li>
+  <li>check routing tables on client machine. There should be routes for networks <code class="highlighter-rouge">172.17.0.0</code> and <code class="highlighter-rouge">192.168.13.0</code> going through Gateway <code class="highlighter-rouge">192.168.255.1</code>.</li>
+  <li>check if you can ping internal network from <code class="highlighter-rouge">openvpn</code> container</li>
+</ul>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Measuring PowerShell hashtables performance</title>
 	  <link>//powershell-hashtables</link>
 	  <author>qbik</author>
@@ -875,74 +1066,74 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>If you want to do it from commandline, here’s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $false) 
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>System.Reflection.Assembly]::LoadWithPartialName<span class="o">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="o">)</span> 
+<span class="o">[</span>Microsoft.Web.Management.Server.ManagementAuthorization]::Grant<span class="o">(</span><span class="nv">$username</span>, <span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span>, <span class="nv">$false</span><span class="o">)</span> 
 </code></pre></div></div>
 
 <p>Then, use <code class="highlighter-rouge">Set-Acl</code> to set physical path permissions. Here’s a full script:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;#
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">&lt;#
 .SYNOPSIS
 
 adds ACL rules to specific path. it's a helper wrapper for Set-ACL from Microsoft.PowerShell.Security   
 
-#&gt;
+#&gt;</span>
 
-function set-acl2(
-[Parameter(Mandatory=$true)] $path, 
-[Parameter(Mandatory=$true)] [System.Security.AccessControl.FileSystemRights] $rights, 
-[Parameter(Mandatory=$true)] $user,
-[System.Security.AccessControl.InheritanceFlags]  $InheritanceFlag = [System.Security.AccessControl.InheritanceFlags]::None,
- [System.Security.AccessControl.PropagationFlags] $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None
-) {
-    $colRights = $rights
+<span class="k">function </span><span class="nb">set</span>-acl2<span class="o">(</span>
+<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$path</span>, 
+<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="o">[</span>System.Security.AccessControl.FileSystemRights] <span class="nv">$rights</span>, 
+<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$user</span>,
+<span class="o">[</span>System.Security.AccessControl.InheritanceFlags]  <span class="nv">$InheritanceFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.InheritanceFlags]::None,
+ <span class="o">[</span>System.Security.AccessControl.PropagationFlags] <span class="nv">$PropagationFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.PropagationFlags]::None
+<span class="o">)</span> <span class="o">{</span>
+    <span class="nv">$colRights</span> <span class="o">=</span> <span class="nv">$rights</span>
 
-    $PropagationFlag = [System.Security.AccessControl.PropagationFlags]::None 
+    <span class="nv">$PropagationFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.PropagationFlags]::None 
 
-    $objType =[System.Security.AccessControl.AccessControlType]::Allow 
+    <span class="nv">$objType</span> <span class="o">=[</span>System.Security.AccessControl.AccessControlType]::Allow 
 
-    $objUser = New-Object System.Security.Principal.NTAccount($user) 
+    <span class="nv">$objUser</span> <span class="o">=</span> <span class="nb">New-Object </span>System.Security.Principal.NTAccount<span class="o">(</span><span class="nv">$user</span><span class="o">)</span> 
 
-    $objACE = New-Object System.Security.AccessControl.FileSystemAccessRule ($objUser, $colRights, $InheritanceFlag, $PropagationFlag, $objType) 
+    <span class="nv">$objACE</span> <span class="o">=</span> <span class="nb">New-Object </span>System.Security.AccessControl.FileSystemAccessRule <span class="o">(</span><span class="nv">$objUser</span>, <span class="nv">$colRights</span>, <span class="nv">$InheritanceFlag</span>, <span class="nv">$PropagationFlag</span>, <span class="nv">$objType</span><span class="o">)</span> 
 
-    $objACL = (Get-Item $path).GetAccessControl('Access')#(Get-ACL $path).GetAccessControl('Access')
-    $objACL.AddAccessRule($objACE) 
+    <span class="nv">$objACL</span> <span class="o">=</span> <span class="o">(</span><span class="nb">Get-Item</span> <span class="nv">$path</span><span class="o">)</span>.GetAccessControl<span class="o">(</span><span class="s1">'Access'</span><span class="o">)</span><span class="c1">#(Get-ACL $path).GetAccessControl('Access')</span>
+    <span class="nv">$objACL</span>.AddAccessRule<span class="o">(</span><span class="nv">$objACE</span><span class="o">)</span> 
 
-    Set-ACL -Path $path -AclObject $objACL
-}
+    <span class="nb">Set-ACL</span> -Path <span class="nv">$path</span> -AclObject <span class="nv">$objACL</span>
+<span class="o">}</span>
 
-&lt;#
+<span class="cm">&lt;#
 
 .SYNOPSIS 
 Allows the specified user to publish website through webdeploy
 
-#&gt;    
-function allow-iiswebdeploy {
-param(
-    [Parameter(Mandatory=$true)] $username,
-    [Parameter(Mandatory=$true)] $site,
-    [Switch][bool] $isgroup
-)
+#&gt;</span>    
+<span class="k">function </span>allow-iiswebdeploy <span class="o">{</span>
+<span class="k">param</span><span class="o">(</span>
+    <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$username</span>,
+    <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$site</span>,
+    <span class="o">[</span><span class="k">Switch</span><span class="o">][</span><span class="kt">bool</span><span class="o">]</span> <span class="nv">$isgroup</span>
+<span class="o">)</span>
 
-    ipmo webadministration
+    <span class="nb">ipmo </span>webadministration
 
 
-    $iissite = get-item "iis:\sites\$site" -ErrorAction Stop
+    <span class="nv">$iissite</span> <span class="o">=</span> <span class="nb">get-item</span> <span class="s2">"iis:\sites\</span><span class="nv">$site</span><span class="s2">"</span> -ErrorAction Stop
 
-    if ($iissite -eq $null) { throw "site '$site' not found" }
+    <span class="k">if</span> <span class="o">(</span><span class="nv">$iissite</span> -eq <span class="nv">$null</span><span class="o">)</span> <span class="o">{</span> <span class="k">throw</span> <span class="s2">"site '</span><span class="nv">$site</span><span class="s2">' not found"</span> <span class="o">}</span>
 
-    # add  IIS Manager Users and Permissions
-    # from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell
+    <span class="c1"># add  IIS Manager Users and Permissions</span>
+    <span class="c1"># from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell</span>
 
-    [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.Web.Management") 
-    [Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, "$site", $isgroup) 
+    <span class="o">[</span>System.Reflection.Assembly]::LoadWithPartialName<span class="o">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="o">)</span> 
+    <span class="o">[</span>Microsoft.Web.Management.Server.ManagementAuthorization]::Grant<span class="o">(</span><span class="nv">$username</span>, <span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span>, <span class="nv">$isgroup</span><span class="o">)</span> 
 
-    # grant file system permissions!
+    <span class="c1"># grant file system permissions!</span>
 
-    $dir = $iissite.physicalPath
+    <span class="nv">$dir</span> <span class="o">=</span> <span class="nv">$iissite</span>.physicalPath
     
-    set-acl2 -path $dir -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user $username -InheritanceFlag ObjectInherit,ContainerInherit 
-}
+    <span class="nb">set</span>-acl2 -path <span class="nv">$dir</span> -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user <span class="nv">$username</span> -InheritanceFlag ObjectInherit,ContainerInherit 
+<span class="o">}</span>
 </code></pre></div></div>
 
 <p>Just call:</p>
@@ -1533,93 +1724,6 @@ Hello World!
 <p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
 
 <p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.</p>
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>ReflectionTypeLoadException when running dnx (aspnet5)</title>
-	  <link>//aspnet5-reflectiontypeloadexception</link>
-	  <author>qbik</author>
-	  <pubDate>2015-11-26T00:00:00+01:00</pubDate>
-	  <guid>//aspnet5-reflectiontypeloadexception</guid>
-	  <description><![CDATA[
-	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
-Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
-   at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
-   at System.Reflection.RuntimeAssembly.get_DefinedTypes()
-   at Microsoft.AspNet.Hosting.Startup.StartupLoader.FindStartupType(String startupAssemblyName, IList`1 diagnosticMessages)
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureStartup()
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.EnsureApplicationServices()
-   at Microsoft.AspNet.Hosting.Internal.HostingEngine.BuildApplication()
-Hosting environment: Production
-Now listening on: http://localhost:5000
-Application started. Press Ctrl+C to shut down.
-</code></pre></div></div>
-
-<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
-(...)
-Done, without errors.
-Restore complete, 18523ms elapsed
-</code></pre></div></div>
-
-<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
-
-<p>Try to compile then:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
-(...)
-Build succeeded.
-    0 Warning(s)
-    0 Error(s)
-
-Time elapsed 00:00:01.9781471
-Total build time elapsed: 00:00:02.0094707
-Total projects built: 1
-</code></pre></div></div>
-
-<p>Seems ok to me. What the hell is causing the problem then?</p>
-
-<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
-Process Id: 15396
-Waiting for the debugger to attach...
-</code></pre></div></div>
-
-<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
-In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
-</code></pre></div></div>
-
-<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
-Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
-
-<p>And voila, we have our exception caught. What now? How to get details for this exception? 
-Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
-If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
-In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
-
-<p>In my case the problem was:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
-
-Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
-</code></pre></div></div>
-
-<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
-It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
-I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
-Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
-I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
-If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
-
-<p>I hope that will be fixed in next releases!</p>
-
 
 	  ]]></description>
 	</item>

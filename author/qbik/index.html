@@ -33,6 +33,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
+    <!-- [[! mermaid ]] -->
+    <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
+
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -164,7 +167,7 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
             <span class="author-link icon-link"><a href="http://heavymetaldev.com"></a></span>
         </div> -->
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <!--<span class="author-stats"><i class="icon-stats"></i>11 posts</span>-->
+            <!--<span class="author-stats"><i class="icon-stats"></i>12 posts</span>-->
         <div class="author-bio">
     <p>
         I love exploring new technologies and ideas and applying them in day-to-day work. I believe that the best way to validate
@@ -221,6 +224,37 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
     </div>
 
     <!-- This is the post loop - each post will be output using this markup -->
+    
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="/openvpn-with-docker">OpenVPN server inside docker container</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>
+            
+                <h2 id="the-problem">The problem</h2>
+
+ 
+            
+                <a class="read-more" href="/openvpn-with-docker">&raquo;</a>
+                </p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/qbik'>qbik</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/docker'>Docker</a>
+                       
+                
+            
+            <time class="post-date" datetime="2017-09-28">28 Sep 2017</time>
+        </footer>
+    </article>
     
     <article class="post">
         <header class="post-header">
@@ -366,39 +400,6 @@ Or has grown so big that you can’t even clone it?</p>
         </footer>
     </article>
     
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/powershell-on-linux">Powershell on Linux</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>
-            
-                Powershell is now Open Source. This perfectly complies with “Microsoft loves Linux” philosophy. Hardcore Bash users will probably ignore it anyway, but for many PowerShell fans that also work with Linux systems it will be a big treat. 
-            
-                <a class="read-more" href="/powershell-on-linux">&raquo;</a>
-                </p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/qbik'>qbik</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/powershell'>Powershell</a>,
-                       
-                
-                    
-                       <a href='/tag/linux'>Linux</a>
-                       
-                
-            
-            <time class="post-date" datetime="2016-08-24">24 Aug 2016</time>
-        </footer>
-    </article>
-    
 
     <!-- Previous/next page links - displayed on every page -->
     
@@ -421,6 +422,11 @@ Or has grown so big that you can’t even clone it?</p>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <script src="/assets/js/mermaid.js"></script>
+    <script>$(document).ready(function() {
+        mermaid.init(undefined, ".language-mermaid");
+    });</script>
 
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->

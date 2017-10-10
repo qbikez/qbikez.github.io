@@ -77,7 +77,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 </head>
 
-<body class="paged archive-template nav-closed">
+<body class="tag-template nav-closed">
     
     
 <div class="nav">
@@ -87,7 +87,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </a>
     <ul>
         
-        <li class="nav-home  nav-current" role="presentation"><a href="//" style="text-transform:capitalize;">home</a></li>   
+        <li class="nav-home " role="presentation"><a href="//" style="text-transform:capitalize;">home</a></li>   
         
         <li class="nav-my work " role="presentation"><a href="/powershell-modules" style="text-transform:capitalize;">my work</a></li>   
         
@@ -105,44 +105,55 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <div class="site-wrapper">
 
-        <header class="main-header " 
+        <header class=" post-head main-header  " 
      
-        style="background-image: url(/assets/images/cover1.jpg); "  
+        style="background-image: url(/assets/images/cover2.jpg); "  
      
 >
 
     <nav class="main-nav nav-top overlay clearfix">
+                
+        <a class="icon-arrow-left blog-logo" href="/">Heavy Metal Dev</a>
         
         
             <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
         
     </nav>
 
+
+
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">Heavy Metal Dev</h1>
-            <h2 class="page-description">Developer stories from the trenches.</h2>
+            <h1 class="page-title">Docker</h1>
+            <h2 class="page-description">
+            
+			    A 1-post collection
+            
+            </h2>
         </div>
     </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
-
-
 
 </header>
 
         <!-- [[! Everything else gets inserted here ]] -->
-        <!-- The main content area on the homepage -->
+        <!-- < dynamically overriding backgrounds for tags as well as descriptions -->
+
+
+<!-- < default}} -->
+<!-- The tag above means - insert everything in this file into the [body] of the default.hbs template -->
+
+<!-- If we have a tag cover, display that - else blog cover - else nothing -->
+
+<!-- The main content area on the homepage -->
 <main id="content" class="content" role="main">
+
+    <!-- The tag below includes the post loop - partials/loop.hbs -->
         <!-- Previous/next page links - only displayed on page 2+ -->
     <div class="extra-pagination inner">
         
             <nav class="pagination" role="pagination">
     
-        
-            <a class="newer-posts" href="/page2/" title="Previous Page">&laquo; Newer Posts</a>
-      
-    
-    <span class="page-number"> Page 3 of 3 </span>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
         
@@ -152,16 +163,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     
     <article class="post">
         <header class="post-header">
-            <h2 class="post-title"><a href="/aspnet5-reflectiontypeloadexception">ReflectionTypeLoadException when running dnx (aspnet5)</a></h2>
+            <h2 class="post-title"><a href="/openvpn-with-docker">OpenVPN server inside docker container</a></h2>
         </header>
         <section class="post-excerpt">
             <p>
             
-                <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+                <h2 id="the-problem">The problem</h2>
 
  
             
-                <a class="read-more" href="/aspnet5-reflectiontypeloadexception">&raquo;</a>
+                <a class="read-more" href="/openvpn-with-docker">&raquo;</a>
                 </p>
         </section>
         <footer class="post-meta">
@@ -173,46 +184,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 on 
                 
                     
-                       <a href='/tag/aspnet-vnext'>Aspnet-vnext</a>
+                       <a href='/tag/docker'>Docker</a>
                        
                 
             
-            <time class="post-date" datetime="2015-11-26">26 Nov 2015</time>
-        </footer>
-    </article>
-    
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="/azure-mime-mapping">Azure MIME mapping</a></h2>
-        </header>
-        <section class="post-excerpt">
-            <p>
-            
-                <p>It turns out that Azure Websites have some MIME mapping problems that a default IIS installation has not.</p>
-
- 
-            
-                <a class="read-more" href="/azure-mime-mapping">&raquo;</a>
-                </p>
-        </section>
-        <footer class="post-meta">
-            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
-            <!-- author -->
-            <a href='/author/qbik'>qbik</a>
-            <!-- [[tags prefix=" on "]] -->
-             
-                on 
-                
-                    
-                       <a href='/tag/azure'>Azure</a>,
-                       
-                
-                    
-                       <a href='/tag/aspnet'>Aspnet</a>
-                       
-                
-            
-            <time class="post-date" datetime="2015-11-18">18 Nov 2015</time>
+            <time class="post-date" datetime="2017-09-28">28 Sep 2017</time>
         </footer>
     </article>
     
@@ -221,17 +197,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     
         <nav class="pagination" role="pagination">
     
-        
-            <a class="newer-posts" href="/page2/" title="Previous Page">&laquo; Newer Posts</a>
-      
-    
-    <span class="page-number"> Page 3 of 3 </span>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
     
 
-</main>
 
+</main>
 
         <footer class="site-footer clearfix">
             <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>

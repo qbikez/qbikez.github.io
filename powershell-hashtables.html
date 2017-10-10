@@ -33,6 +33,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
+    <!-- [[! mermaid ]] -->
+    <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
+
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -305,6 +308,13 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
 
     <!-- [[! next_post ]] -->
     
+        <a class="read-next-story no-cover" href="/openvpn-with-docker">
+            <section class="post">
+                <h2>OpenVPN server inside docker container</h2>
+                <p>## The problem Start an OpenVPN server so that other users (i.e. workers) can connect...</p>
+            </section>
+        </a>
+    
     <!-- [[! /next_post ]] -->
     <!-- [[! prev_post ]] -->
     
@@ -327,6 +337,11 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <script src="/assets/js/mermaid.js"></script>
+    <script>$(document).ready(function() {
+        mermaid.init(undefined, ".language-mermaid");
+    });</script>
 
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->

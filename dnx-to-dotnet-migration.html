@@ -33,6 +33,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
+    <!-- [[! mermaid ]] -->
+    <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
+
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -527,6 +530,11 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <script src="/assets/js/mermaid.js"></script>
+    <script>$(document).ready(function() {
+        mermaid.init(undefined, ".language-mermaid");
+    });</script>
 
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->

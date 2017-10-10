@@ -33,6 +33,9 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://use.fontawesome.com/7356a771d5.js"></script>
 
+    <!-- [[! mermaid ]] -->
+    <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
+
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -164,7 +167,7 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
             <span class="author-link icon-link"><a href="http://heavymetaldev.com"></a></span>
         </div> -->
             <!-- <span class="author-stats"><i class="icon-stats"></i> [[plural ../pagination.total empty='No posts' singular='% post' plural='% posts']]</span> -->
-            <!--<span class="author-stats"><i class="icon-stats"></i>11 posts</span>-->
+            <!--<span class="author-stats"><i class="icon-stats"></i>12 posts</span>-->
         <div class="author-bio">
     <p>
         I love exploring new technologies and ideas and applying them in day-to-day work. I believe that the best way to validate
@@ -226,6 +229,37 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
     
     <article class="post">
         <header class="post-header">
+            <h2 class="post-title"><a href="/aspnet5-reflectiontypeloadexception">ReflectionTypeLoadException when running dnx (aspnet5)</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>
+            
+                <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+
+ 
+            
+                <a class="read-more" href="/aspnet5-reflectiontypeloadexception">&raquo;</a>
+                </p>
+        </section>
+        <footer class="post-meta">
+            <img class="author-thumb" src="/assets/images/qbik.jpg" alt="Author image" nopin="nopin" />
+            <!-- author -->
+            <a href='/author/qbik'>qbik</a>
+            <!-- [[tags prefix=" on "]] -->
+             
+                on 
+                
+                    
+                       <a href='/tag/aspnet-vnext'>Aspnet-vnext</a>
+                       
+                
+            
+            <time class="post-date" datetime="2015-11-26">26 Nov 2015</time>
+        </footer>
+    </article>
+    
+    <article class="post">
+        <header class="post-header">
             <h2 class="post-title"><a href="/azure-mime-mapping">Azure MIME mapping</a></h2>
         </header>
         <section class="post-excerpt">
@@ -283,6 +317,11 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <script src="/assets/js/mermaid.js"></script>
+    <script>$(document).ready(function() {
+        mermaid.init(undefined, ".language-mermaid");
+    });</script>
 
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
