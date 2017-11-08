@@ -94,7 +94,7 @@ Or has grown so big that you can’t even clone it?&lt;/p&gt;
     
       
       <item>
-        <title>Adding Web Deploy permissions using PowerShell</title>
+        <title>IIS Web Deploy permissions (with PowerShell)</title>
         
           <description>&lt;p&gt;Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company’s infrastructure.&lt;/p&gt;
 

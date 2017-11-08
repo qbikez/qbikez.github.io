@@ -1035,7 +1035,7 @@ But the fact that I can now look into PS source code and see, how they do things
 	</item>
 
 	<item>
-	  <title>Adding Web Deploy permissions using PowerShell</title>
+	  <title>IIS Web Deploy permissions (with PowerShell)</title>
 	  <link>//iis-web-deploy-permissions</link>
 	  <author>qbik</author>
 	  <pubDate>2016-08-07T00:00:00+02:00</pubDate>
