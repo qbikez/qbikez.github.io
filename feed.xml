@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>How to: import resources into terraform</title>
+        
+          <description>&lt;p&gt;So you’d like to start using infrastructure as code, but have a bunch of existing Azure resources?
+Or maybe you’ve added some resources through UI and want to include them in existing terraform script?&lt;/p&gt;
+</description>
+        
+        <pubDate>Tue, 07 Sep 2021 00:00:00 +0200</pubDate>
+        <link>
+        http://heavymetaldev.com/import-resources-to-terraform</link>
+        <guid isPermaLink="true">http://heavymetaldev.com/import-resources-to-terraform</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>OpenVPN server inside docker container</title>
         
           <description>Start an OpenVPN server inside docker container so that other users (i.e. workers) can connect to internal network.</description>

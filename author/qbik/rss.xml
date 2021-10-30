@@ -12,6 +12,257 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>How to: import resources into terraform</title>
+	  <link>//import-resources-to-terraform</link>
+	  <author>qbik</author>
+	  <pubDate>2021-09-07T00:00:00+02:00</pubDate>
+	  <guid>//import-resources-to-terraform</guid>
+	  <description><![CDATA[
+	     <p>So you’d like to start using infrastructure as code, but have a bunch of existing Azure resources?
+Or maybe you’ve added some resources through UI and want to include them in existing terraform script?</p>
+
+<p><code class="language-plaintext highlighter-rouge">terraform import</code> can help you with that (although not as much as it could).</p>
+
+<h1 id="gameplan">Gameplan</h1>
+
+<p>The algorithm is rather straightforward:</p>
+
+<ol>
+  <li>Define the desired resource in terraform, specifying only the required attributes.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">terraform import</code> to map the resource to actual Azure one.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">terraform plan</code> to get a diff between terraform’s resource and Azure one.</li>
+  <li>Update terraform script to match the diff and go to point 3. Repeat points 3.-4. until terraform matches the Azure resource.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">terraform apply</code> to update terraform state.</li>
+</ol>
+
+<h1 id="case-1---resource-group">Case 1 - Resource Group</h1>
+
+<p>Let’s try this in practice. The simplest resource in Azure is a <a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group">resource group</a>.</p>
+
+<h5 id="1-define-terraform-resource">1. Define terraform resource</h5>
+
+<p>Add resource definition:</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># resource-group.tf</span>
+
+<span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"rg"</span> <span class="p">{</span>
+  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"hmdev-sample-rg"</span>    <span class="c1"># the name of your pre-existing resource group</span>
+  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"westeurope"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Your provider configuration may vary, but here’s a simple one for starters:</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># provider.tf</span>
+
+<span class="k">terraform</span> <span class="p">{</span>
+  <span class="nx">required_providers</span> <span class="p">{</span>
+    <span class="nx">azurerm</span> <span class="p">=</span> <span class="p">{</span>
+      <span class="nx">source</span>  <span class="p">=</span> <span class="s2">"hashicorp/azurerm"</span>
+      <span class="nx">version</span> <span class="p">=</span> <span class="s2">"=2.78.0"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">provider</span> <span class="s2">"azurerm"</span> <span class="p">{</span>
+  <span class="nx">features</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Init first:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform init
+</code></pre></div></div>
+
+<h5 id="2-import">2. Import</h5>
+
+<p>First, let’s try plan to see what’s terraform planning to do:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform plan
+
+Terraform will perform the following actions:
+
+  <span class="c"># azurerm_resource_group.rg will be created</span>
+  + resource <span class="s2">"azurerm_resource_group"</span> <span class="s2">"rg"</span> <span class="o">{</span>
+      + <span class="nb">id</span>       <span class="o">=</span> <span class="o">(</span>known after apply<span class="o">)</span>
+      + location <span class="o">=</span> <span class="s2">"westeurope"</span>
+      + name     <span class="o">=</span> <span class="s2">"hmdev-sample-rg"</span>
+    <span class="o">}</span>
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+</code></pre></div></div>
+
+<p>No surprise, terraform wants to create a new resource group - because it have that resource in its state, thus doesn’t know it exists.</p>
+
+<p>We need to import it with <code class="language-plaintext highlighter-rouge">terraform import {ADDR} {ID}</code>.<br />
+The command expects two arguments:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ADDR</code> is the resoirce address in terraform script (which is simply <code class="language-plaintext highlighter-rouge">{resource_type}.{resource_name}</code>, i.e. ` azurerm_resource_group.rg`).</li>
+  <li><code class="language-plaintext highlighter-rouge">ID</code> is Azure resourceId. How do I know the resource id? I go to <a href="portal.azure.com">portal.azure.com</a>, and navigate to the specific resource. Then, in Overview section, there’s a little link called “JSON View”, which shows the Resource ID, along with all RM data.</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform import azurerm_resource_group.rg subscriptions/ddc49e36-1815-46a9-9c8a-fea443074404/resourceGroups/hmdev-sample-rg
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now <span class="k">in
+</span>your Terraform state and will henceforth be managed by Terraform.
+</code></pre></div></div>
+
+<p>The import simply adds an entry to the state that tells terraform that resource azurerm_resource_group.rg from the script is mapped to that specific Azure resource. 
+It also <strong>gets the properties of the actual resource and puts them in the state file</strong>. (try doing <code class="language-plaintext highlighter-rouge">terraform show</code> to see what’s in the state file).</p>
+
+<h5 id="3-plan">3. Plan</h5>
+
+<p>Now, let’s try plan again:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform plan
+...
+<span class="c"># azurerm_resource_group.rg will be updated in-place</span>
+~ resource <span class="s2">"azurerm_resource_group"</span> <span class="s2">"rg"</span> <span class="o">{</span>
+    <span class="nb">id</span>       <span class="o">=</span> <span class="s2">"/subscriptions/ddc49e36-1815-46a9-9c8a-fea443074404/resourceGroups/hmdev-sample-rg"</span>
+    name     <span class="o">=</span> <span class="s2">"hmdev-sample-rg"</span>
+    ~ tags     <span class="o">=</span> <span class="o">{</span>
+        - <span class="s2">"foo"</span> <span class="o">=</span> <span class="s2">"bar"</span> -&gt; null
+    <span class="o">}</span>
+    <span class="c"># (1 unchanged attribute hidden)</span>
+
+    <span class="c"># (1 unchanged block hidden)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Ok, We’re getting somewhere. Now terraform recognizes the existing resource, but shows some differences. I’ve added a tag on the resource group (via portal) and terraform is telling me that this tag is not part of terraform’s resource definition and it will be removed.</p>
+
+<h5 id="4-update-repeat">4. Update. Repeat.</h5>
+
+<p>Let’s add the missing tag then:</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"rg"</span> <span class="p">{</span>
+  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"hmdev-sample-rg"</span>
+  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"westeurope"</span>
+  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="s2">"foo"</span> <span class="p">=</span> <span class="s2">"bar"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Plan again… and voila:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform plan
+
+No changes. Your infrastructure matches the configuration.
+</code></pre></div></div>
+
+<h5 id="5-apply">5. Apply</h5>
+<p>Now I can safely do <code class="language-plaintext highlighter-rouge">terraform apply</code> - the state will be updated and no changes to actual infra will be made.</p>
+
+<h1 id="case-2---web-app">Case 2 - Web App</h1>
+
+<p>Ok, we nailed the resource group, now let’s something more complicated - a Web App.</p>
+
+<h5 id="1-define-resource">1. Define resource</h5>
+
+<p>Start again by adding a resource to terraform:</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_app_service_plan"</span> <span class="s2">"serviceplan"</span> <span class="p">{</span>
+  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"hmdev-sample-free-plan"</span>
+  <span class="nx">location</span>            <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">rg</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">rg</span><span class="p">.</span><span class="nx">name</span>
+
+  <span class="nx">sku</span> <span class="p">{</span>
+    <span class="nx">tier</span> <span class="p">=</span> <span class="s2">"Standard"</span>
+    <span class="nx">size</span> <span class="p">=</span> <span class="s2">"S1"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"azurerm_app_service"</span> <span class="s2">"sample-webapp"</span> <span class="p">{</span>
+  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"hmdev-sample-webapp"</span>
+  <span class="nx">location</span>            <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">rg</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">rg</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">app_service_plan_id</span> <span class="p">=</span> <span class="nx">azurerm_app_service_plan</span><span class="p">.</span><span class="nx">serviceplan</span><span class="p">.</span><span class="nx">id</span>
+
+  
+  <span class="nx">site_config</span> <span class="p">{</span>
+  <span class="p">}</span>
+
+  <span class="nx">app_settings</span> <span class="p">=</span> <span class="p">{</span>
+  <span class="p">}</span>
+
+  <span class="nx">logs</span> <span class="p">{</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>App service needs a service plan, so I added this as well. Fortunately, terraform docs include all the required pieces for a given resource type, so you don’t need to guess.</p>
+
+<h5 id="2-import-1">2. Import</h5>
+
+<p>Import the resources:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform import azurerm_app_service_plan.serviceplan /subscriptions/ddc49e36-1815-46a9-9c8a-fea443074404/resourceGroups/hmdev-sample-rg/providers/Microsoft.Web/serverfarms/hmdev-sample-free-plan
+<span class="o">&gt;</span> terraform import azurerm_app_service.sample-webapp /subscriptions/ddc49e36-1815-46a9-9c8a-fea443074404/resourceGroups/hmdev-sample-rg/providers/Microsoft.Web/sites/hmdev-sample-webapp 
+</code></pre></div></div>
+
+<blockquote>
+  <p>Note: Service Plan is simple enough, but webapp is a bit more tricky one. 
+Some <a href="https://github.com/hashicorp/terraform-provider-azurerm/issues/11215">optional attributes might be ignored</a> in state diff if you don’t define them. That’s why we have <code class="language-plaintext highlighter-rouge">site_config</code>, <code class="language-plaintext highlighter-rouge">app_settings</code> and <code class="language-plaintext highlighter-rouge">logs</code> blocks defined.</p>
+</blockquote>
+
+<h5 id="3-plan-1">3. Plan</h5>
+
+<p>Let’s see the plan:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> terraform plan
+
+Terraform will perform the following actions:
+
+  <span class="c"># azurerm_app_service.sample-webapp will be updated in-place</span>
+  ~ resource <span class="s2">"azurerm_app_service"</span> <span class="s2">"sample-webapp"</span> <span class="o">{</span>
+      ~ app_settings                      <span class="o">=</span> <span class="o">{</span>
+          - <span class="s2">"WEBSITE_NODE_DEFAULT_VERSION"</span>   <span class="o">=</span> <span class="s2">"~16"</span> -&gt; null
+        <span class="o">}</span>
+        <span class="nb">id</span>                                <span class="o">=</span> <span class="s2">"/subscriptions/ddc49e36-1815-46a9-9c8a-fea443074404/resourceGroups/hmdev-sample-rg/providers/Microsoft.Web/sites/hmdev-sample-webapp"</span>
+        name                              <span class="o">=</span> <span class="s2">"hmdev-sample-webapp"</span>
+
+        <span class="c"># (14 unchanged attributes hidden)</span>
+
+      ~ logs <span class="o">{</span>
+          ~ detailed_error_messages_enabled <span class="o">=</span> <span class="nb">true</span> -&gt; <span class="nb">false</span>
+            <span class="c"># (1 unchanged attribute hidden)</span>
+
+
+            <span class="c"># (2 unchanged blocks hidden)</span>
+        <span class="o">}</span>
+
+      ~ site_config <span class="o">{</span>
+          - use_32_bit_worker_process            <span class="o">=</span> <span class="nb">true</span> -&gt; null
+            <span class="c"># (18 unchanged attributes hidden)</span>
+
+            <span class="c"># (1 unchanged block hidden)</span>
+        <span class="o">}</span>
+
+
+        <span class="c"># (4 unchanged blocks hidden)</span>
+    <span class="o">}</span>
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+</code></pre></div></div>
+
+<h5 id="4-update-repeat-1">4. Update. Repeat.</h5>
+
+<p>Analyze the diff and update terraform script to match the real resource. Repeat that until the plan doesn’t contain any changes (or you’re happy with the planned changes).</p>
+
+<h5 id="6-apply">6. Apply</h5>
+
+<p>Once you’re happy with the plan, apply it.</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>That’s it. The process is not complicated, but may require a few (sometimes tedious) iterations. Before doing the final <code class="language-plaintext highlighter-rouge">apply</code> step, be sure to compare your script with the actual resource (i.e. in the portal) and look for any non-default settings - there might be things that <code class="language-plaintext highlighter-rouge">terraform plan</code> won’t tell you about.</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>OpenVPN server inside docker container</title>
 	  <link>//openvpn-with-docker</link>
 	  <author>qbik</author>
@@ -1626,104 +1877,6 @@ Hello World!
 </code></pre></div></div>
 
 <p>Great! Now you can checkout all the resources at https://www.microsoft.com/net and start hacking. And I’m gonna start migrating my RC1 projects to <code class="language-plaintext highlighter-rouge">.Net Core 1.0</code>…</p>
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>Sharing code between aspnet5 and "old" .net</title>
-	  <link>//aspnet5-reference-csproj</link>
-	  <author>qbik</author>
-	  <pubDate>2015-12-03T00:00:00+01:00</pubDate>
-	  <guid>//aspnet5-reference-csproj</guid>
-	  <description><![CDATA[
-	     <p>If you want to share some common code between <code class="language-plaintext highlighter-rouge">aspnet5</code> and regular <code class="language-plaintext highlighter-rouge">csproj</code> projects, you basically have three options:</p>
-<ul>
-  <li>create a nuget from the common library and push it to a shared nuget repository</li>
-  <li>use <code class="language-plaintext highlighter-rouge">dnu wrap</code> to wrap existing <code class="language-plaintext highlighter-rouge">csproj</code> into aspnet5 <code class="language-plaintext highlighter-rouge">project.json</code></li>
-  <li>maintain two versions of your shared project - a  <code class="language-plaintext highlighter-rouge">project.json</code> for aspnet5 and a <code class="language-plaintext highlighter-rouge">csproj</code> for regular .net</li>
-</ul>
-
-<p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
-
-<h3 id="shared-nuget-package">Shared nuget package</h3>
-
-<p>Sharing a library through nuget has many benefits:</p>
-<ul>
-  <li>versioning</li>
-  <li>easy restoration (devs don’t need to compile anything, just restore nuget packaget)</li>
-  <li>less projects to compile - shorter compilation time</li>
-</ul>
-
-<p>If the shared code doesn’t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
-
-<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="language-plaintext highlighter-rouge">dnu wrap</code></h3>
-
-<p>There is one other way - <code class="language-plaintext highlighter-rouge">dnu</code> has a handy command named <code class="language-plaintext highlighter-rouge">wrap</code>. It wraps your existing <code class="language-plaintext highlighter-rouge">.csproj</code> files into <code class="language-plaintext highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
-
-<p>You can do something like this:</p>
-
-<ol>
-  <li>
-    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="language-plaintext highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="language-plaintext highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
-
-    <p><!-- language: lang-json --></p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
-     "projects": [ "src", "test" ],
-     "sdk": {
-         "version": "1.0.0-rc1-final"
-     }
- }
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>In the same directory that contains <code class="language-plaintext highlighter-rouge">global.json</code> execute <code class="language-plaintext highlighter-rouge">dnu wrap</code> for each existing <code class="language-plaintext highlighter-rouge">.csproj</code> project.</p>
-  </li>
-</ol>
-
- 		dnu wrap src/my.project/my.project.csproj<br />
-
-<p>This should create a directory <code class="language-plaintext highlighter-rouge">wrap</code> containing <code class="language-plaintext highlighter-rouge">project.json</code> files that wrap <code class="language-plaintext highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
-
-	{
-		"version": "1.0.0-*",
-		"frameworks": {
-			"net45": {
-				"wrappedProject": "../../src/my.project/my.project.csproj",
-				"bin": {
-					"assembly": "../../src/my.project/obj/{configuration}/my.project.dll",
-					"pdb": "../../src/my.project/obj/{configuration}/my.project.pdb"
-				}
-			}
-		}
-	}
-</code></pre></div></div>
-
-<p>Note that <code class="language-plaintext highlighter-rouge">wrap</code> directory is also added to <code class="language-plaintext highlighter-rouge">projects</code> section in <code class="language-plaintext highlighter-rouge">global.json</code>.</p>
-
-<ol>
-  <li>
-    <p>In your solution, add a new aspnet project and add a reference to the wrapped project. Just add:</p>
-
-    <p><!-- language: lang-json --></p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "my.project": ""
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>to <code class="language-plaintext highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="language-plaintext highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="language-plaintext highlighter-rouge">wrap</code> directory.</p>
-
-<ol>
-  <li>Now you’re good to go - you can use all classes from <code class="language-plaintext highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="language-plaintext highlighter-rouge">csproj</code>.</li>
-</ol>
-
-<p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
-
-<p>I suppose this may get a little complicated if you have some custom things in your projects, like conditional compilation, custom includes, etc.</p>
 
 	  ]]></description>
 	</item>
