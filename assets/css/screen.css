@@ -470,7 +470,7 @@ body:not(.post-template) .post-title { font-size: 3.8rem; text-transform: none; 
 
 .post-footer h4 a:hover { text-decoration: underline; }
 
-.post-footer .share { position: absolute; top: 6rem; right: 0; width: 140px; }
+.post-footer .share { position: absolute; top: 0px; /* 6rem;*/ right: 0; width: 160px; }
 
 .post-footer .share a { font-size: 1.8rem; display: inline-block; margin: 1rem 1.6rem 1.6rem 0; color: #BBC7CC; text-decoration: none; }
 
