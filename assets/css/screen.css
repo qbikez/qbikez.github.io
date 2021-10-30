@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Table of Contents
-   ========================================================================== */
+/* ========================================================================== Table of Contents ========================================================================== */
 /*
 
     0.  Normalize
@@ -19,1040 +17,363 @@
     13. Animations
 
 */
-/* ==========================================================================
-   0. Normalize.css v2.1.3 | MIT License | git.io/normalize | (minified)
-   ========================================================================== */
-/* line 30 */
-article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
-  display: block; }
+/* ========================================================================== 0. Normalize.css v2.1.3 | MIT License | git.io/normalize | (minified) ========================================================================== */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
 
-/* line 34 */
-audio, canvas, video {
-  display: inline-block; }
+audio, canvas, video { display: inline-block; }
 
-/* line 38 */
-audio:not([controls]) {
-  display: none;
-  height: 0; }
+audio:not([controls]) { display: none; height: 0; }
 
-/* line 43 */
-[hidden], template {
-  display: none; }
+[hidden], template { display: none; }
 
-/* line 47 */
-html {
-  font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%; }
+html { font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
 
-/* line 53 */
-body {
-  margin: 0; }
+body { margin: 0; }
 
-/* line 57 */
-a {
-  background: transparent; }
-  /* line 59 */
-  a:focus {
-    outline: thin dotted; }
-  /* line 62 */
-  a:active, a:hover {
-    outline: 0; }
+a { background: transparent; }
 
-/* line 67 */
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0; }
+a:focus { outline: thin dotted; }
 
-/* line 72 */
-abbr[title] {
-  border-bottom: 1px dotted; }
+a:active, a:hover { outline: 0; }
 
-/* line 76 */
-b, strong {
-  font-weight: 700; }
+h1 { font-size: 2em; margin: 0.67em 0; }
 
-/* line 80 */
-dfn {
-  font-style: italic; }
+abbr[title] { border-bottom: 1px dotted; }
 
-/* line 84 */
-hr {
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 0; }
+b, strong { font-weight: 700; }
 
-/* line 90 */
-mark {
-  background: #FF0;
-  color: #000; }
+dfn { font-style: italic; }
 
-/* line 95 */
-code, kbd, pre, samp {
-  font-family: monospace, serif;
-  font-size: 1em; }
+hr { -moz-box-sizing: content-box; box-sizing: content-box; height: 0; }
 
-/* line 100 */
-pre {
-  white-space: pre-wrap; }
+mark { background: #FF0; color: #000; }
 
-/* line 104 */
-q {
-  quotes: "\201C" "\201D" "\2018" "\2019"; }
+code, kbd, pre, samp { font-family: monospace, serif; font-size: 1em; }
 
-/* line 108 */
-small {
-  font-size: 80%; }
+pre { white-space: pre-wrap; }
 
-/* line 112 */
-sub {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline; }
+q { quotes: "\201C" "\201D" "\2018" "\2019"; }
 
-/* line 119 */
-sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-  top: -0.5em; }
+small { font-size: 80%; }
 
-/* line 127 */
-sub {
-  bottom: -0.25em; }
+sub { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
 
-/* line 131 */
-img {
-  border: 0; }
+sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; top: -0.5em; }
 
-/* line 135 */
-svg:not(:root) {
-  overflow: hidden; }
+sub { bottom: -0.25em; }
 
-/* line 139 */
-figure {
-  margin: 0; }
+img { border: 0; }
 
-/* line 143 */
-fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em; }
+svg:not(:root) { overflow: hidden; }
 
-/* line 149 */
-legend {
-  border: 0;
-  padding: 0; }
+figure { margin: 0; }
 
-/* line 154 */
-button, input, select, textarea {
-  font-family: inherit;
-  font-size: 100%;
-  margin: 0; }
+fieldset { border: 1px solid #c0c0c0; margin: 0 2px; padding: 0.35em 0.625em 0.75em; }
 
-/* line 160 */
-button, input {
-  line-height: normal; }
+legend { border: 0; padding: 0; }
 
-/* line 164 */
-button, select {
-  text-transform: none; }
+button, input, select, textarea { font-family: inherit; font-size: 100%; margin: 0; }
 
-/* line 168 */
-button, html input[type="button"] {
-  -webkit-appearance: button;
-  cursor: pointer; }
+button, input { line-height: normal; }
 
-/* line 174 */
-input[type="reset"], input[type="submit"] {
-  -webkit-appearance: button;
-  cursor: pointer; }
+button, select { text-transform: none; }
 
-/* line 180 */
-button[disabled], html input[disabled] {
-  cursor: default; }
+button, html input[type="button"] { -webkit-appearance: button; cursor: pointer; }
 
-/* line 185 */
-input[type="checkbox"], input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0; }
-/* line 189 */
-input[type="search"] {
-  -webkit-appearance: textfield;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box; }
-  /* line 194 */
-  input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
-    -webkit-appearance: none; }
+input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
 
-/* line 200 */
-button::-moz-focus-inner, input::-moz-focus-inner {
-  border: 0;
-  padding: 0; }
+button[disabled], html input[disabled] { cursor: default; }
 
-/* line 205 */
-textarea {
-  overflow: auto;
-  vertical-align: top; }
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
 
-/* line 210 */
-table {
-  border-collapse: collapse;
-  border-spacing: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
 
-/* ==========================================================================
-   1. Icons - Sets up the icon font and respective classes
-   ========================================================================== */
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+textarea { overflow: auto; vertical-align: top; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* ========================================================================== 1. Icons - Sets up the icon font and respective classes ========================================================================== */
 /* Import the font file with the icons in it */
-@font-face {
-  font-family: "casper-icons";
-  src: url("../fonts/casper-icons.eot?v=1");
-  src: url("../fonts/casper-icons.eot?v=1#iefix") format("embedded-opentype"), url("../fonts/casper-icons.woff?v=1") format("woff"), url("../fonts/casper-icons.ttf?v=1") format("truetype"), url("../fonts/casper-icons.svg?v=1#icons") format("svg");
-  font-weight: normal;
-  font-style: normal; }
+@font-face { font-family: "casper-icons"; src: url("../fonts/casper-icons.eot?v=1"); src: url("../fonts/casper-icons.eot?v=1#iefix") format("embedded-opentype"), url("../fonts/casper-icons.woff?v=1") format("woff"), url("../fonts/casper-icons.ttf?v=1") format("truetype"), url("../fonts/casper-icons.svg?v=1#icons") format("svg"); font-weight: normal; font-style: normal; }
+
 /* Apply these base styles to all icons */
-/* line 231 */
-[class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "casper-icons", "Open Sans", sans-serif;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  text-decoration: none !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+[class^="icon-"]:before, [class*=" icon-"]:before { font-family: "casper-icons", "Open Sans", sans-serif; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; text-decoration: none !important; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-/* Each icon is created by inserting the correct character into the
-   content of the :before pseudo element. Like a boss. */
-/* line 247 */
-.icon-ghost:before {
-  content: "\f600"; }
+/* Each icon is created by inserting the correct character into the content of the :before pseudo element. Like a boss. */
+.icon-ghost:before { content: "\f600"; }
 
-/* line 251 */
-.icon-feed:before {
-  content: "\f601"; }
+.icon-feed:before { content: "\f601"; }
 
-/* line 255 */
-.icon-twitter:before {
-  content: "\f602";
-  font-size: 1.1em; }
+.icon-twitter:before { content: "\f602"; font-size: 1.1em; }
 
-/* line 260 */
-.icon-google-plus:before {
-  content: "\f603"; }
+.icon-google-plus:before { content: "\f603"; }
 
-/* line 264 */
-.icon-facebook:before {
-  content: "\f604"; }
+.icon-facebook:before { content: "\f604"; }
 
-/* line 268 */
-.icon-arrow-left:before {
-  content: "\f605"; }
+.icon-arrow-left:before { content: "\f605"; }
 
-/* line 272 */
-.icon-stats:before {
-  content: "\f606"; }
+.icon-stats:before { content: "\f606"; }
 
-/* line 276 */
-.icon-location:before {
-  content: "\f607";
-  margin-left: -3px;
-  /* Tracking fix */ }
+.icon-location:before { content: "\f607"; margin-left: -3px; /* Tracking fix */ }
 
-/* line 282 */
-.icon-link:before {
-  content: "\f608"; }
+.icon-link:before { content: "\f608"; }
 
-/* line 286 */
-.icon-menu:before {
-  content: "\f609"; }
+.icon-menu:before { content: "\f609"; }
 
-/*
-    IMPORTANT: When making any changes to the icon font, be sure to increment
-    the version number by 1 in the @font-face rule. `?v=1` becomes `?v=2`
-    This forces browsers to download the new font file.
-*/
-/* ==========================================================================
-   2. General - Setting up some base styles
-   ========================================================================== */
-/* line 300 */
-html {
-  height: 100%;
-  max-height: 100%;
-  font-size: 62.5%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+/* IMPORTANT: When making any changes to the icon font, be sure to increment the version number by 1 in the @font-face rule. `?v=1` becomes `?v=2` This forces browsers to download the new font file. */
+/* ========================================================================== 2. General - Setting up some base styles ========================================================================== */
+html { height: 100%; max-height: 100%; font-size: 62.5%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
-/* line 307 */
-body {
-  height: 100%;
-  max-height: 100%;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  letter-spacing: 0.01rem;
-  font-size: 1.6rem;
-  line-height: 1.6em;
-  color: #3A4145;
-  font-feature-settings: 'kern' 1;
-  -webkit-font-feature-settings: 'kern' 1;
-  -moz-font-feature-settings: 'kern' 1;
-  -o-font-feature-settings: 'kern' 1;
-  text-rendering: geometricPrecision; }
+body { height: 100%; max-height: 100%; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.01rem; font-size: 1.6rem; line-height: 1.6em; color: #3A4145; font-feature-settings: 'kern' 1; -webkit-font-feature-settings: 'kern' 1; -moz-font-feature-settings: 'kern' 1; -o-font-feature-settings: 'kern' 1; text-rendering: geometricPrecision; }
 
-/* line 322 */
-::-moz-selection, ::selection {
-  background: #D6EDFF; }
+::-moz-selection, ::selection { background: #D6EDFF; }
 
-/* line 326 */
-h1, h2, h3, h4, h5, h6 {
-  font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
-  -webkit-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
-  -moz-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
-  -o-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1;
-  text-transform: uppercase;
-  color: #2E2E2E;
-  line-height: 1.15em;
-  margin: 0 0 0.4em 0;
-  font-family: "Open Sans", sans-serif;
-  text-rendering: geometricPrecision; }
+h1, h2, h3, h4, h5, h6 { font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1; -webkit-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1; -moz-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1; -o-font-feature-settings: 'dlig' 1, 'liga' 1, 'lnum' 1, 'kern' 1; text-transform: uppercase; color: #2E2E2E; line-height: 1.15em; margin: 0 0 0.4em 0; font-family: "Open Sans", sans-serif; text-rendering: geometricPrecision; }
 
-/* line 339 */
-h1 {
-  font-size: 3.2rem;
-  letter-spacing: -2px;
-  text-indent: -3px; }
+h1 { font-size: 3.2rem; letter-spacing: -2px; text-indent: -3px; }
 
-/* line 345 */
-h2 {
-  font-size: 2.8rem;
-  letter-spacing: -1px; }
+h2 { font-size: 2.8rem; letter-spacing: -1px; }
 
-/* line 350 */
-h3 {
-  font-size: 2.4rem; }
+h3 { font-size: 2.4rem; }
 
-/* line 354 */
-h4 {
-  font-size: 2.0rem; }
+h4 { font-size: 2.0rem; }
 
-/* line 358 */
-h5, h6 {
-  font-size: 1.6rem; }
+h5, h6 { font-size: 1.6rem; }
 
-/* line 362 */
-a {
-  color: #4A4A4A;
-  transition: color 0.3s ease; }
-  /* line 365 */
-  a:hover {
-    color: #111; }
+a { color: #4A4A4A; transition: color 0.3s ease; }
 
-/* line 370 */
-p, ul, ol, dl {
-  -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-  -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-  -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-  margin: 0 0 1.5em 0;
-  text-rendering: geometricPrecision; }
+a:hover { color: #111; }
 
-/* line 378 */
-ol, ul {
-  padding-left: 3rem; }
+p, ul, ol, dl { -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1; -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1; -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1; margin: 0 0 1.5em 0; text-rendering: geometricPrecision; }
 
-/* line 382 */
-ol ol {
-  margin: 0 0 0.4em 0;
-  padding-left: 2em; }
+ol, ul { padding-left: 3rem; }
 
-/* line 388 */
-ul ul, ul ol {
-  margin: 0 0 0.4em 0;
-  padding-left: 2em; }
+ol ol { margin: 0 0 0.4em 0; padding-left: 2em; }
 
-/* line 394 */
-ol ul {
-  margin: 0 0 0.4em 0;
-  padding-left: 2em; }
+ul ul, ul ol { margin: 0 0 0.4em 0; padding-left: 2em; }
 
-/* line 400 */
-dl dt {
-  float: left;
-  width: 180px;
-  overflow: hidden;
-  clear: left;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 700;
-  margin-bottom: 1em; }
-/* line 411 */
-dl dd {
-  margin-left: 200px;
-  margin-bottom: 1em; }
+ol ul { margin: 0 0 0.4em 0; padding-left: 2em; }
 
-/* line 417 */
-li {
-  margin: 0.4em 0; }
-  /* line 419 */
-  li li {
-    margin: 0; }
+dl dt { float: left; width: 180px; overflow: hidden; clear: left; text-align: right; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; margin-bottom: 1em; }
 
-/* line 424 */
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: #EFEFEF 1px solid;
-  margin: 3.2em 0;
-  padding: 0; }
+dl dd { margin-left: 200px; margin-bottom: 1em; }
 
-/* line 433 */
-blockquote {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 1.75em 0 1.75em -2.2em;
-  padding: 0 0 0 1.75em;
-  border-left: #4A4A4A 0.4em solid;
-  margin-left: 0; }
-  /* line 440 */
-  blockquote p {
-    margin: 0.8em 0;
-    font-style: italic; }
-  /* line 444 */
-  blockquote small {
-    display: inline-block;
-    margin: 0.8em 0 0.8em 1.5em;
-    font-size: 0.9em;
-    color: #CCC; }
-    /* line 449 */
-    blockquote small:before {
-      content: "\2014 \00A0"; }
-  /* line 453 */
-  blockquote cite {
-    font-weight: 700; }
-    /* line 455 */
-    blockquote cite a {
-      font-weight: normal; }
+li { margin: 0.4em 0; }
 
-/* line 461 */
-mark {
-  background-color: #fdffb6; }
+li li { margin: 0; }
 
-/* line 465 */
-code, tt {
-  padding: 1px 3px;
-  font-family: Inconsolata, monospace, sans-serif;
-  font-size: 0.85em;
-  white-space: pre-wrap;
-  border: #E3EDF3 1px solid;
-  background: #F7FAFB;
-  border-radius: 2px; }
+hr { display: block; height: 1px; border: 0; border-top: #EFEFEF 1px solid; margin: 3.2em 0; padding: 0; }
 
-/* line 475 */
-pre {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 0 0 1.75em 0;
-  border: #E3EDF3 1px solid;
-  width: 100%;
-  padding: 10px;
-  font-family: Inconsolata, monospace, sans-serif;
-  font-size: 0.9em;
-  white-space: pre;
-  overflow: auto;
-  background: #F7FAFB;
-  border-radius: 3px;
-  line-height: 1em; }
-  /* line 489 */
-  pre code, pre tt {
-    font-size: inherit;
-    white-space: pre-wrap;
-    background: transparent;
-    border: none;
-    padding: 0; }
+blockquote { -moz-box-sizing: border-box; box-sizing: border-box; margin: 1.75em 0 1.75em -2.2em; padding: 0 0 0 1.75em; border-left: #4A4A4A 0.4em solid; margin-left: 0; }
 
-/* line 498 */
-kbd {
-  display: inline-block;
-  margin-bottom: 0.4em;
-  padding: 1px 8px;
-  border: #CCC 1px solid;
-  color: #666;
-  text-shadow: #FFF 0 1px 0;
-  font-size: 0.9em;
-  font-weight: 700;
-  background: #F4F4F4;
-  border-radius: 4px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 0 #fff inset; }
+blockquote p { margin: 0.8em 0; font-style: italic; }
 
-/* line 512 */
-table {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 1.75em 0;
-  width: 100%;
-  max-width: 100%;
-  background-color: transparent; }
-  /* line 519 */
-  table th, table td {
-    padding: 8px;
-    line-height: 20px;
-    text-align: left;
-    vertical-align: top;
-    border-top: #EFEFEF 1px solid; }
-  /* line 526 */
-  table th {
-    color: #000; }
-  /* line 530 */
-  table caption + thead tr:first-child th, table caption + thead tr:first-child td {
-    border-top: 0; }
-  /* line 535 */
-  table colgroup + thead tr:first-child th, table colgroup + thead tr:first-child td {
-    border-top: 0; }
-  /* line 540 */
-  table thead:first-child tr:first-child th, table thead:first-child tr:first-child td {
-    border-top: 0; }
-  /* line 544 */
-  table tbody + tbody {
-    border-top: #EFEFEF 2px solid; }
-  /* line 547 */
-  table table table {
-    background-color: #FFF; }
-  /* line 551 */
-  table tbody > tr:nth-child(odd) > td, table tbody > tr:nth-child(odd) > th {
-    background-color: #F6F6F6; }
-  /* line 556 */
-  table.plain tbody > tr:nth-child(odd) > td, table.plain tbody > tr:nth-child(odd) > th {
-    background: transparent; }
+blockquote small { display: inline-block; margin: 0.8em 0 0.8em 1.5em; font-size: 0.9em; color: #CCC; }
 
-/* line 562 */
-iframe {
-  display: block;
-  margin: 1.75em 0; }
+blockquote small:before { content: "\2014 \00A0"; }
 
-/* line 567 */
-.fluid-width-video-wrapper {
-  display: block;
-  margin: 1.75em 0; }
-  /* line 570 */
-  .fluid-width-video-wrapper iframe {
-    margin: 0; }
+blockquote cite { font-weight: 700; }
+
+blockquote cite a { font-weight: normal; }
+
+mark { background-color: #fdffb6; }
+
+code, tt { padding: 1px 3px; font-family: Inconsolata, monospace, sans-serif; font-size: 0.85em; white-space: pre-wrap; border: #E3EDF3 1px solid; background: #F7FAFB; border-radius: 2px; }
+
+pre { -moz-box-sizing: border-box; box-sizing: border-box; margin: 0 0 1.75em 0; border: #E3EDF3 1px solid; width: 100%; padding: 10px; font-family: Inconsolata, monospace, sans-serif; font-size: 0.9em; white-space: pre; overflow: auto; background: #F7FAFB; border-radius: 3px; line-height: 1em; }
+
+pre code, pre tt { font-size: inherit; white-space: pre-wrap; background: transparent; border: none; padding: 0; }
+
+kbd { display: inline-block; margin-bottom: 0.4em; padding: 1px 8px; border: #CCC 1px solid; color: #666; text-shadow: #FFF 0 1px 0; font-size: 0.9em; font-weight: 700; background: #F4F4F4; border-radius: 4px; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 0 #fff inset; }
+
+table { -moz-box-sizing: border-box; box-sizing: border-box; margin: 1.75em 0; width: 100%; max-width: 100%; background-color: transparent; }
+
+table th, table td { padding: 8px; line-height: 20px; text-align: left; vertical-align: top; border-top: #EFEFEF 1px solid; }
+
+table th { color: #000; }
+
+table caption + thead tr:first-child th, table caption + thead tr:first-child td { border-top: 0; }
+
+table colgroup + thead tr:first-child th, table colgroup + thead tr:first-child td { border-top: 0; }
+
+table thead:first-child tr:first-child th, table thead:first-child tr:first-child td { border-top: 0; }
+
+table tbody + tbody { border-top: #EFEFEF 2px solid; }
+
+table table table { background-color: #FFF; }
+
+table tbody > tr:nth-child(odd) > td, table tbody > tr:nth-child(odd) > th { background-color: #F6F6F6; }
+
+table.plain tbody > tr:nth-child(odd) > td, table.plain tbody > tr:nth-child(odd) > th { background: transparent; }
+
+iframe { display: block; margin: 1.75em 0; }
+
+.fluid-width-video-wrapper { display: block; margin: 1.75em 0; }
+
+.fluid-width-video-wrapper iframe { margin: 0; }
 
 /* When a video is inside the fitvids wrapper, drop the
 margin on the iframe, cause it breaks stuff. */
-/* ==========================================================================
-   3. Utilities - These things get used a lot
-   ========================================================================== */
+/* ========================================================================== 3. Utilities - These things get used a lot ========================================================================== */
 /* Clears shit */
-/* line 584 */
-.clearfix {
-  zoom: 1; }
-  /* line 585 */
-  .clearfix:before {
-    content: " ";
-    display: table; }
-  /* line 589 */
-  .clearfix:after {
-    content: " ";
-    display: table;
-    clear: both; }
+.clearfix { zoom: 1; }
+
+.clearfix:before { content: " "; display: table; }
+
+.clearfix:after { content: " "; display: table; clear: both; }
 
 /* Hides shit */
-/* line 599 */
-.hidden {
-  text-indent: -9999px;
-  visibility: hidden;
-  display: none; }
+.hidden { text-indent: -9999px; visibility: hidden; display: none; }
 
 /* Creates a responsive wrapper that makes our content scale nicely */
-/* line 607 */
-.inner {
-  position: relative;
-  width: 80%;
-  max-width: 710px;
-  margin: 0 auto; }
+.inner { position: relative; width: 80%; max-width: 710px; margin: 0 auto; }
 
 /* Centres vertically yo. (IE8+) */
-/* line 616 */
-.vertical {
-  display: table-cell;
-  vertical-align: middle; }
+.vertical { display: table-cell; vertical-align: middle; }
 
 /* Wraps the main content & footer */
-/* line 623 */
-.site-wrapper {
-  position: relative;
-  z-index: 10;
-  min-height: 100%;
-  background: #fff;
-  -webkit-transition: -webkit-transform 0.5s ease;
-  transition: transform 0.5s ease; }
+.site-wrapper { position: relative; z-index: 10; min-height: 100%; background: #fff; -webkit-transition: -webkit-transform 0.5s ease; transition: transform 0.5s ease; }
 
-/* line 632 */
-body.nav-opened .site-wrapper {
-  overflow-x: hidden;
-  -webkit-transform: translate3D(-240px, 0, 0);
-  -ms-transform: translate3D(-240px, 0, 0);
-  transform: translate3D(-240px, 0, 0);
-  -webkit-transition: -webkit-transform 0.3s ease;
-  transition: transform 0.3s ease; }
+body.nav-opened .site-wrapper { overflow-x: hidden; -webkit-transform: translate3D(-240px, 0, 0); -ms-transform: translate3D(-240px, 0, 0); transform: translate3D(-240px, 0, 0); -webkit-transition: -webkit-transform 0.3s ease; transition: transform 0.3s ease; }
 
-/* ==========================================================================
-   4. General - The main styles for the the theme
-   ========================================================================== */
+/* ========================================================================== 4. General - The main styles for the the theme ========================================================================== */
 /* Big cover image on the home page */
-/* line 647 */
-.main-header {
-  position: relative;
-  display: table;
-  width: 100%;
-  height: 50vh;
-  margin-bottom: 5rem;
-  text-align: center;
-  background: #222 no-repeat center center;
-  background-size: cover;
-  overflow: hidden; }
-  /* line 657 */
-  .main-header .inner {
-    width: 80%; }
+.main-header { position: relative; display: table; width: 100%; height: 50vh; margin-bottom: 5rem; text-align: center; background: #222 no-repeat center center; background-size: cover; overflow: hidden; }
 
-/* line 662 */
-.main-nav {
-  position: relative;
-  padding: 35px 40px;
-  margin: 0 0 30px 0; }
-  /* line 666 */
-  .main-nav a {
-    text-decoration: none;
-    font-family: 'Open Sans', sans-serif; }
+.main-header .inner { width: 80%; }
 
-/* line 672 */
-.no-cover .main-nav {
-  position: relative;
-  padding: 5px 40px;
-  margin: 0 0 0 0;
-  background: black;
-  color: white; }
-  /* line 678 */
-  .no-cover .main-nav a {
-    text-decoration: none;
-    font-family: 'Open Sans', sans-serif; }
+.main-nav { position: relative; padding: 35px 40px; margin: 0 0 30px 0; }
+
+.main-nav a { text-decoration: none; font-family: 'Open Sans', sans-serif; }
+
+.no-cover .main-nav { position: relative; padding: 5px 40px; margin: 0 0 0 0; background: black; color: white; }
+
+.no-cover .main-nav a { text-decoration: none; font-family: 'Open Sans', sans-serif; }
 
 /* Navigation */
-/* line 687 */
-body.nav-opened .nav-cover {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 240px;
-  bottom: 0;
-  z-index: 200; }
+body.nav-opened .nav-cover { position: fixed; top: 0; left: 0; right: 240px; bottom: 0; z-index: 200; }
 
-/* line 696 */
-.nav {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-  width: 240px;
-  opacity: 0;
-  background: #111;
-  margin-bottom: 0;
-  text-align: left;
-  overflow-y: auto;
-  -webkit-transition: -webkit-transform 0.5s ease, opacity 0.3s ease 0.7s;
-  transition: transform 0.5s ease, opacity 0.3s ease 0.7s; }
+.nav { position: fixed; top: 0; right: 0; bottom: 0; z-index: 5; width: 240px; opacity: 0; background: #111; margin-bottom: 0; text-align: left; overflow-y: auto; -webkit-transition: -webkit-transform 0.5s ease, opacity 0.3s ease 0.7s; transition: transform 0.5s ease, opacity 0.3s ease 0.7s; }
 
-/* line 712 */
-.nav-top {
-  background: #111; }
+.nav-top { background: #111; }
 
-/* line 717 */
-body.nav-closed .nav {
-  -webkit-transform: translate3D(97px, 0, 0);
-  -ms-transform: translate3D(97px, 0, 0);
-  transform: translate3D(97px, 0, 0); }
-/* line 722 */
-body.nav-opened .nav {
-  opacity: 1;
-  -webkit-transition: -webkit-transform 0.3s ease, opacity 0s ease 0s;
-  transition: transform 0.3s ease, opacity 0s ease 0s;
-  -webkit-transform: translate3D(0, 0, 0);
-  -ms-transform: translate3D(0, 0, 0);
-  transform: translate3D(0, 0, 0); }
+body.nav-closed .nav { -webkit-transform: translate3D(97px, 0, 0); -ms-transform: translate3D(97px, 0, 0); transform: translate3D(97px, 0, 0); }
 
-/* line 732 */
-.nav-title {
-  position: absolute;
-  top: 45px;
-  left: 30px;
-  font-size: 16px;
-  font-weight: 100;
-  text-transform: uppercase;
-  color: #fff; }
+body.nav-opened .nav { opacity: 1; -webkit-transition: -webkit-transform 0.3s ease, opacity 0s ease 0s; transition: transform 0.3s ease, opacity 0s ease 0s; -webkit-transform: translate3D(0, 0, 0); -ms-transform: translate3D(0, 0, 0); transform: translate3D(0, 0, 0); }
 
-/* line 742 */
-.nav-close {
-  position: absolute;
-  top: 38px;
-  right: 25px;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  font-size: 10px; }
-  /* line 750 */
-  .nav-close:focus {
-    outline: 0; }
-  /* line 753 */
-  .nav-close:before, .nav-close:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 20px;
-    height: 1px;
-    background: #969696;
-    top: 15px;
-    -webkit-transition: background 0.15s ease;
-    transition: background 0.15s ease; }
-  /* line 764 */
-  .nav-close:before {
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg); }
-  /* line 769 */
-  .nav-close:after {
-    -webkit-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
-    transform: rotate(-45deg); }
-  /* line 775 */
-  .nav-close:hover:before, .nav-close:hover:after {
-    background: white; }
+.nav-title { position: absolute; top: 45px; left: 30px; font-size: 16px; font-weight: 100; text-transform: uppercase; color: #fff; }
 
-/* line 782 */
-.nav ul, .nav-top ul {
-  padding: 90px 9% 5%;
-  list-style: none;
-  counter-reset: item; }
-/* line 787 */
-.nav li, .nav-top li {
-  margin: 0; }
-  /* line 788 */
-  .nav li:before, .nav-top li:before {
-    display: block;
-    float: right;
-    padding-right: 4%;
-    padding-left: 5px;
-    text-align: right;
-    font-size: 1.2rem;
-    vertical-align: bottom;
-    color: #B8B8B8;
-    content: counter(item,lower-roman);
-    counter-increment: item; }
-  /* line 801 */
-  .nav li a, .nav-top li a {
-    text-decoration: none;
-    line-height: 1.4;
-    font-size: 1.4rem;
-    display: block;
-    padding: 0.6rem 4%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis; }
-    /* line 810 */
-    .nav li a:after, .nav-top li a:after {
-      display: inline-block;
-      content: " .......................................................";
-      color: rgba(255, 255, 255, 0.2);
-      margin-left: 5px; }
-/* line 819 */
-.nav .nav-current:before, .nav-top .nav-current:before {
-  color: #fff; }
-/* line 822 */
-.nav .nav-current a:after, .nav-top .nav-current a:after {
-  content: " ";
-  border-bottom: rgba(255, 255, 255, 0.5) 1px solid;
-  width: 100%;
-  height: 1px; }
-/* line 830 */
-.nav a:link, .nav a:visited, .nav-top a:link, .nav-top a:visited {
-  color: #B8B8B8; }
-/* line 834 */
-.nav li.nav-current a, .nav-top li.nav-current a {
-  color: #fff; }
-/* line 838 */
-.nav a:hover, .nav a:active, .nav a:focus, .nav-top a:hover, .nav-top a:active, .nav-top a:focus {
-  color: #fff; }
+.nav-close { position: absolute; top: 38px; right: 25px; width: 20px; height: 20px; padding: 0; font-size: 10px; }
 
-/* line 844 */
-.subscribe-button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
-  height: 38px;
-  padding: 0 20px;
-  color: #111 !important;
-  /* Overides `.nav a:link, .nav a:visited` colour */
-  text-align: center;
-  font-size: 12px;
-  font-family: "Open Sans", sans-serif;
-  text-transform: uppercase;
-  text-decoration: none;
-  line-height: 35px;
-  border-radius: 3px;
-  background: #fff;
-  transition: all ease 0.3s; }
-  /* line 866 */
-  .subscribe-button:before {
-    font-size: 9px;
-    margin-right: 6px; }
+.nav-close:focus { outline: 0; }
 
-/* line 872 */
-.coffee-button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  bottom: 76px;
-  left: 30px;
-  right: 30px;
-  height: 38px;
-  padding: 0;
-  color: #111 !important;
-  /* Overides `.nav a:link, .nav a:visited` colour */
-  text-align: center;
-  font-size: 12px;
-  font-family: "Open Sans", sans-serif;
-  text-transform: uppercase;
-  text-decoration: none;
-  line-height: 35px;
-  border-radius: 3px;
-  transition: all ease 0.3s; }
-  /* line 894 */
-  .coffee-button:before {
-    font-size: 9px;
-    margin-right: 6px; }
+.nav-close:before, .nav-close:after { content: ''; position: absolute; top: 0; width: 20px; height: 1px; background: #969696; top: 15px; -webkit-transition: background 0.15s ease; transition: background 0.15s ease; }
+
+.nav-close:before { -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); }
+
+.nav-close:after { -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); transform: rotate(-45deg); }
+
+.nav-close:hover:before, .nav-close:hover:after { background: white; }
+
+.nav ul, .nav-top ul { padding: 90px 9% 5%; list-style: none; counter-reset: item; }
+
+.nav li, .nav-top li { margin: 0; }
+
+.nav li:before, .nav-top li:before { display: block; float: right; padding-right: 4%; padding-left: 5px; text-align: right; font-size: 1.2rem; vertical-align: bottom; color: #B8B8B8; content: counter(item, lower-roman); counter-increment: item; }
+
+.nav li a, .nav-top li a { text-decoration: none; line-height: 1.4; font-size: 1.4rem; display: block; padding: 0.6rem 4%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.nav li a:after, .nav-top li a:after { display: inline-block; content: " ......................................................."; color: rgba(255, 255, 255, 0.2); margin-left: 5px; }
+
+.nav .nav-current:before, .nav-top .nav-current:before { color: #fff; }
+
+.nav .nav-current a:after, .nav-top .nav-current a:after { content: " "; border-bottom: rgba(255, 255, 255, 0.5) 1px solid; width: 100%; height: 1px; }
+
+.nav a:link, .nav a:visited, .nav-top a:link, .nav-top a:visited { color: #B8B8B8; }
+
+.nav li.nav-current a, .nav-top li.nav-current a { color: #fff; }
+
+.nav a:hover, .nav a:active, .nav a:focus, .nav-top a:hover, .nav-top a:active, .nav-top a:focus { color: #fff; }
+
+.subscribe-button { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; display: block; position: absolute; bottom: 30px; left: 30px; right: 30px; height: 38px; padding: 0 20px; color: #111 !important; /* Overides `.nav a:link, .nav a:visited` colour */ text-align: center; font-size: 12px; font-family: "Open Sans", sans-serif; text-transform: uppercase; text-decoration: none; line-height: 35px; border-radius: 3px; background: #fff; transition: all ease 0.3s; }
+
+.subscribe-button:before { font-size: 9px; margin-right: 6px; }
+
+.coffee-button { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; display: block; position: absolute; bottom: 76px; left: 30px; right: 30px; height: 38px; padding: 0; color: #111 !important; /* Overides `.nav a:link, .nav a:visited` colour */ text-align: center; font-size: 12px; font-family: "Open Sans", sans-serif; text-transform: uppercase; text-decoration: none; line-height: 35px; border-radius: 3px; transition: all ease 0.3s; }
+
+.coffee-button:before { font-size: 9px; margin-right: 6px; }
 
 /* Create a bouncing scroll-down arrow on homepage with cover image */
-/* line 902 */
-.scroll-down {
-  display: block;
-  position: absolute;
-  z-index: 100;
-  bottom: 45px;
-  left: 50%;
-  margin-left: -16px;
-  width: 34px;
-  height: 34px;
-  font-size: 34px;
-  text-align: center;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.7);
-  -webkit-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-  transform: rotate(-90deg);
-  -webkit-animation: bounce 4s 2s infinite;
-  animation: bounce 4s 2s infinite; }
-  /* line 920 */
-  .scroll-down:hover {
-    color: #fff;
-    -webkit-animation: none;
-    animation: none; }
+.scroll-down { display: block; position: absolute; z-index: 100; bottom: 45px; left: 50%; margin-left: -16px; width: 34px; height: 34px; font-size: 34px; text-align: center; text-decoration: none; color: rgba(255, 255, 255, 0.7); -webkit-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); -webkit-animation: bounce 4s 2s infinite; animation: bounce 4s 2s infinite; }
+
+.scroll-down:hover { color: #fff; -webkit-animation: none; animation: none; }
 
 /* Stop it bouncing and increase contrast when hovered */
-/* Put a semi-opaque radial gradient behind the icon to make it more visible
-   on photos which happen to have a light background. */
-/* line 932 */
-.home-template .main-header:after {
-  display: block;
-  content: " ";
-  width: 150px;
-  height: 130px;
-  border-radius: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  margin-left: -75px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%); }
+/* Put a semi-opaque radial gradient behind the icon to make it more visible on photos which happen to have a light background. */
+.home-template .main-header:after { display: block; content: " "; width: 150px; height: 130px; border-radius: 100%; position: absolute; bottom: 0; left: 50%; margin-left: -75px; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%); }
 
 /* Hide when there's no cover image or on page2+ */
-/* line 948 */
-.no-cover .scroll-down, .no-cover.main-header:after {
-  display: none; }
+.no-cover .scroll-down, .no-cover.main-header:after { display: none; }
 
-/* line 954 */
-.archive-template .scroll-down, .archive-template .main-header:after {
-  display: none; }
+.archive-template .scroll-down, .archive-template .main-header:after { display: none; }
 
 /* Appears in the top left corner of your home page */
-/* line 961 */
-.blog-logo {
-  display: block;
-  float: left;
-  background: none !important;
-  /* Makes sure there is never a background */
-  border: none !important;
-  /* Makes sure there is never a border */ }
-  /* line 968 */
-  .blog-logo img {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    display: block;
-    height: 38px;
-    padding: 1px 0 5px 0;
-    width: auto; }
+.blog-logo { display: block; float: left; background: none !important; /* Makes sure there is never a background */ border: none !important; /* Makes sure there is never a border */ }
 
-/* line 979 */
-.menu-button {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: inline-block;
-  float: right;
-  height: 38px;
-  padding: 0 15px;
-  border-style: solid;
-  border-width: 1px;
-  opacity: 1;
-  text-align: center;
-  font-size: 12px;
-  text-transform: uppercase;
-  line-height: 35px;
-  white-space: nowrap;
-  border-radius: 3px;
-  transition: all 0.5s ease; }
-  /* line 997 */
-  .menu-button:before {
-    font-size: 12px;
-    font-weight: bold;
-    margin-right: 6px;
-    position: relative;
-    top: 1px; }
-  /* line 1004 */
-  .menu-button:hover {
-    background: #fff; }
-  /* line 1007 */
-  .menu-button:focus {
-    outline: 0; }
+.blog-logo img { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; display: block; height: 38px; padding: 1px 0 5px 0; width: auto; }
+
+.menu-button { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; display: inline-block; float: right; height: 38px; padding: 0 15px; border-style: solid; border-width: 1px; opacity: 1; text-align: center; font-size: 12px; text-transform: uppercase; line-height: 35px; white-space: nowrap; border-radius: 3px; transition: all 0.5s ease; }
+
+.menu-button:before { font-size: 12px; font-weight: bold; margin-right: 6px; position: relative; top: 1px; }
+
+.menu-button:hover { background: #fff; }
+
+.menu-button:focus { outline: 0; }
 
 /* When the navigation is closed */
-/* line 1015 */
-.nav-closed .menu-button {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.6); }
-  /* line 1018 */
-  .nav-closed .menu-button:hover {
-    color: #222; }
-/* line 1022 */
-.nav-closed .no-cover .menu-button {
-  border-color: #BFC8CD;
-  color: #9EABB3; }
-  /* line 1025 */
-  .nav-closed .no-cover .menu-button:hover {
-    border-color: #555;
-    color: #555; }
+.nav-closed .menu-button { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+
+.nav-closed .menu-button:hover { color: #222; }
+
+.nav-closed .no-cover .menu-button { border-color: #BFC8CD; color: #9EABB3; }
+
+.nav-closed .no-cover .menu-button:hover { border-color: #555; color: #555; }
 
 /* When the navigation is closed and there is no cover image */
 /* When the navigation is opened */
-/* line 1036 */
-.nav-opened .menu-button {
-  padding: 0 12px;
-  background: #111;
-  border-color: #111;
-  color: #fff;
-  -webkit-transform: translate3D(94px, 0, 0);
-  -ms-transform: translate3D(94px, 0, 0);
-  transform: translate3D(94px, 0, 0);
-  transition: all 0.3s ease; }
-  /* line 1045 */
-  .nav-opened .menu-button .word {
-    opacity: 0;
-    transition: all 0.3s ease; }
+.nav-opened .menu-button { padding: 0 12px; background: #111; border-color: #111; color: #fff; -webkit-transform: translate3D(94px, 0, 0); -ms-transform: translate3D(94px, 0, 0); transform: translate3D(94px, 0, 0); transition: all 0.3s ease; }
+
+.nav-opened .menu-button .word { opacity: 0; transition: all 0.3s ease; }
 
 /* Special styles when overlaid on an image*/
-/* line 1053 */
-.main-nav.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  border: none;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); }
+.main-nav.overlay { position: absolute; top: 0; left: 0; right: 0; height: 70px; border: none; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); }
 
-/* line 1063 */
-.no-cover .main-nav.overlay {
-  background: none; }
+.no-cover .main-nav.overlay { background: none; }
 
 /* The details of your blog. Defined in ghost/settings/ */
-/* line 1069 */
-.page-title {
-  margin: 10px 0 10px 0;
-  font-size: 5rem;
-  letter-spacing: -1px;
-  font-weight: 700;
-  font-family: "Open Sans", sans-serif;
-  color: #fff; }
+.page-title { margin: 10px 0 10px 0; font-size: 5rem; letter-spacing: -1px; font-weight: 700; font-family: "Open Sans", sans-serif; color: #fff; }
 
-/* line 1078 */
-.page-description {
-  margin: 0;
-  font-size: 2rem;
-  line-height: 1.5em;
-  font-weight: 400;
-  font-family: "Merriweather", serif;
-  letter-spacing: 0.01rem;
-  color: rgba(255, 255, 255, 0.8); }
+.page-description { margin: 0; font-size: 2rem; line-height: 1.5em; font-weight: 400; font-family: "Merriweather", serif; letter-spacing: 0.01rem; color: rgba(255, 255, 255, 0.8); }
 
-/* line 1089 */
-.no-cover.main-header {
-  min-height: 40px;
-  max-height: 40px;
-  background: #f5f8fa; }
-/* line 1094 */
-.no-cover .page-title {
-  color: rgba(0, 0, 0, 0.8); }
-/* line 1097 */
-.no-cover .page-description {
-  color: rgba(0, 0, 0, 0.5); }
+.no-cover.main-header { min-height: 40px; max-height: 40px; background: #f5f8fa; }
+
+.no-cover .page-title { color: rgba(0, 0, 0, 0.8); }
+
+.no-cover .page-description { color: rgba(0, 0, 0, 0.5); }
 
 /* Add subtle load-in animation for content on the home page */
-/* line 1105 */
-.home-template .page-title {
-  -webkit-animation: fade-in-down 0.6s;
-  animation: fade-in-down 0.6s;
-  -webkit-animation-delay: 0.2s;
-  animation-delay: 0.2s; }
-/* line 1111 */
-.home-template .page-description {
-  -webkit-animation: fade-in-down 0.9s;
-  animation: fade-in-down 0.9s;
-  -webkit-animation-delay: 0.1s;
-  animation-delay: 0.1s; }
+.home-template .page-title { -webkit-animation: fade-in-down 0.6s; animation: fade-in-down 0.6s; -webkit-animation-delay: 0.2s; animation-delay: 0.2s; }
+
+.home-template .page-description { -webkit-animation: fade-in-down 0.9s; animation: fade-in-down 0.9s; -webkit-animation-delay: 0.1s; animation-delay: 0.1s; }
 
 /* Every post, on every page, gets this style on its <article> tag */
-/* line 1121 */
-.post {
-  position: relative;
-  width: 80%;
-  max-width: 710px;
-  margin: 4rem auto;
-  padding-bottom: 4rem;
-  /*border-bottom: #EBF2F6 1px solid;*/
-  word-wrap: break-word; }
+.post { position: relative; width: 80%; max-width: 710px; margin: 4rem auto; padding-bottom: 4rem; /*border-bottom: #EBF2F6 1px solid;*/ word-wrap: break-word; }
 
-/* Add a little circle in the middle of the border-bottom on our .post
-   just for the lolz and stylepoints. */
+/* Add a little circle in the middle of the border-bottom on our .post just for the lolz and stylepoints. */
 /*.post:after {*/
 /*display: block;*/
 /*content: "";*/
@@ -1067,1066 +388,274 @@ body.nav-opened .nav {
 /*border-radius: 100%;*/
 /*box-shadow: #FFF 0 0 0 5px;*/
 /*}*/
-/* line 1148 */
-body:not(.post-template) .post-title {
-  font-size: 3.8rem;
-  text-transform: none;
-  margin-bottom: 0.1rem; }
+body:not(.post-template) .post-title { font-size: 3.8rem; text-transform: none; margin-bottom: 0.1rem; }
 
-/* line 1154 */
-.post-title a {
-  text-decoration: none; }
+.post-title a { text-decoration: none; }
 
-/* line 1158 */
-.post-excerpt p {
-  margin: 0;
-  font-size: 0.9em;
-  line-height: 1.7em; }
+.post-excerpt p { margin: 0; font-size: 0.9em; line-height: 1.7em; }
 
-/* line 1164 */
-.read-more {
-  text-decoration: none; }
+.read-more { text-decoration: none; }
 
-/* line 1168 */
-.post-meta {
-  display: block;
-  margin: 0.5rem 0 1.75rem 0;
-  font-family: "Open Sans", sans-serif;
-  font-size: 1.5rem;
-  line-height: 2.2rem;
-  color: #9EABB3; }
+.post-meta { display: block; margin: 0.5rem 0 1.75rem 0; font-family: "Open Sans", sans-serif; font-size: 1.5rem; line-height: 2.2rem; color: #9EABB3; }
 
-/* line 1177 */
-.author-thumb {
-  width: 24px;
-  height: 24px;
-  float: left;
-  margin-right: 9px;
-  border-radius: 100%; }
+.author-thumb { width: 24px; height: 24px; float: left; margin-right: 9px; border-radius: 100%; }
 
-/* line 1185 */
-.post-meta a {
-  color: #9EABB3;
-  text-decoration: none; }
-  /* line 1188 */
-  .post-meta a:hover {
-    text-decoration: underline; }
+.post-meta a { color: #9EABB3; text-decoration: none; }
 
-/* line 1193 */
-.user-meta {
-  position: relative;
-  padding: 0.3rem 40px 0 100px;
-  min-height: 77px; }
+.post-meta a:hover { text-decoration: underline; }
 
-/* line 1199 */
-.post-date {
-  display: inline-block;
-  margin-left: 8px;
-  padding-left: 12px;
-  border-left: #d5dbde 1px solid;
-  text-transform: uppercase;
-  font-size: 1.3rem;
-  white-space: nowrap; }
+.user-meta { position: relative; padding: 0.3rem 40px 0 100px; min-height: 77px; }
 
-/* line 1209 */
-.user-image {
-  position: absolute;
-  top: 0;
-  left: 0; }
+.post-date { display: inline-block; margin-left: 8px; padding-left: 12px; border-left: #d5dbde 1px solid; text-transform: uppercase; font-size: 1.3rem; white-space: nowrap; }
 
-/* line 1215 */
-.user-name {
-  display: block;
-  font-weight: 700; }
+.user-image { position: absolute; top: 0; left: 0; }
 
-/* line 1220 */
-.user-bio {
-  display: block;
-  max-width: 440px;
-  font-size: 1.4rem;
-  line-height: 1.5em; }
+.user-name { display: block; font-weight: 700; }
 
-/* line 1227 */
-.publish-meta {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 4.3rem 0 4rem 0;
-  text-align: right; }
+.user-bio { display: block; max-width: 440px; font-size: 1.4rem; line-height: 1.5em; }
 
-/* line 1235 */
-.publish-heading {
-  display: block;
-  font-weight: 700; }
+.publish-meta { position: absolute; top: 0; right: 0; padding: 4.3rem 0 4rem 0; text-align: right; }
 
-/* line 1240 */
-.publish-date {
-  display: block;
-  font-size: 1.4rem;
-  line-height: 1.5em; }
+.publish-heading { display: block; font-weight: 700; }
 
-/* ==========================================================================
-   5. Single Post - When you click on an individual post
-   ========================================================================== */
-/* line 1251 */
-.post-template .post-header {
-  margin-bottom: 3.4rem; }
-/* line 1254 */
-.post-template .post-title {
-  margin-bottom: 0; }
-/* line 1257 */
-.post-template .post-meta {
-  margin: 0; }
-/* line 1260 */
-.post-template .post-date {
-  padding: 0;
-  margin: 0;
-  border: none; }
-/* line 1265 */
-.post-template .content {
-  overflow: hidden; }
-/* line 1268 */
-.post-template .post {
-  margin-top: 0;
-  border-bottom: none;
-  padding-bottom: 0; }
-  /* line 1272 */
-  .post-template .post:after {
-    display: none; }
+.publish-date { display: block; font-size: 1.4rem; line-height: 1.5em; }
 
-/* Stop elements, such as img wider than the post content, from
-   creating horizontal scroll - slight hack due to imperfections
-   with browser width % calculations and rounding */
+/* ========================================================================== 5. Single Post - When you click on an individual post ========================================================================== */
+.post-template .post-header { margin-bottom: 3.4rem; }
+
+.post-template .post-title { margin-bottom: 0; }
+
+.post-template .post-meta { margin: 0; }
+
+.post-template .post-date { padding: 0; margin: 0; border: none; }
+
+.post-template .content { overflow: hidden; }
+
+.post-template .post { margin-top: 0; border-bottom: none; padding-bottom: 0; }
+
+.post-template .post:after { display: none; }
+
+/* Stop elements, such as img wider than the post content, from creating horizontal scroll - slight hack due to imperfections with browser width % calculations and rounding */
 /* Tweak the .post wrapper style */
 /* Kill that stylish little circle that was on the border, too */
-/* Keep images centered, and allow images wider than the main
-   text column to break out. */
-/* line 1289 */
-.post-content img {
-  display: block;
-  max-width: 126%;
-  height: auto;
-  padding: 0.6em 0;
-  /* Centers an image by (1) pushing its left edge to the
-     center of its container and (2) shifting the entire image
-     in the opposite direction by half its own width.
-     Works for images that are larger than their containers. */
-  position: relative;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  /* for Safari and iOS */
-  -ms-transform: translateX(-50%);
-  /* for IE9 */
-  transform: translateX(-50%); }
+/* Keep images centered, and allow images wider than the main text column to break out. */
+.post-content img { display: block; max-width: 126%; height: auto; padding: 0.6em 0; /* Centers an image by (1) pushing its left edge to the center of its container and (2) shifting the entire image in the opposite direction by half its own width. Works for images that are larger than their containers. */ position: relative; left: 50%; -webkit-transform: translateX(-50%); /* for Safari and iOS */ -ms-transform: translateX(-50%); /* for IE9 */ transform: translateX(-50%); }
 
-/* line 1307 */
-.footnotes {
-  font-style: italic;
-  font-size: 1.3rem;
-  line-height: 1.6em; }
-  /* line 1311 */
-  .footnotes li {
-    margin: 0.6rem 0; }
-  /* line 1314 */
-  .footnotes p {
-    margin: 0; }
-    /* line 1316 */
-    .footnotes p a:last-child {
-      text-decoration: none; }
+.footnotes { font-style: italic; font-size: 1.3rem; line-height: 1.6em; }
+
+.footnotes li { margin: 0.6rem 0; }
+
+.footnotes p { margin: 0; }
+
+.footnotes p a:last-child { text-decoration: none; }
 
 /* The author credit area after the post */
-/* line 1324 */
-.post-footer {
-  position: relative;
-  margin: 6rem 0 0 0;
-  padding: 6rem 0 0 0;
-  border-top: #EBF2F6 1px solid; }
-  /* line 1329 */
-  .post-footer h4 {
-    font-size: 1.8rem;
-    margin: 0; }
-  /* line 1333 */
-  .post-footer p {
-    margin: 1rem 0;
-    font-size: 1.4rem;
-    line-height: 1.75em; }
+.post-footer { position: relative; margin: 6rem 0 0 0; padding: 6rem 0 0 0; border-top: #EBF2F6 1px solid; }
+
+.post-footer h4 { font-size: 1.8rem; margin: 0; }
+
+.post-footer p { margin: 1rem 0; font-size: 1.4rem; line-height: 1.75em; }
 
 /* list of author links - location / url */
-/* line 1342 */
-.author-meta {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  font-size: 1.4rem;
-  line-height: 1;
-  font-style: italic;
-  color: #9EABB3; }
-  /* line 1350 */
-  .author-meta a {
-    color: #9EABB3; }
-    /* line 1352 */
-    .author-meta a:hover {
-      color: #111; }
+.author-meta { padding: 0; margin: 0; list-style: none; font-size: 1.4rem; line-height: 1; font-style: italic; color: #9EABB3; }
+
+.author-meta a { color: #9EABB3; }
+
+.author-meta a:hover { color: #111; }
 
 /* Create some space to the right for the share links */
-/* line 1361 */
-.post-footer .author {
-  margin-right: 180px; }
-/* line 1364 */
-.post-footer h4 a {
-  color: #2e2e2e;
-  text-decoration: none; }
-  /* line 1367 */
-  .post-footer h4 a:hover {
-    text-decoration: underline; }
-/* line 1371 */
-.post-footer .share {
-  position: absolute;
-  top: 6rem;
-  right: 0;
-  width: 140px; }
-  /* line 1376 */
-  .post-footer .share a {
-    font-size: 1.8rem;
-    display: inline-block;
-    margin: 1rem 1.6rem 1.6rem 0;
-    color: #BBC7CC;
-    text-decoration: none; }
-  /* line 1383 */
-  .post-footer .share .icon-twitter:hover {
-    color: #55acee; }
-  /* line 1386 */
-  .post-footer .share .icon-facebook:hover {
-    color: #3b5998; }
-  /* line 1389 */
-  .post-footer .share .icon-google-plus:hover {
-    color: #dd4b39; }
+.post-footer .author { margin-right: 180px; }
 
-/* Drop the share links in the space to the right.
-   Doing it like this means it's easier for the author bio
-   to be flexible at smaller screen sizes while the share
-   links remain at a fixed width the whole time */
-/* ==========================================================================
-   6. Author profile
-   ========================================================================== */
-/* line 1404 */
-.post-head.main-header {
-  height: 45vh;
-  min-height: 180px; }
+.post-footer h4 a { color: #2e2e2e; text-decoration: none; }
 
-/* line 1409 */
-.no-cover.post-head.main-header {
-  height: 85px;
-  min-height: 0;
-  margin-bottom: 0;
-  background: transparent; }
+.post-footer h4 a:hover { text-decoration: underline; }
 
-/* line 1416 */
-.tag-head.main-header, .author-head.main-header {
-  height: 40vh;
-  min-height: 180px; }
+.post-footer .share { position: absolute; top: 6rem; right: 0; width: 140px; }
 
-/* line 1421 */
-.no-cover.author-head.main-header {
-  height: 10vh;
-  min-height: 100px;
-  background: transparent; }
+.post-footer .share a { font-size: 1.8rem; display: inline-block; margin: 1rem 1.6rem 1.6rem 0; color: #BBC7CC; text-decoration: none; }
 
-/* line 1427 */
-.author-profile {
-  padding: 0 15px 5rem 15px;
-  border-bottom: #EBF2F6 1px solid;
-  text-align: center; }
-  /* line 1431 */
-  .author-profile:after {
-    display: block;
-    content: "";
-    width: 7px;
-    height: 7px;
-    border: #E7EEF2 1px solid;
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    margin-left: -5px;
-    background: #FFF;
-    border-radius: 100%;
-    box-shadow: #FFF 0 0 0 5px; }
+.post-footer .share .icon-twitter:hover { color: #55acee; }
+
+.post-footer .share .icon-facebook:hover { color: #3b5998; }
+
+.post-footer .share .icon-google-plus:hover { color: #dd4b39; }
+
+/* Drop the share links in the space to the right. Doing it like this means it's easier for the author bio to be flexible at smaller screen sizes while the share links remain at a fixed width the whole time */
+/* ========================================================================== 6. Author profile ========================================================================== */
+.post-head.main-header { height: 45vh; min-height: 180px; }
+
+.no-cover.post-head.main-header { height: 85px; min-height: 0; margin-bottom: 0; background: transparent; }
+
+.tag-head.main-header, .author-head.main-header { height: 40vh; min-height: 180px; }
+
+.no-cover.author-head.main-header { height: 10vh; min-height: 100px; background: transparent; }
+
+.author-profile { padding: 0 15px 5rem 15px; border-bottom: #EBF2F6 1px solid; text-align: center; }
+
+.author-profile:after { display: block; content: ""; width: 7px; height: 7px; border: #E7EEF2 1px solid; position: absolute; bottom: -5px; left: 50%; margin-left: -5px; background: #FFF; border-radius: 100%; box-shadow: #FFF 0 0 0 5px; }
 
 /* Add a little circle in the middle of the border-bottom */
-/* line 1449 */
-.author-image {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  margin-left: -40px;
-  width: 80px;
-  height: 80px;
-  border-radius: 100%;
-  overflow: hidden;
-  padding: 6px;
-  background: #fff;
-  z-index: 2;
-  box-shadow: #E7EEF2 0 0 0 1px; }
-  /* line 1466 */
-  .author-image .img {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
-    border-radius: 100%; }
+.author-image { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; display: block; position: absolute; top: -40px; left: 50%; margin-left: -40px; width: 80px; height: 80px; border-radius: 100%; overflow: hidden; padding: 6px; background: #fff; z-index: 2; box-shadow: #E7EEF2 0 0 0 1px; }
 
-/* line 1477 */
-.author-profile .author-image {
-  position: relative;
-  left: auto;
-  top: auto;
-  width: 120px;
-  height: 120px;
-  padding: 3px;
-  margin: -100px auto 0 auto;
-  box-shadow: none; }
+.author-image .img { position: relative; display: block; width: 100%; height: 100%; background-size: cover; background-position: center center; border-radius: 100%; }
 
-/* line 1488 */
-.author-title {
-  margin: 1.5rem 0 1rem; }
+.author-profile .author-image { position: relative; left: auto; top: auto; width: 120px; height: 120px; padding: 3px; margin: -100px auto 0 auto; box-shadow: none; }
 
-/* line 1492 */
-.author-bio {
-  font-size: 1.8rem;
-  line-height: 1.5em;
-  font-weight: 200;
-  color: #50585D;
-  letter-spacing: 0;
-  text-indent: 0;
-  text-align: justify; }
+.author-title { margin: 1.5rem 0 1rem; }
 
-/* line 1502 */
-.author-meta {
-  margin: 1.6rem 0; }
+.author-bio { font-size: 1.8rem; line-height: 1.5em; font-weight: 200; color: #50585D; letter-spacing: 0; text-indent: 0; text-align: justify; }
+
+.author-meta { margin: 1.6rem 0; }
 
 /* Location, website, and link */
-/* line 1508 */
-.author-profile .author-meta {
-  margin: 2rem 0;
-  font-family: "Merriweather", serif;
-  letter-spacing: 0.01rem;
-  font-size: 1.7rem; }
+.author-profile .author-meta { margin: 2rem 0; font-family: "Merriweather", serif; letter-spacing: 0.01rem; font-size: 1.7rem; }
 
-/* line 1516 */
-.author-meta span {
-  display: inline-block;
-  margin: 0 2rem 1rem 0;
-  word-wrap: break-word; }
-/* line 1521 */
-.author-meta a {
-  text-decoration: none; }
+.author-meta span { display: inline-block; margin: 0 2rem 1rem 0; word-wrap: break-word; }
 
-/* Turn off meta for page2+ to make room for extra
-   pagination prev/next links */
-/* line 1529 */
-.archive-template .author-profile .author-meta {
-  display: none; }
+.author-meta a { text-decoration: none; }
 
-/* ==========================================================================
-   7. Read More - Next/Prev Post Links
-   ========================================================================== */
-/* line 1537 */
-.read-next {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  margin-top: 10rem; }
+/* Turn off meta for page2+ to make room for extra pagination prev/next links */
+.archive-template .author-profile .author-meta { display: none; }
 
-/* line 1549 */
-.read-next-story {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  min-width: 50%;
-  text-decoration: none;
-  position: relative;
-  text-align: center;
-  color: #fff;
-  background: #222 no-repeat center center;
-  background-size: cover;
-  overflow: hidden; }
-  /* line 1567 */
-  .read-next-story:hover:before {
-    background: rgba(0, 0, 0, 0.8);
-    transition: all 0.2s ease; }
-  /* line 1571 */
-  .read-next-story:hover .post:before {
-    color: #222;
-    background: #fff;
-    transition: all 0.2s ease; }
-  /* line 1577 */
-  .read-next-story:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.7);
-    transition: all 0.5s ease; }
-  /* line 1588 */
-  .read-next-story .post {
-    padding-top: 6rem;
-    padding-bottom: 6rem; }
-    /* line 1591 */
-    .read-next-story .post:before {
-      content: "Read This Next";
-      padding: 4px 10px 5px;
-      text-transform: uppercase;
-      font-size: 1.1rem;
-      font-family: "Open Sans", sans-serif;
-      color: rgba(255, 255, 255, 0.8);
-      border: rgba(255, 255, 255, 0.5) 1px solid;
-      border-radius: 4px;
-      transition: all 0.5s ease; }
-  /* line 1603 */
-  .read-next-story.prev .post:before {
-    content: "You Might Enjoy"; }
-  /* line 1606 */
-  .read-next-story h2 {
-    margin-top: 1rem;
-    color: #fff; }
-  /* line 1610 */
-  .read-next-story p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.8); }
-  /* line 1614 */
-  .read-next-story.no-cover {
-    background: #f5f8fa; }
-    /* line 1616 */
-    .read-next-story.no-cover:before {
-      display: none; }
-    /* line 1619 */
-    .read-next-story.no-cover .post:before {
-      color: rgba(0, 0, 0, 0.5);
-      border-color: rgba(0, 0, 0, 0.2); }
-    /* line 1623 */
-    .read-next-story.no-cover h2 {
-      color: rgba(0, 0, 0, 0.8); }
-    /* line 1626 */
-    .read-next-story.no-cover p {
-      color: rgba(0, 0, 0, 0.5); }
-    /* line 1629 */
-    .read-next-story.no-cover + .read-next-story.no-cover {
-      border-left: rgba(0, 0, 100, 0.04) 1px solid;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box; }
+/* ========================================================================== 7. Read More - Next/Prev Post Links ========================================================================== */
+.read-next { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: stretch; -webkit-align-items: stretch; -ms-flex-align: stretch; align-items: stretch; margin-top: 10rem; }
+
+.read-next-story { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-flex: 1; -webkit-flex-grow: 1; -ms-flex-positive: 1; flex-grow: 1; min-width: 50%; text-decoration: none; position: relative; text-align: center; color: #fff; background: #222 no-repeat center center; background-size: cover; overflow: hidden; }
+
+.read-next-story:hover:before { background: rgba(0, 0, 0, 0.8); transition: all 0.2s ease; }
+
+.read-next-story:hover .post:before { color: #222; background: #fff; transition: all 0.2s ease; }
+
+.read-next-story:before { content: ""; display: block; position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0, 0, 0, 0.7); transition: all 0.5s ease; }
+
+.read-next-story .post { padding-top: 6rem; padding-bottom: 6rem; }
+
+.read-next-story .post:before { content: "Read This Next"; padding: 4px 10px 5px; text-transform: uppercase; font-size: 1.1rem; font-family: "Open Sans", sans-serif; color: rgba(255, 255, 255, 0.8); border: rgba(255, 255, 255, 0.5) 1px solid; border-radius: 4px; transition: all 0.5s ease; }
+
+.read-next-story.prev .post:before { content: "You Might Enjoy"; }
+
+.read-next-story h2 { margin-top: 1rem; color: #fff; }
+
+.read-next-story p { margin: 0; color: rgba(255, 255, 255, 0.8); }
+
+.read-next-story.no-cover { background: #f5f8fa; }
+
+.read-next-story.no-cover:before { display: none; }
+
+.read-next-story.no-cover .post:before { color: rgba(0, 0, 0, 0.5); border-color: rgba(0, 0, 0, 0.2); }
+
+.read-next-story.no-cover h2 { color: rgba(0, 0, 0, 0.8); }
+
+.read-next-story.no-cover p { color: rgba(0, 0, 0, 0.5); }
+
+.read-next-story.no-cover + .read-next-story.no-cover { border-left: rgba(0, 0, 100, 0.04) 1px solid; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 
 /* Special styles for posts with no cover images */
 /* if there are two posts without covers, put a border between them */
 /* Correctly position site-footer when next to the .read-next container */
-/* line 1644 */
-.read-next + .site-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0; }
+.read-next + .site-footer { position: absolute; bottom: 0; left: 0; right: 0; margin: 0; }
 
-/* ==========================================================================
-   8. Third Party Elements - Embeds from other services
-   ========================================================================== */
+/* ========================================================================== 8. Third Party Elements - Embeds from other services ========================================================================== */
 /* Github */
-/* line 1659 */
-.gist table {
-  margin: 0;
-  font-size: 1.4rem; }
-/* line 1663 */
-.gist td {
-  line-height: 1.4; }
-/* line 1666 */
-.gist .line-number {
-  min-width: 25px; }
+.gist table { margin: 0; font-size: 1.4rem; }
+
+.gist td { line-height: 1.4; }
+
+.gist .line-number { min-width: 25px; }
 
 /* Pastebin */
-/* line 1673 */
-.content .embedPastebin {
-  margin-bottom: 1.75em; }
+.content .embedPastebin { margin-bottom: 1.75em; }
 
-/* ==========================================================================
-   9. Pagination - Tools to let you flick between pages
-   ========================================================================== */
+/* ========================================================================== 9. Pagination - Tools to let you flick between pages ========================================================================== */
 /* The main wrapper for our pagination links */
-/* line 1683 */
-.pagination {
-  position: relative;
-  width: 80%;
-  max-width: 710px;
-  margin: 4rem auto;
-  font-family: "Open Sans", sans-serif;
-  font-size: 1.3rem;
-  color: #9EABB3;
-  text-align: center; }
-  /* line 1692 */
-  .pagination a {
-    color: #9EABB3;
-    transition: all 0.2s ease; }
+.pagination { position: relative; width: 80%; max-width: 710px; margin: 4rem auto; font-family: "Open Sans", sans-serif; font-size: 1.3rem; color: #9EABB3; text-align: center; }
+
+.pagination a { color: #9EABB3; transition: all 0.2s ease; }
 
 /* Push the previous/next links out to the left/right */
-/* line 1700 */
-.older-posts, .newer-posts {
-  position: absolute;
-  display: inline-block;
-  padding: 0 15px;
-  border: #bfc8cd 1px solid;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: border 0.3s ease; }
+.older-posts, .newer-posts { position: absolute; display: inline-block; padding: 0 15px; border: #bfc8cd 1px solid; text-decoration: none; border-radius: 4px; transition: border 0.3s ease; }
 
-/* line 1710 */
-.older-posts {
-  right: 0; }
+.older-posts { right: 0; }
 
-/* line 1714 */
-.page-number {
-  display: inline-block;
-  padding: 2px 0;
-  min-width: 100px; }
+.page-number { display: inline-block; padding: 2px 0; min-width: 100px; }
 
-/* line 1720 */
-.newer-posts {
-  left: 0; }
+.newer-posts { left: 0; }
 
-/* line 1724 */
-.older-posts:hover, .newer-posts:hover {
-  color: #889093;
-  border-color: #98a0a4; }
+.older-posts:hover, .newer-posts:hover { color: #889093; border-color: #98a0a4; }
 
-/* line 1729 */
-.extra-pagination {
-  display: none;
-  border-bottom: #EBF2F6 1px solid; }
-  /* line 1732 */
-  .extra-pagination:after {
-    display: block;
-    content: "";
-    width: 7px;
-    height: 7px;
-    border: #E7EEF2 1px solid;
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    margin-left: -5px;
-    background: #FFF;
-    border-radius: 100%;
-    box-shadow: #FFF 0 0 0 5px; }
-  /* line 1746 */
-  .extra-pagination .pagination {
-    width: auto; }
+.extra-pagination { display: none; border-bottom: #EBF2F6 1px solid; }
+
+.extra-pagination:after { display: block; content: ""; width: 7px; height: 7px; border: #E7EEF2 1px solid; position: absolute; bottom: -5px; left: 50%; margin-left: -5px; background: #FFF; border-radius: 100%; box-shadow: #FFF 0 0 0 5px; }
+
+.extra-pagination .pagination { width: auto; }
 
 /* On page2+ make all the headers smaller */
-/* line 1754 */
-.archive-template .main-header {
-  max-height: 30vh; }
-/* line 1757 */
-.archive-template .extra-pagination {
-  display: block; }
+.archive-template .main-header { max-height: 30vh; }
+
+.archive-template .extra-pagination { display: block; }
 
 /* On page2+ show extra pagination controls at the top of post list */
-/* ==========================================================================
-   10. Footer - The bottom of every page
-   ========================================================================== */
-/* line 1768 */
-.site-footer {
-  position: relative;
-  margin: 8rem 0 0 0;
-  padding: 1rem 15px;
-  font-family: "Open Sans", sans-serif;
-  font-size: 1rem;
-  line-height: 1.75em;
-  color: #BBC7CC; }
-  /* line 1776 */
-  .site-footer a {
-    color: #BBC7CC;
-    text-decoration: none;
-    font-weight: bold; }
-    /* line 1780 */
-    .site-footer a:hover {
-      border-bottom: #bbc7cc 1px solid; }
+/* ========================================================================== 10. Footer - The bottom of every page ========================================================================== */
+.site-footer { position: relative; margin: 8rem 0 0 0; padding: 1rem 15px; font-family: "Open Sans", sans-serif; font-size: 1rem; line-height: 1.75em; color: #BBC7CC; }
 
-/* line 1786 */
-.poweredby {
-  display: block;
-  width: 45%;
-  float: right;
-  text-align: right; }
+.site-footer a { color: #BBC7CC; text-decoration: none; font-weight: bold; }
 
-/* line 1793 */
-.copyright {
-  display: block;
-  width: 45%;
-  float: left; }
+.site-footer a:hover { border-bottom: #bbc7cc 1px solid; }
 
-/* ==========================================================================
-   11. Media Queries - Smaller than 900px
-   ========================================================================== */
-@media only screen and (max-width: 900px) {
-  /* line 1804 */
-  .main-header {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    height: auto;
-    min-height: 240px;
-    height: 60vh;
-    padding: 15% 0; }
+.poweredby { display: block; width: 45%; float: right; text-align: right; }
 
-  /* line 1813 */
-  .scroll-down, .home-template .main-header:after {
-    display: none; }
+.copyright { display: block; width: 45%; float: left; }
 
-  /* line 1816 */
-  .archive-template .main-header {
-    min-height: 180px;
-    padding: 10% 0; }
+/* ========================================================================== 11. Media Queries - Smaller than 900px ========================================================================== */
+@media only screen and (max-width: 900px) { .main-header { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; height: auto; min-height: 240px; height: 60vh; padding: 15% 0; } .scroll-down, .home-template .main-header:after { display: none; } .archive-template .main-header { min-height: 180px; padding: 10% 0; } .blog-logo img { padding: 4px 0; } .page-title { font-size: 4rem; letter-spacing: -1px; } .page-description { font-size: 1.8rem; line-height: 1.5em; } .post { font-size: 0.95em; } body:not(.post-template) .post-title { font-size: 3.4rem; text-transform: none; margin-bottom: 0.1rem; } hr { margin: 2.4em 0; } ol, ul { padding-left: 2em; } h1 { font-size: 4.5rem; text-indent: -2px; } h2 { font-size: 3.6rem; } h3 { font-size: 3.1rem; } h4 { font-size: 2.5rem; } h5 { font-size: 2.2rem; } h6 { font-size: 1.8rem; } .author-profile { padding-bottom: 4rem; } .author-profile .author-bio { font-size: 1.6rem; } .author-meta span { display: block; margin: 1.5rem 0; } .author-profile .author-meta span { font-size: 1.6rem; } .post-head.main-header { height: 45vh; } .tag-head.main-header, .author-head.main-header { height: 30vh; } .no-cover.post-head.main-header { height: 55px; padding: 0; } .no-cover.author-head.main-header { padding: 0; } .read-next { -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; margin-top: 4rem; } .read-next p { display: none; } .read-next-story.no-cover + .read-next-story.no-cover { border-top: rgba(0, 0, 100, 0.06) 1px solid; border-left: none; } }
 
-  /* line 1820 */
-  .blog-logo img {
-    padding: 4px 0; }
+/* ========================================================================== 12. Media Queries - Smaller than 500px ========================================================================== */
+@media only screen and (max-width: 500px) { .main-header { margin-bottom: 15px; height: 40vh; } .no-cover.main-header { height: 30vh; } .archive-template .main-header { max-height: 20vh; min-height: 160px; padding: 10% 0; } .main-nav { padding: 5px; margin-bottom: 2rem; } .blog-logo { padding: 5px; } .blog-logo img { height: 30px; } .menu-button { padding: 0 5px; border-radius: 0; border-width: 0; color: #2e2e2e; background: transparent; } .menu-button:hover { color: #2e2e2e; border-color: transparent; background: none; } body.nav-opened .menu-button { background: none; border: transparent; } .main-nav.overlay a:hover { color: #fff; border-color: transparent; background: transparent; } .no-cover .main-nav.overlay { background: none; } .no-cover .main-nav.overlay .menu-button { border: none; } .main-nav.overlay .menu-button { border-color: transparent; } .nav-title { top: 25px; } .nav-close { position: absolute; top: 18px; } .nav ul { padding: 60px 9% 5%; } .inner, .pagination { width: auto; margin: 2rem auto; } .post { width: auto; margin-top: 2rem; margin-bottom: 2rem; margin-left: 16px; margin-right: 16px; padding-bottom: 2rem; line-height: 1.65em; } .post-date { display: none; } .post-template .post-header { margin-bottom: 2rem; } .post-template .post-date { display: inline-block; } hr { margin: 1.75em 0; } p, ul, ol, dl { font-size: 0.95em; margin: 0 0 2.5rem 0; } .page-title { font-size: 3rem; } .post-excerpt p { font-size: 0.85em; } .page-description { font-size: 1.6rem; } h1, h2, h3, h4, h5, h6 { margin: 0 0 0.3em 0; } h1 { font-size: 2.8rem; letter-spacing: -1px; } h2 { font-size: 2.4rem; letter-spacing: 0; } h3 { font-size: 2.1rem; } h4 { font-size: 1.9rem; } h5, h6 { font-size: 1.8rem; } body:not(.post-template) .post-title { font-size: 2.5rem; text-transform: none; margin-bottom: 0.1rem; } .post-template .site-footer { margin-top: 0; } .post-content img { padding: 0; width: calc(100% + 32px); /* expand with to image + margins */ min-width: 0; max-width: 112%; /* fallback when calc doesn't work */ } .post-meta { font-size: 1.3rem; margin-top: 1rem; } .post-footer { padding: 5rem 0 3rem 0; text-align: center; } .post-footer .author { margin: 0 0 2rem 0; padding: 0 0 1.6rem 0; border-bottom: #EBF2F6 1px dashed; } .post-footer .share { position: static; width: auto; } .post-footer .share a { margin: 1.4rem 0.8rem 0 0.8rem; } .author-meta li { float: none; margin: 0; line-height: 1.75em; } .author-meta li:before { display: none; } .older-posts, .newer-posts { position: static; margin: 10px 0; } .page-number { display: block; } .site-footer { margin-top: 3rem; } .author-profile { padding-bottom: 2rem; } .post-head.main-header { height: 30vh; } .tag-head.main-header, .author-head.main-header { height: 20vh; } .author-profile .author-image { margin-top: -70px; } .author-profile .author-meta span { font-size: 1.4rem; } .archive-template .main-header .page-description { display: none; } .read-next { margin-top: 2rem; margin-bottom: -37px; } .read-next .post { width: 100%; } }
 
-  /* line 1823 */
-  .page-title {
-    font-size: 4rem;
-    letter-spacing: -1px; }
-
-  /* line 1827 */
-  .page-description {
-    font-size: 1.8rem;
-    line-height: 1.5em; }
-
-  /* line 1831 */
-  .post {
-    font-size: 0.95em; }
-
-  /* line 1834 */
-  body:not(.post-template) .post-title {
-    font-size: 3.4rem;
-    text-transform: none;
-    margin-bottom: 0.1rem; }
-
-  /* line 1839 */
-  hr {
-    margin: 2.4em 0; }
-
-  /* line 1842 */
-  ol, ul {
-    padding-left: 2em; }
-
-  /* line 1845 */
-  h1 {
-    font-size: 4.5rem;
-    text-indent: -2px; }
-
-  /* line 1849 */
-  h2 {
-    font-size: 3.6rem; }
-
-  /* line 1852 */
-  h3 {
-    font-size: 3.1rem; }
-
-  /* line 1855 */
-  h4 {
-    font-size: 2.5rem; }
-
-  /* line 1858 */
-  h5 {
-    font-size: 2.2rem; }
-
-  /* line 1861 */
-  h6 {
-    font-size: 1.8rem; }
-
-  /* line 1864 */
-  .author-profile {
-    padding-bottom: 4rem; }
-    /* line 1866 */
-    .author-profile .author-bio {
-      font-size: 1.6rem; }
-
-  /* line 1870 */
-  .author-meta span {
-    display: block;
-    margin: 1.5rem 0; }
-
-  /* line 1874 */
-  .author-profile .author-meta span {
-    font-size: 1.6rem; }
-
-  /* line 1877 */
-  .post-head.main-header {
-    height: 45vh; }
-
-  /* line 1880 */
-  .tag-head.main-header, .author-head.main-header {
-    height: 30vh; }
-
-  /* line 1884 */
-  .no-cover.post-head.main-header {
-    height: 55px;
-    padding: 0; }
-  /* line 1888 */
-  .no-cover.author-head.main-header {
-    padding: 0; }
-
-  /* line 1892 */
-  .read-next {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    margin-top: 4rem; }
-    /* line 1899 */
-    .read-next p {
-      display: none; }
-
-  /* line 1903 */
-  .read-next-story.no-cover + .read-next-story.no-cover {
-    border-top: rgba(0, 0, 100, 0.06) 1px solid;
-    border-left: none; } }
-/* ==========================================================================
-   12. Media Queries - Smaller than 500px
-   ========================================================================== */
-@media only screen and (max-width: 500px) {
-  /* line 1914 */
-  .main-header {
-    margin-bottom: 15px;
-    height: 40vh; }
-
-  /* line 1918 */
-  .no-cover.main-header {
-    height: 30vh; }
-
-  /* line 1921 */
-  .archive-template .main-header {
-    max-height: 20vh;
-    min-height: 160px;
-    padding: 10% 0; }
-
-  /* line 1926 */
-  .main-nav {
-    padding: 5px;
-    margin-bottom: 2rem; }
-
-  /* line 1930 */
-  .blog-logo {
-    padding: 5px; }
-    /* line 1932 */
-    .blog-logo img {
-      height: 30px; }
-
-  /* line 1936 */
-  .menu-button {
-    padding: 0 5px;
-    border-radius: 0;
-    border-width: 0;
-    color: #2e2e2e;
-    background: transparent; }
-    /* line 1942 */
-    .menu-button:hover {
-      color: #2e2e2e;
-      border-color: transparent;
-      background: none; }
-
-  /* line 1948 */
-  body.nav-opened .menu-button {
-    background: none;
-    border: transparent; }
-
-  /* line 1952 */
-  .main-nav.overlay a:hover {
-    color: #fff;
-    border-color: transparent;
-    background: transparent; }
-
-  /* line 1957 */
-  .no-cover .main-nav.overlay {
-    background: none; }
-    /* line 1959 */
-    .no-cover .main-nav.overlay .menu-button {
-      border: none; }
-
-  /* line 1963 */
-  .main-nav.overlay .menu-button {
-    border-color: transparent; }
-
-  /* line 1966 */
-  .nav-title {
-    top: 25px; }
-
-  /* line 1969 */
-  .nav-close {
-    position: absolute;
-    top: 18px; }
-
-  /* line 1973 */
-  .nav ul {
-    padding: 60px 9% 5%; }
-
-  /* line 1976 */
-  .inner, .pagination {
-    width: auto;
-    margin: 2rem auto; }
-
-  /* line 1980 */
-  .post {
-    width: auto;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    margin-left: 16px;
-    margin-right: 16px;
-    padding-bottom: 2rem;
-    line-height: 1.65em; }
-
-  /* line 1989 */
-  .post-date {
-    display: none; }
-
-  /* line 1993 */
-  .post-template .post-header {
-    margin-bottom: 2rem; }
-  /* line 1996 */
-  .post-template .post-date {
-    display: inline-block; }
-
-  /* line 2000 */
-  hr {
-    margin: 1.75em 0; }
-
-  /* line 2003 */
-  p, ul, ol, dl {
-    font-size: 0.95em;
-    margin: 0 0 2.5rem 0; }
-
-  /* line 2007 */
-  .page-title {
-    font-size: 3rem; }
-
-  /* line 2010 */
-  .post-excerpt p {
-    font-size: 0.85em; }
-
-  /* line 2013 */
-  .page-description {
-    font-size: 1.6rem; }
-
-  /* line 2016 */
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0 0 0.3em 0; }
-
-  /* line 2019 */
-  h1 {
-    font-size: 2.8rem;
-    letter-spacing: -1px; }
-
-  /* line 2023 */
-  h2 {
-    font-size: 2.4rem;
-    letter-spacing: 0; }
-
-  /* line 2027 */
-  h3 {
-    font-size: 2.1rem; }
-
-  /* line 2030 */
-  h4 {
-    font-size: 1.9rem; }
-
-  /* line 2033 */
-  h5, h6 {
-    font-size: 1.8rem; }
-
-  /* line 2036 */
-  body:not(.post-template) .post-title {
-    font-size: 2.5rem;
-    text-transform: none;
-    margin-bottom: 0.1rem; }
-
-  /* line 2041 */
-  .post-template .site-footer {
-    margin-top: 0; }
-
-  /* line 2044 */
-  .post-content img {
-    padding: 0;
-    width: calc(100% + 32px);
-    /* expand with to image + margins */
-    min-width: 0;
-    max-width: 112%;
-    /* fallback when calc doesn't work */ }
-
-  /* line 2052 */
-  .post-meta {
-    font-size: 1.3rem;
-    margin-top: 1rem; }
-
-  /* line 2056 */
-  .post-footer {
-    padding: 5rem 0 3rem 0;
-    text-align: center; }
-    /* line 2059 */
-    .post-footer .author {
-      margin: 0 0 2rem 0;
-      padding: 0 0 1.6rem 0;
-      border-bottom: #EBF2F6 1px dashed; }
-    /* line 2064 */
-    .post-footer .share {
-      position: static;
-      width: auto; }
-      /* line 2067 */
-      .post-footer .share a {
-        margin: 1.4rem 0.8rem 0 0.8rem; }
-
-  /* line 2072 */
-  .author-meta li {
-    float: none;
-    margin: 0;
-    line-height: 1.75em; }
-    /* line 2076 */
-    .author-meta li:before {
-      display: none; }
-
-  /* line 2080 */
-  .older-posts, .newer-posts {
-    position: static;
-    margin: 10px 0; }
-
-  /* line 2084 */
-  .page-number {
-    display: block; }
-
-  /* line 2087 */
-  .site-footer {
-    margin-top: 3rem; }
-
-  /* line 2090 */
-  .author-profile {
-    padding-bottom: 2rem; }
-
-  /* line 2093 */
-  .post-head.main-header {
-    height: 30vh; }
-
-  /* line 2096 */
-  .tag-head.main-header, .author-head.main-header {
-    height: 20vh; }
-
-  /* line 2100 */
-  .author-profile .author-image {
-    margin-top: -70px; }
-  /* line 2103 */
-  .author-profile .author-meta span {
-    font-size: 1.4rem; }
-
-  /* line 2107 */
-  .archive-template .main-header .page-description {
-    display: none; }
-
-  /* line 2110 */
-  .read-next {
-    margin-top: 2rem;
-    margin-bottom: -37px; }
-    /* line 2113 */
-    .read-next .post {
-      width: 100%; } }
-/* ==========================================================================
-   13. Animations
-   ========================================================================== */
+/* ========================================================================== 13. Animations ========================================================================== */
 /* Used to fade in title/desc on the home page */
-@-webkit-keyframes fade-in-down {
-  0% {
-    opacity: 0;
+@-webkit-keyframes fade-in-down { 0% { opacity: 0;
     -webkit-transform: translateY(-10px);
     transform: translateY(-10px); }
-  100% {
-    opacity: 1;
+  100% { opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0); } }
-@keyframes fade-in-down {
-  0% {
-    opacity: 0;
+
+@keyframes fade-in-down { 0% { opacity: 0;
     -webkit-transform: translateY(-10px);
     transform: translateY(-10px); }
-  100% {
-    opacity: 1;
+  100% { opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0); } }
+
 /* Used to bounce .scroll-down on home page */
-@-webkit-keyframes bounce {
-  0%, 10%, 25%, 40%, 50% {
-    -webkit-transform: translateY(0) rotate(-90deg);
+@-webkit-keyframes bounce { 0%, 10%, 25%, 40%, 50% { -webkit-transform: translateY(0) rotate(-90deg);
     transform: translateY(0) rotate(-90deg); }
-  20% {
-    -webkit-transform: translateY(-10px) rotate(-90deg);
+  20% { -webkit-transform: translateY(-10px) rotate(-90deg);
     transform: translateY(-10px) rotate(-90deg); }
-  30% {
-    -webkit-transform: translateY(-5px) rotate(-90deg);
+  30% { -webkit-transform: translateY(-5px) rotate(-90deg);
     transform: translateY(-5px) rotate(-90deg); } }
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    -webkit-transform: translateY(0) rotate(-90deg);
+
+@keyframes bounce { 0%, 20%, 50%, 80%, 100% { -webkit-transform: translateY(0) rotate(-90deg);
     transform: translateY(0) rotate(-90deg); }
-  40% {
-    -webkit-transform: translateY(-10px) rotate(-90deg);
+  40% { -webkit-transform: translateY(-10px) rotate(-90deg);
     transform: translateY(-10px) rotate(-90deg); }
-  60% {
-    -webkit-transform: translateY(-5px) rotate(-90deg);
+  60% { -webkit-transform: translateY(-5px) rotate(-90deg);
     transform: translateY(-5px) rotate(-90deg); } }
-/* line 2190 */
-.shields {
-  display: flex; }
-  /* line 2192 */
-  .shields div {
-    margin: 1rem; }
 
-/* line 2197 */
-.inline {
-  display: inline; }
+.shields { display: flex; }
 
-/* line 2201 */
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center; }
+.shields div { margin: 1rem; }
 
-/* ==========================================================================
-   End of file. Animations should be the last thing here. Do not add stuff
-   below this point, or it will probably fuck everything up.
-   ========================================================================== */
-/* line 2214 */
-.project-info {
-  color: #666;
-  font-size: 1.2rem;
-  font-weight: 100; }
-  /* line 2218 */
-  .project-info .fa {
-    padding-right: 0.5rem; }
-  /* line 2221 */
-  .project-info a {
-    color: #666;
-    text-decoration: none;
-    padding-right: 1.5rem; }
+.inline { display: inline; }
+
+.center { display: flex; align-items: center; justify-content: center; }
+
+/* ========================================================================== End of file. Animations should be the last thing here. Do not add stuff below this point, or it will probably fuck everything up. ========================================================================== */
+.project-info { color: #666; font-size: 1.2rem; font-weight: 100; }
+
+.project-info .fa { padding-right: 0.5rem; }
+
+.project-info a { color: #666; text-decoration: none; padding-right: 1.5rem; }
+
+/*# sourceMappingURL=screen.css.map */

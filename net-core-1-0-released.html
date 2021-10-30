@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -141,20 +143,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>If you don’t mind installers, just go to <a href="http://dot.net">dot.net</a> and download the <a href="https://go.microsoft.com/fwlink/?LinkID=809122">.Net Core SDK Windows Installer</a>.</p>
 
-<p>Otherwise, if you’re a command-line freak, use the <code class="highlighter-rouge">dotnet-install.ps1</code> script (from PowerShell commandline):</p>
+<p>Otherwise, if you’re a command-line freak, use the <code class="language-plaintext highlighter-rouge">dotnet-install.ps1</code> script (from PowerShell commandline):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 | iex
 </code></pre></div></div>
 
-<p>You don’t even need elevated access - by default <code class="highlighter-rouge">dotnet</code> will install in <code class="highlighter-rouge">%LOCALAPPDATA%\Microsoft\dotnet</code>. The install script also takes optional arguments, such as the required version of dotnet SDK, install location, and so on. If you want to fiddle with these options, just save it locally:</p>
+<p>You don’t even need elevated access - by default <code class="language-plaintext highlighter-rouge">dotnet</code> will install in <code class="language-plaintext highlighter-rouge">%LOCALAPPDATA%\Microsoft\dotnet</code>. The install script also takes optional arguments, such as the required version of dotnet SDK, install location, and so on. If you want to fiddle with these options, just save it locally:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1 -outfile dotnet-install.ps1
 &gt;  get-help .\dotnet-install.ps1 -Detailed
 </code></pre></div></div>
 
-<p>Let’s verify <code class="highlighter-rouge">dotnet</code> installation:</p>
+<p>Let’s verify <code class="language-plaintext highlighter-rouge">dotnet</code> installation:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet --info
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet --info
 .NET Command Line Tools (1.0.0-preview2-003121)
 
 Product Information:
@@ -179,11 +181,11 @@ RID:         win10-x64
   <li>.NET Core SDK = Develop apps with .NET Core and the SDK+CLI (Software Development Kit/Command Line Interface) tools</li>
 </ul>
 
-<p>This may seem confusing, but think of it this way: <code class="highlighter-rouge">.Net Core</code> is like another version of .Net Framework. You need it in order to run applications that target <code class="highlighter-rouge">.Net Core</code> (like on the server). <code class="highlighter-rouge">.Net Core SDK</code> contains <code class="highlighter-rouge">.Net Core</code> plus additional (CLI tooling)[https://github.com/dotnet/cli] - so you can actually develop and compile apps (like on your dev machine).</p>
+<p>This may seem confusing, but think of it this way: <code class="language-plaintext highlighter-rouge">.Net Core</code> is like another version of .Net Framework. You need it in order to run applications that target <code class="language-plaintext highlighter-rouge">.Net Core</code> (like on the server). <code class="language-plaintext highlighter-rouge">.Net Core SDK</code> contains <code class="language-plaintext highlighter-rouge">.Net Core</code> plus additional (CLI tooling)[https://github.com/dotnet/cli] - so you can actually develop and compile apps (like on your dev machine).</p>
 
-<p>The <code class="highlighter-rouge">dotnet</code> command is still available after <code class="highlighter-rouge">.Net Core</code> installation (without the SDK), but if you run it:</p>
+<p>The <code class="language-plaintext highlighter-rouge">dotnet</code> command is still available after <code class="language-plaintext highlighter-rouge">.Net Core</code> installation (without the SDK), but if you run it:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore
 Did you mean to run dotnet SDK commands? Please install dotnet SDK from:
  http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 
@@ -214,9 +216,9 @@ http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 
 <h3 id="whats-in-the-box">What’s in the box?</h3>
 
-<p>The <code class="highlighter-rouge">dotnet</code> directory layout looks like this:</p>
+<p>The <code class="language-plaintext highlighter-rouge">dotnet</code> directory layout looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet
  \- shared/
      \- Microsoft.NETCore.App/
          \- 1.0.0/
@@ -250,15 +252,15 @@ http://go.microsoft.com/fwlink/?LinkID=798306&amp;clcid=0x409
 <p>Something to note:</p>
 
 <ul>
-  <li>Each directory in <code class="highlighter-rouge">runtimes</code> contains only a few runtime-specific dlls.</li>
-  <li><code class="highlighter-rouge">hostfxr.dll</code> - wonder what’s this for…</li>
+  <li>Each directory in <code class="language-plaintext highlighter-rouge">runtimes</code> contains only a few runtime-specific dlls.</li>
+  <li><code class="language-plaintext highlighter-rouge">hostfxr.dll</code> - wonder what’s this for…</li>
 </ul>
 
 <h1 id="getting-started">Getting started</h1>
 
-<p><code class="highlighter-rouge">dotnet</code> command is announced to be the one which you will ever need to operate in .Net Core space. That is, including creating a new project:</p>
+<p><code class="language-plaintext highlighter-rouge">dotnet</code> command is announced to be the one which you will ever need to operate in .Net Core space. That is, including creating a new project:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new
 
 Welcome to .NET Core!
 ---------------------
@@ -276,25 +278,25 @@ Expanding 100% 104448 ms
 Created new C# project in C:\src\dotnet\test.
 </code></pre></div></div>
 
-<p>That gives us a simple “Hello world” program and a <code class="highlighter-rouge">project.json</code> file. Just type <code class="highlighter-rouge">dotnet run</code> and…</p>
+<p>That gives us a simple “Hello world” program and a <code class="language-plaintext highlighter-rouge">project.json</code> file. Just type <code class="language-plaintext highlighter-rouge">dotnet run</code> and…</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
 The current project is not valid because of the following errors:
 C:\src\dotnet\test\project.lock.json(1,0): error NU1009: The expected lock file doesn't exist. Please run "dotnet restore" to generate a new lock file.
 </code></pre></div></div>
 
-<p>Ok, sure, <code class="highlighter-rouge">dotnet restore</code>:</p>
+<p>Ok, sure, <code class="language-plaintext highlighter-rouge">dotnet restore</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore    
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet restore    
 log  : Restoring packages for C:\src\dotnet\test\project.json...
 log  : Writing lock file to disk. Path: C:\src\dotnet\test\project.lock.json
 log  : C:\src\dotnet\test\project.json
 log  : Restore completed in 2118ms.
 </code></pre></div></div>
 
-<p>Fine, <code class="highlighter-rouge">project.lock.json</code> is created and up to date.</p>
+<p>Fine, <code class="language-plaintext highlighter-rouge">project.lock.json</code> is created and up to date.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet run
 Project test (.NETCoreApp,Version=v1.0) will be compiled because expected outputs are missing
 Compiling test for .NETCoreApp,Version=v1.0
 
@@ -308,7 +310,7 @@ Time elapsed 00:00:03.1092630
 Hello World!
 </code></pre></div></div>
 
-<p>Great! Now you can checkout all the resources at https://www.microsoft.com/net and start hacking. And I’m gonna start migrating my RC1 projects to <code class="highlighter-rouge">.Net Core 1.0</code>…</p>
+<p>Great! Now you can checkout all the resources at https://www.microsoft.com/net and start hacking. And I’m gonna start migrating my RC1 projects to <code class="language-plaintext highlighter-rouge">.Net Core 1.0</code>…</p>
 
 
         </section>
@@ -386,17 +388,32 @@ Hello World!
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

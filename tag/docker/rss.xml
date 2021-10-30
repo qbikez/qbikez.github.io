@@ -39,9 +39,9 @@
 
 <p>We’ve got three separate subnets:</p>
 <ul>
-  <li><code class="highlighter-rouge">192.168.13.0/24</code> - the target internal network (i.e. company network)</li>
-  <li><code class="highlighter-rouge">172.17.0.0/16</code> - docker internal bridge network</li>
-  <li><code class="highlighter-rouge">192.168.255.0/24</code> - openvpn network, from which addresses are assigned to clients</li>
+  <li><code class="language-plaintext highlighter-rouge">192.168.13.0/24</code> - the target internal network (i.e. company network)</li>
+  <li><code class="language-plaintext highlighter-rouge">172.17.0.0/16</code> - docker internal bridge network</li>
+  <li><code class="language-plaintext highlighter-rouge">192.168.255.0/24</code> - openvpn network, from which addresses are assigned to clients</li>
 </ul>
 
 <p>We want to be able to connect through OpenVPN and access any host in the internal network. This will be achieved through routing and NAT (as opposed to bridging, where VPN clients would get IP addreses from internal network).</p>
@@ -50,9 +50,9 @@
 
 <p>Let’s start with OpenVPN docker image. The heavy lifting has already been done and there is an image at  <a href="https://github.com/kylemanna/docker-openvpn/tree/master">https://github.com/kylemanna/docker-openvpn/tree/master</a> that not only starts OpenVPN server, but also facilitates registering new clients and generating profiles for them. There’s also a <a href="https://github.com/kylemanna/docker-openvpn/blob/909744dd7899870df764c2cc0a33ef01e9189849/docs/docker-compose.md">guide on how to use it with docker-compose</a>. Sweet.</p>
 
-<p>The <code class="highlighter-rouge">docker-compose.yml</code> looks like this:</p>
+<p>The <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '2'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '2'
 services:
   openvpn:
     cap_add:
@@ -68,7 +68,7 @@ services:
 
 <p>Before running openvpn server itself, we need to generate it’s config and certificates, using scripts provided in the image.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose run --rm openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose run --rm openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
 &gt; docker-compose run --rm openvpn ovpn_initpki
 </code></pre></div></div>
 
@@ -76,11 +76,11 @@ services:
 
 <h2 id="configuration">Configuration</h2>
 
-<p><code class="highlighter-rouge">ovpn_genconfig</code> script that we used in previous step generates two config files: <code class="highlighter-rouge">openvpn.config</code> and <code class="highlighter-rouge">ovpn_env.sh</code>. It takes a bunch of additional arguments to help you customize the config. You can either play along with it or edit the generated config manually. <code class="highlighter-rouge">ovpn_genconfig</code> also does some basic <code class="highlighter-rouge">iptables</code> configuration, which otherwise you would have to edit by hand, so I’ll stick with the script.</p>
+<p><code class="language-plaintext highlighter-rouge">ovpn_genconfig</code> script that we used in previous step generates two config files: <code class="language-plaintext highlighter-rouge">openvpn.config</code> and <code class="language-plaintext highlighter-rouge">ovpn_env.sh</code>. It takes a bunch of additional arguments to help you customize the config. You can either play along with it or edit the generated config manually. <code class="language-plaintext highlighter-rouge">ovpn_genconfig</code> also does some basic <code class="language-plaintext highlighter-rouge">iptables</code> configuration, which otherwise you would have to edit by hand, so I’ll stick with the script.</p>
 
-<p>Let’s see what <code class="highlighter-rouge">ovpn_genconfig</code> can do for us:</p>
+<p>Let’s see what <code class="language-plaintext highlighter-rouge">ovpn_genconfig</code> can do for us:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up -d openvpn 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up -d openvpn 
 &gt; docker-compose exec openvpn bash
 bash-4.3# ovpn_genconfig -?
 Invalid option: -?
@@ -112,23 +112,23 @@ optional arguments:
 
 <p>In this scenario, we want to:</p>
 <ul>
-  <li>enable NAT (<code class="highlighter-rouge">-N</code>)</li>
-  <li>push (<code class="highlighter-rouge">-p</code>) routes to the client, so it knows to it should use vpn network to connect to company network</li>
-  <li>use company’s internal dns for name resolution (<code class="highlighter-rouge">-n</code>) and set default domain to <code class="highlighter-rouge">mycompany.net</code> (push adequate <code class="highlighter-rouge">dhcp-option</code> to client)</li>
+  <li>enable NAT (<code class="language-plaintext highlighter-rouge">-N</code>)</li>
+  <li>push (<code class="language-plaintext highlighter-rouge">-p</code>) routes to the client, so it knows to it should use vpn network to connect to company network</li>
+  <li>use company’s internal dns for name resolution (<code class="language-plaintext highlighter-rouge">-n</code>) and set default domain to <code class="language-plaintext highlighter-rouge">mycompany.net</code> (push adequate <code class="language-plaintext highlighter-rouge">dhcp-option</code> to client)</li>
 </ul>
 
 <p>Here’s the command to do that:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># remove old ovpn_env.sh
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># remove old ovpn_env.sh
 &gt; docker-compose run --rm openvpn rm /etc/openvpn/ovpn_env.sh
 
 # generate new config files
 &gt; docker-compose run --rm openvpn ovpn_genconfig -N -d -n 192.168.13.6 -u udp://vpn.mycompany.net -p "dhcp-option DOMAIN mycompany.net" -p "route 192.168.13.0 255.255.255.0" -p "route 172.17.0.0 255.255.0.0"
 </code></pre></div></div>
 
-<p>The generated config will be in <code class="highlighter-rouge">./openvpn-data/conf</code> and it should look like this (you may also want to take a look at <code class="highlighter-rouge">ovpn_env.sh</code>):</p>
+<p>The generated config will be in <code class="language-plaintext highlighter-rouge">./openvpn-data/conf</code> and it should look like this (you may also want to take a look at <code class="language-plaintext highlighter-rouge">ovpn_env.sh</code>):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server 192.168.255.0 255.255.255.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server 192.168.255.0 255.255.255.0
 verb 3
 key /etc/openvpn/pki/private/dev.legimi.com.key
 ca /etc/openvpn/pki/ca.crt
@@ -160,12 +160,12 @@ push "route 172.17.0.0 255.255.0.0"
 
 <p>Now that openvpn server is configured, make sure it is up and running:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; docker-compose up
 </code></pre></div></div>
 
 <p>To connect, we’ll need a client profile.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generate a client certificate (you will be asked for a passphrase)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Generate a client certificate (you will be asked for a passphrase)
 &gt; export CLIENTNAME="your_client_name"
 &gt; docker-compose run --rm openvpn easyrsa build-client-full $CLIENTNAME
 
@@ -175,7 +175,7 @@ push "route 172.17.0.0 255.255.0.0"
 
 <p>Finally, connect to openvpn:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; openvpn -c your_client_name.ovpn
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; openvpn -c your_client_name.ovpn
 </code></pre></div></div>
 
 <p>If everything goes fine, you should be able to ping the internal network (i.e. 192.168.13.1 host).</p>
@@ -185,18 +185,18 @@ push "route 172.17.0.0 255.255.0.0"
 <p>If you cannot connect to openvpn:</p>
 
 <ul>
-  <li>make sure <code class="highlighter-rouge">openvpn</code> container starts without errors and port 1194 is exposed at docker host</li>
+  <li>make sure <code class="language-plaintext highlighter-rouge">openvpn</code> container starts without errors and port 1194 is exposed at docker host</li>
   <li>make sure port 1194 is open at vpn url you specified when configuring (vpn.mycompany.net)</li>
 </ul>
 
 <p>If you can connect to openvpn, but cannot ping internal network:</p>
 
 <ul>
-  <li>check if the client machine has an IP address from openvpn network assigned (<code class="highlighter-rouge">192.168.255.x</code>)</li>
-  <li>ping <code class="highlighter-rouge">192.168.255.1</code> (that’s the default gateway for openvpn connections). If you can’t, there’s probably something wrong with openvpn config.</li>
-  <li>check <code class="highlighter-rouge">openvpn</code> container’s internal IP (<code class="highlighter-rouge">172.17.0.x</code>) and ping it.</li>
-  <li>check routing tables on client machine. There should be routes for networks <code class="highlighter-rouge">172.17.0.0</code> and <code class="highlighter-rouge">192.168.13.0</code> going through Gateway <code class="highlighter-rouge">192.168.255.1</code>.</li>
-  <li>check if you can ping internal network from <code class="highlighter-rouge">openvpn</code> container</li>
+  <li>check if the client machine has an IP address from openvpn network assigned (<code class="language-plaintext highlighter-rouge">192.168.255.x</code>)</li>
+  <li>ping <code class="language-plaintext highlighter-rouge">192.168.255.1</code> (that’s the default gateway for openvpn connections). If you can’t, there’s probably something wrong with openvpn config.</li>
+  <li>check <code class="language-plaintext highlighter-rouge">openvpn</code> container’s internal IP (<code class="language-plaintext highlighter-rouge">172.17.0.x</code>) and ping it.</li>
+  <li>check routing tables on client machine. There should be routes for networks <code class="language-plaintext highlighter-rouge">172.17.0.0</code> and <code class="language-plaintext highlighter-rouge">192.168.13.0</code> going through Gateway <code class="language-plaintext highlighter-rouge">192.168.255.1</code>.</li>
+  <li>check if you can ping internal network from <code class="language-plaintext highlighter-rouge">openvpn</code> container</li>
 </ul>
 
 	  ]]></description>

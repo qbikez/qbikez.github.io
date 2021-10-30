@@ -43,79 +43,79 @@
 
 <p>If you want to do it from commandline, here’s a snippet for <a href="https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell">setting IIS Manager permissions</a>:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>System.Reflection.Assembly]::LoadWithPartialName<span class="o">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="o">)</span> 
-<span class="o">[</span>Microsoft.Web.Management.Server.ManagementAuthorization]::Grant<span class="o">(</span><span class="nv">$username</span>, <span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span>, <span class="nv">$false</span><span class="o">)</span> 
-</code></pre></div></div>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">System.Reflection.Assembly</span><span class="p">]::</span><span class="n">LoadWithPartialName</span><span class="p">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="p">)</span><span class="w"> 
+</span><span class="p">[</span><span class="n">Microsoft.Web.Management.Server.ManagementAuthorization</span><span class="p">]::</span><span class="n">Grant</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span><span class="w"> </span><span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span><span class="p">,</span><span class="w"> </span><span class="bp">$false</span><span class="p">)</span><span class="w"> 
+</span></code></pre></div></div>
 
-<p>Then, use <code class="highlighter-rouge">Set-Acl</code> to set physical path permissions. Here’s a full script:</p>
+<p>Then, use <code class="language-plaintext highlighter-rouge">Set-Acl</code> to set physical path permissions. Here’s a full script:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">&lt;#
-.SYNOPSIS
+</span><span class="cs">.SYNOPSIS</span><span class="cm">
 
 adds ACL rules to specific path. it's a helper wrapper for Set-ACL from Microsoft.PowerShell.Security   
 
-#&gt;</span>
+#&gt;</span><span class="w">
 
-<span class="k">function </span><span class="nb">set</span>-acl2<span class="o">(</span>
-<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$path</span>, 
-<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="o">[</span>System.Security.AccessControl.FileSystemRights] <span class="nv">$rights</span>, 
-<span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$user</span>,
-<span class="o">[</span>System.Security.AccessControl.InheritanceFlags]  <span class="nv">$InheritanceFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.InheritanceFlags]::None,
- <span class="o">[</span>System.Security.AccessControl.PropagationFlags] <span class="nv">$PropagationFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.PropagationFlags]::None
-<span class="o">)</span> <span class="o">{</span>
-    <span class="nv">$colRights</span> <span class="o">=</span> <span class="nv">$rights</span>
+</span><span class="kr">function</span><span class="w"> </span><span class="nf">set-acl2</span><span class="p">(</span><span class="w">
+</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="o">=</span><span class="bp">$true</span><span class="p">)]</span><span class="w"> </span><span class="nv">$path</span><span class="p">,</span><span class="w"> 
+</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="o">=</span><span class="bp">$true</span><span class="p">)]</span><span class="w"> </span><span class="p">[</span><span class="n">System.Security.AccessControl.FileSystemRights</span><span class="p">]</span><span class="w"> </span><span class="nv">$rights</span><span class="p">,</span><span class="w"> 
+</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="o">=</span><span class="bp">$true</span><span class="p">)]</span><span class="w"> </span><span class="nv">$user</span><span class="p">,</span><span class="w">
+</span><span class="p">[</span><span class="n">System.Security.AccessControl.InheritanceFlags</span><span class="p">]</span><span class="w">  </span><span class="nv">$InheritanceFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">System.Security.AccessControl.InheritanceFlags</span><span class="p">]::</span><span class="n">None</span><span class="p">,</span><span class="w">
+ </span><span class="p">[</span><span class="n">System.Security.AccessControl.PropagationFlags</span><span class="p">]</span><span class="w"> </span><span class="nv">$PropagationFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">System.Security.AccessControl.PropagationFlags</span><span class="p">]::</span><span class="n">None</span><span class="w">
+</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nv">$colRights</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$rights</span><span class="w">
 
-    <span class="nv">$PropagationFlag</span> <span class="o">=</span> <span class="o">[</span>System.Security.AccessControl.PropagationFlags]::None 
+    </span><span class="nv">$PropagationFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">System.Security.AccessControl.PropagationFlags</span><span class="p">]::</span><span class="n">None</span><span class="w"> 
 
-    <span class="nv">$objType</span> <span class="o">=[</span>System.Security.AccessControl.AccessControlType]::Allow 
+    </span><span class="nv">$objType</span><span class="w"> </span><span class="o">=</span><span class="p">[</span><span class="n">System.Security.AccessControl.AccessControlType</span><span class="p">]::</span><span class="n">Allow</span><span class="w"> 
 
-    <span class="nv">$objUser</span> <span class="o">=</span> <span class="nb">New-Object </span>System.Security.Principal.NTAccount<span class="o">(</span><span class="nv">$user</span><span class="o">)</span> 
+    </span><span class="nv">$objUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">New-Object</span><span class="w"> </span><span class="nx">System.Security.Principal.NTAccount</span><span class="p">(</span><span class="nv">$user</span><span class="p">)</span><span class="w"> 
 
-    <span class="nv">$objACE</span> <span class="o">=</span> <span class="nb">New-Object </span>System.Security.AccessControl.FileSystemAccessRule <span class="o">(</span><span class="nv">$objUser</span>, <span class="nv">$colRights</span>, <span class="nv">$InheritanceFlag</span>, <span class="nv">$PropagationFlag</span>, <span class="nv">$objType</span><span class="o">)</span> 
+    </span><span class="nv">$objACE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">New-Object</span><span class="w"> </span><span class="nx">System.Security.AccessControl.FileSystemAccessRule</span><span class="w"> </span><span class="p">(</span><span class="nv">$objUser</span><span class="p">,</span><span class="w"> </span><span class="nv">$colRights</span><span class="p">,</span><span class="w"> </span><span class="nv">$InheritanceFlag</span><span class="p">,</span><span class="w"> </span><span class="nv">$PropagationFlag</span><span class="p">,</span><span class="w"> </span><span class="nv">$objType</span><span class="p">)</span><span class="w"> 
 
-    <span class="nv">$objACL</span> <span class="o">=</span> <span class="o">(</span><span class="nb">Get-Item</span> <span class="nv">$path</span><span class="o">)</span>.GetAccessControl<span class="o">(</span><span class="s1">'Access'</span><span class="o">)</span><span class="c1">#(Get-ACL $path).GetAccessControl('Access')</span>
-    <span class="nv">$objACL</span>.AddAccessRule<span class="o">(</span><span class="nv">$objACE</span><span class="o">)</span> 
+    </span><span class="nv">$objACL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Get-Item</span><span class="w"> </span><span class="nv">$path</span><span class="p">)</span><span class="o">.</span><span class="nf">GetAccessControl</span><span class="p">(</span><span class="s1">'Access'</span><span class="p">)</span><span class="c">#(Get-ACL $path).GetAccessControl('Access')</span><span class="w">
+    </span><span class="nv">$objACL</span><span class="o">.</span><span class="nf">AddAccessRule</span><span class="p">(</span><span class="nv">$objACE</span><span class="p">)</span><span class="w"> 
 
-    <span class="nb">Set-ACL</span> -Path <span class="nv">$path</span> -AclObject <span class="nv">$objACL</span>
-<span class="o">}</span>
+    </span><span class="n">Set-ACL</span><span class="w"> </span><span class="nt">-Path</span><span class="w"> </span><span class="nv">$path</span><span class="w"> </span><span class="nt">-AclObject</span><span class="w"> </span><span class="nv">$objACL</span><span class="w">
+</span><span class="p">}</span><span class="w">
 
-<span class="cm">&lt;#
+</span><span class="cm">&lt;#
 
-.SYNOPSIS 
+</span><span class="cs">.SYNOPSIS</span><span class="cm"> 
 Allows the specified user to publish website through webdeploy
 
-#&gt;</span>    
-<span class="k">function </span>allow-iiswebdeploy <span class="o">{</span>
-<span class="k">param</span><span class="o">(</span>
-    <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$username</span>,
-    <span class="o">[</span>Parameter<span class="o">(</span><span class="nv">Mandatory</span><span class="o">=</span><span class="nv">$true</span><span class="o">)]</span> <span class="nv">$site</span>,
-    <span class="o">[</span><span class="k">Switch</span><span class="o">][</span><span class="kt">bool</span><span class="o">]</span> <span class="nv">$isgroup</span>
-<span class="o">)</span>
+#&gt;</span><span class="w">    
+</span><span class="kr">function</span><span class="w"> </span><span class="nf">allow-iiswebdeploy</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="kr">param</span><span class="p">(</span><span class="w">
+    </span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="o">=</span><span class="bp">$true</span><span class="p">)]</span><span class="w"> </span><span class="nv">$username</span><span class="p">,</span><span class="w">
+    </span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="o">=</span><span class="bp">$true</span><span class="p">)]</span><span class="w"> </span><span class="nv">$site</span><span class="p">,</span><span class="w">
+    </span><span class="p">[</span><span class="n">Switch</span><span class="p">][</span><span class="n">bool</span><span class="p">]</span><span class="w"> </span><span class="nv">$isgroup</span><span class="w">
+</span><span class="p">)</span><span class="w">
 
-    <span class="nb">ipmo </span>webadministration
+    </span><span class="n">ipmo</span><span class="w"> </span><span class="nx">webadministration</span><span class="w">
 
 
-    <span class="nv">$iissite</span> <span class="o">=</span> <span class="nb">get-item</span> <span class="s2">"iis:\sites\</span><span class="nv">$site</span><span class="s2">"</span> -ErrorAction Stop
+    </span><span class="nv">$iissite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get-item</span><span class="w"> </span><span class="s2">"iis:\sites\</span><span class="nv">$site</span><span class="s2">"</span><span class="w"> </span><span class="nt">-ErrorAction</span><span class="w"> </span><span class="nx">Stop</span><span class="w">
 
-    <span class="k">if</span> <span class="o">(</span><span class="nv">$iissite</span> -eq <span class="nv">$null</span><span class="o">)</span> <span class="o">{</span> <span class="k">throw</span> <span class="s2">"site '</span><span class="nv">$site</span><span class="s2">' not found"</span> <span class="o">}</span>
+    </span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$iissite</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="bp">$null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">throw</span><span class="w"> </span><span class="s2">"site '</span><span class="nv">$site</span><span class="s2">' not found"</span><span class="w"> </span><span class="p">}</span><span class="w">
 
-    <span class="c1"># add  IIS Manager Users and Permissions</span>
-    <span class="c1"># from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell</span>
+    </span><span class="c"># add  IIS Manager Users and Permissions</span><span class="w">
+    </span><span class="c"># from: https://blogs.iis.net/carlosag/adding-iis-manager-users-and-permissions-using-powershell</span><span class="w">
 
-    <span class="o">[</span>System.Reflection.Assembly]::LoadWithPartialName<span class="o">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="o">)</span> 
-    <span class="o">[</span>Microsoft.Web.Management.Server.ManagementAuthorization]::Grant<span class="o">(</span><span class="nv">$username</span>, <span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span>, <span class="nv">$isgroup</span><span class="o">)</span> 
+    </span><span class="p">[</span><span class="n">System.Reflection.Assembly</span><span class="p">]::</span><span class="n">LoadWithPartialName</span><span class="p">(</span><span class="s2">"Microsoft.Web.Management"</span><span class="p">)</span><span class="w"> 
+    </span><span class="p">[</span><span class="n">Microsoft.Web.Management.Server.ManagementAuthorization</span><span class="p">]::</span><span class="n">Grant</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span><span class="w"> </span><span class="s2">"</span><span class="nv">$site</span><span class="s2">"</span><span class="p">,</span><span class="w"> </span><span class="nv">$isgroup</span><span class="p">)</span><span class="w"> 
 
-    <span class="c1"># grant file system permissions!</span>
+    </span><span class="c"># grant file system permissions!</span><span class="w">
 
-    <span class="nv">$dir</span> <span class="o">=</span> <span class="nv">$iissite</span>.physicalPath
+    </span><span class="nv">$dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$iissite</span><span class="o">.</span><span class="nf">physicalPath</span><span class="w">
     
-    <span class="nb">set</span>-acl2 -path <span class="nv">$dir</span> -rights CreateFiles,Delete,Modify,CreateDirectories,ReadAndExecute -user <span class="nv">$username</span> -InheritanceFlag ObjectInherit,ContainerInherit 
-<span class="o">}</span>
-</code></pre></div></div>
+    </span><span class="n">set-acl2</span><span class="w"> </span><span class="nt">-path</span><span class="w"> </span><span class="nv">$dir</span><span class="w"> </span><span class="nt">-rights</span><span class="w"> </span><span class="nx">CreateFiles</span><span class="p">,</span><span class="nx">Delete</span><span class="p">,</span><span class="nx">Modify</span><span class="p">,</span><span class="nx">CreateDirectories</span><span class="p">,</span><span class="nx">ReadAndExecute</span><span class="w"> </span><span class="nt">-user</span><span class="w"> </span><span class="nv">$username</span><span class="w"> </span><span class="nt">-InheritanceFlag</span><span class="w"> </span><span class="nx">ObjectInherit</span><span class="p">,</span><span class="nx">ContainerInherit</span><span class="w"> 
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Just call:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; allow-iiswebdeploy -username "MYDOMAIN\user" -site "Default Web Site"
 </code></pre></div></div>
 
 <p>And that’s it! Note that site’s physical path is obtained directly from IIS.</p>

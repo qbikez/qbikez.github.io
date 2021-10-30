@@ -18,7 +18,7 @@
 	  <pubDate>2016-07-30T12:18:00+02:00</pubDate>
 	  <guid>//dnx-to-dotnet-migration</guid>
 	  <description><![CDATA[
-	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
+	     <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="language-plaintext highlighter-rouge">dnx</code> projects forward and switch to <code class="language-plaintext highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
 
 <p><a href="http://www.smashinglists.com/top-10-barney-stinson-quotes/"><img src="assets/images/new-is-always-better.gif" alt="New is always better" /></a></p>
 
@@ -26,7 +26,7 @@
 
 <h2 id="whats-new">What’s new?</h2>
 
-<p>The first change you will immediately notice are the commandline tools. <code class="highlighter-rouge">Dnu</code> and <code class="highlighter-rouge">dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code class="highlighter-rouge">dotnet</code></a> command. <code class="highlighter-rouge">Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code class="highlighter-rouge">dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code class="highlighter-rouge">dnvm use</code> - you have to specify the desired version in <code class="highlighter-rouge">global.json</code> file.</p>
+<p>The first change you will immediately notice are the commandline tools. <code class="language-plaintext highlighter-rouge">Dnu</code> and <code class="language-plaintext highlighter-rouge">dnx</code> were replaced with one, omnipotent, extensible <a href="http://github.com/dotnet/cli"><code class="language-plaintext highlighter-rouge">dotnet</code></a> command. <code class="language-plaintext highlighter-rouge">Dnvm</code> is gone too - installation is handled by installers or install scripts and the proper version selection is baked right into <code class="language-plaintext highlighter-rouge">dotnet</code>. You can still have multiple versions of SDK installed, but there is nothing similar to <code class="language-plaintext highlighter-rouge">dnvm use</code> - you have to specify the desired version in <code class="language-plaintext highlighter-rouge">global.json</code> file.</p>
 
 <h2 id="how-stable-is-stable">How stable is <em>stable</em>?</h2>
 
@@ -59,55 +59,55 @@
 
 <h4 id="project-dependencies">Project dependencies</h4>
 
-<p>For me, the most important breaking change in <code class="highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
+<p>For me, the most important breaking change in <code class="language-plaintext highlighter-rouge">project.json</code> file (at least for me) is the notion of project dependencies. Before, if you wanted to reference another project in your source tree, you could just specify an empty version string to hint the tooling that this is a project dependency. Now, you need to explicitly name it as a project dependency, like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
     "my.other.project": { "target": "project" }
 }
 </code></pre></div></div>
 
-<p>This will instruct <code class="highlighter-rouge">dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
+<p>This will instruct <code class="language-plaintext highlighter-rouge">dotnet</code> to look only for a source project, not a package. Althouth this is fairly easy to fix, it immediatly broken most of my projects compilation, because I had project references with empty version strings all over the place.</p>
 
 <blockquote>
-  <p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="highlighter-rouge">src</code> directories listed in <code class="highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="highlighter-rouge">"target": "package"</code>.</p>
+  <p>You may also specify a version number, just like with package dependencies and if you have a project with that name in one of the <code class="language-plaintext highlighter-rouge">src</code> directories listed in <code class="language-plaintext highlighter-rouge">global.json</code>, it will also be treated as a project dependency. In case you want to explicitly avoid thatand force using a package, you can specify <code class="language-plaintext highlighter-rouge">"target": "package"</code>.</p>
 </blockquote>
 
 <h4 id="commands-vs-tools">Commands vs. Tools</h4>
 
-<p><code class="highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#application-startup">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
+<p><code class="language-plaintext highlighter-rouge">Commands</code> section has now been removed - instead there is <code class="language-plaintext highlighter-rouge">tools</code> section now, but it works quite differently than old commands. Since the <a href="#application-startup">application startup model has changed</a> and is now more bare-bone - so are the tools. <a href="https://docs.microsoft.com/en-us/dotnet/articles/core/tools/extensibility">.Net Core CLI extensibility model</a> explains in-depth, how the tools work.</p>
 
-<p>There are basically 3 types of tools that can extend <code class="highlighter-rouge">dotnet</code> command.</p>
+<p>There are basically 3 types of tools that can extend <code class="language-plaintext highlighter-rouge">dotnet</code> command.</p>
 
-<p>The simplest one is <code class="highlighter-rouge">PATH</code> tools - every executable file named <code class="highlighter-rouge">dotnet-something</code> that is on <code class="highlighter-rouge">PATH</code> can be called as <code class="highlighter-rouge">dotnet something</code> - pretty much how git does it with <a href="http://thediscoblog.com/blog/2014/03/29/custom-git-commands-in-3-steps/">git subcommands</a>. All the invocation arguments are passed to that command, then it’s up to the tool to do it’s work.</p>
+<p>The simplest one is <code class="language-plaintext highlighter-rouge">PATH</code> tools - every executable file named <code class="language-plaintext highlighter-rouge">dotnet-something</code> that is on <code class="language-plaintext highlighter-rouge">PATH</code> can be called as <code class="language-plaintext highlighter-rouge">dotnet something</code> - pretty much how git does it with <a href="http://thediscoblog.com/blog/2014/03/29/custom-git-commands-in-3-steps/">git subcommands</a>. All the invocation arguments are passed to that command, then it’s up to the tool to do it’s work.</p>
 
-<p>Second type of tools are the project tools that are specified in <code class="highlighter-rouge">tools</code> section. These are portable console appications, which are restored with <code class="highlighter-rouge">dotnet restore</code> and have a separate dependency graph. They can only be run in project’s context. This means that when run, they can easily locate project files and outputs and manipulate them. An example of such command is <code class="highlighter-rouge">dotnet-publish-iis</code>.</p>
+<p>Second type of tools are the project tools that are specified in <code class="language-plaintext highlighter-rouge">tools</code> section. These are portable console appications, which are restored with <code class="language-plaintext highlighter-rouge">dotnet restore</code> and have a separate dependency graph. They can only be run in project’s context. This means that when run, they can easily locate project files and outputs and manipulate them. An example of such command is <code class="language-plaintext highlighter-rouge">dotnet-publish-iis</code>.</p>
 
-<p>This brings us to the third type of tools - tools that need to load project output binaries, like for example <code class="highlighter-rouge">dotnet-test-xunit</code>. As mentioned before, tools have a separate dependency graph. But in order to load project output binaries, the tool dependency graph and project dependency graph have to be unified - otherwise all sort of bad things may happen. In order to achieve this, a simple trick is made - the package in <code class="highlighter-rouge">tools</code> section is just a <a href="https://github.com/dotnet/cli/tree/rel/1.0.0-preview2/TestAssets/TestPackages/dotnet-dependency-tool-invoker">simple invoker</a> that loads a specific library (named excatly as the command, e.g. <code class="highlighter-rouge">dotnet-test-xunit</code>) from project dependencies. Because you have to add this library to project’s dependencies, it is part of the overall dependency graph and is able to load project binaries. If there are any conflicts between the tool library and your project, they will come out during <code class="highlighter-rouge">restore</code>.</p>
+<p>This brings us to the third type of tools - tools that need to load project output binaries, like for example <code class="language-plaintext highlighter-rouge">dotnet-test-xunit</code>. As mentioned before, tools have a separate dependency graph. But in order to load project output binaries, the tool dependency graph and project dependency graph have to be unified - otherwise all sort of bad things may happen. In order to achieve this, a simple trick is made - the package in <code class="language-plaintext highlighter-rouge">tools</code> section is just a <a href="https://github.com/dotnet/cli/tree/rel/1.0.0-preview2/TestAssets/TestPackages/dotnet-dependency-tool-invoker">simple invoker</a> that loads a specific library (named excatly as the command, e.g. <code class="language-plaintext highlighter-rouge">dotnet-test-xunit</code>) from project dependencies. Because you have to add this library to project’s dependencies, it is part of the overall dependency graph and is able to load project binaries. If there are any conflicts between the tool library and your project, they will come out during <code class="language-plaintext highlighter-rouge">restore</code>.</p>
 
-<p>This works a little bit like the old <code class="highlighter-rouge">commands</code> section, but you cannot embed any commandline arguments in <code class="highlighter-rouge">project.json</code> (this part of functionality seem to be gone for good).</p>
+<p>This works a little bit like the old <code class="language-plaintext highlighter-rouge">commands</code> section, but you cannot embed any commandline arguments in <code class="language-plaintext highlighter-rouge">project.json</code> (this part of functionality seem to be gone for good).</p>
 
 <h4 id="scripts">Scripts</h4>
 
-<p>The <code class="highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <strong>‘precompile’</strong> and <strong>‘postcompile’</strong>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
+<p>The <code class="language-plaintext highlighter-rouge">scripts</code> section is still available, but the amount of available events has been drastically cut down. The only events supported now are <strong>‘precompile’</strong> and <strong>‘postcompile’</strong>. So, say <a href="https://github.com/dotnet/cli/issues/3436">goodbye to postrestore</a>, prepare, etc. There were a lot of cases where <em>‘postrestore’</em> was really useful and I don’t fully understand why they’re gone. Hope this will be fixed in some future version of SDK or at least there will be a good replacement.</p>
 
 <h4 id="section-renames">Section renames</h4>
 
-<p>Other changes in <code class="highlighter-rouge">project.json</code> are rather cosmetic:</p>
+<p>Other changes in <code class="language-plaintext highlighter-rouge">project.json</code> are rather cosmetic:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">compileOptions</code> were renamed to <code class="highlighter-rouge">buildOptions</code></li>
-  <li>metadata properties, like <code class="highlighter-rouge">summary</code>, <code class="highlighter-rouge">releaseNotes</code>, <code class="highlighter-rouge">iconUrl</code> were moved to <code class="highlighter-rouge">packOptions</code> section</li>
+  <li><code class="language-plaintext highlighter-rouge">compileOptions</code> were renamed to <code class="language-plaintext highlighter-rouge">buildOptions</code></li>
+  <li>metadata properties, like <code class="language-plaintext highlighter-rouge">summary</code>, <code class="language-plaintext highlighter-rouge">releaseNotes</code>, <code class="language-plaintext highlighter-rouge">iconUrl</code> were moved to <code class="language-plaintext highlighter-rouge">packOptions</code> section</li>
 </ul>
 
 <p>The renames are not breaking  (at least not yet) - you will just get a warning that a specific entry is deprecated and you should use the new one instead.</p>
 
 <h4 id="frameworks">Frameworks</h4>
 
-<p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code class="highlighter-rouge">dnx451</code> should be renamed to <code class="highlighter-rouge">net451</code>. In practice, <code class="highlighter-rouge">dnx451</code> still works just fine. <code class="highlighter-rouge">dnxcore50</code> should become <code class="highlighter-rouge">netcoreapp1.0</code> and must add a dependency to <code class="highlighter-rouge">Microsoft.NETCore.App</code> package.</p>
+<p><a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html">Migration docs</a> state that <code class="language-plaintext highlighter-rouge">dnx451</code> should be renamed to <code class="language-plaintext highlighter-rouge">net451</code>. In practice, <code class="language-plaintext highlighter-rouge">dnx451</code> still works just fine. <code class="language-plaintext highlighter-rouge">dnxcore50</code> should become <code class="language-plaintext highlighter-rouge">netcoreapp1.0</code> and must add a dependency to <code class="language-plaintext highlighter-rouge">Microsoft.NETCore.App</code> package.</p>
 
-<p>A framework declaration in <em>project.json</em> may also include <code class="highlighter-rouge">imports</code> section:</p>
+<p>A framework declaration in <em>project.json</em> may also include <code class="language-plaintext highlighter-rouge">imports</code> section:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"frameworks": {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"frameworks": {
   "netcoreapp1.0": { 
     "imports": [ 
         "dnxcore50",
@@ -117,11 +117,11 @@
 }
 </code></pre></div></div>
 
-<p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it’s telling the package manager: <em>“If you don’t find a package version targeting <code class="highlighter-rouge">netcoreapp1.0</code> or other compatible framework, I wan’t you to install a version that targets one of the imported frameworks”</em>.</p>
+<p>This allow packages supporting these frameworks to be installed in the target framework target, regardless of the compatibility rules. In other words, it’s telling the package manager: <em>“If you don’t find a package version targeting <code class="language-plaintext highlighter-rouge">netcoreapp1.0</code> or other compatible framework, I wan’t you to install a version that targets one of the imported frameworks”</em>.</p>
 
 <h3 id="tests">Tests</h3>
 
-<p>Unit testing seems to be the area that has the most moving pieces. It is depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner is released. And it’s really easy to get confused. Fortunately, xunit team keeps <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">xunit docs</a> up to date.</p>
+<p>Unit testing seems to be the area that has the most moving pieces. It is depends strongly on how dotnet runs applications. It seems like with every preview of <code class="language-plaintext highlighter-rouge">dotnet</code> tool, a matching <code class="language-plaintext highlighter-rouge">xunit</code> runner is released. And it’s really easy to get confused. Fortunately, xunit team keeps <a href="https://xunit.github.io/docs/getting-started-dotnet-core.html">xunit docs</a> up to date.</p>
 
 <p>There are 2 things you have to do to configure a unit test project:</p>
 
@@ -129,7 +129,7 @@
   <li>
     <p>Reference xunit and the test tool in project dependencies, like this:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"dependencies": {
   "xunit": "2.1.0",        
   "dotnet-test-xunit": "1.0.0-rc2-192208-24"
 }
@@ -138,45 +138,45 @@
     <p>This will include testing tool in your dependency chain.</p>
   </li>
   <li>
-    <p>Set <code class="highlighter-rouge">testRunner</code> property in <em>project.json</em>:</p>
+    <p>Set <code class="language-plaintext highlighter-rouge">testRunner</code> property in <em>project.json</em>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"testRunner": "xunit"
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"testRunner": "xunit"
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>That’s it. If you now run <code class="highlighter-rouge">dotnet test</code>, dotnet will know it should invoke <code class="highlighter-rouge">dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code class="highlighter-rouge">dotnet new</code>:</p>
+<p>That’s it. If you now run <code class="language-plaintext highlighter-rouge">dotnet test</code>, dotnet will know it should invoke <code class="language-plaintext highlighter-rouge">dotnet-test-xunit</code>. If you want to quickly create an new unit test project, you can use <code class="language-plaintext highlighter-rouge">dotnet new</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new -t xunittest
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dotnet new -t xunittest
 </code></pre></div></div>
 
 <blockquote>
-  <p>If you want to know more about <code class="highlighter-rouge">dotnet new</code>, there’s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code class="highlighter-rouge">dotnet new</code></a> by Scott Hanselman.</p>
+  <p>If you want to know more about <code class="language-plaintext highlighter-rouge">dotnet new</code>, there’s a great post on <a href="http://www.hanselman.com/blog/ExploringDotnetNewWithNETCore.aspx">exploring <code class="language-plaintext highlighter-rouge">dotnet new</code></a> by Scott Hanselman.</p>
 </blockquote>
 
-<p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
+<p>By default, it will create a project that targets .Net Core, but the CLI runner is capable of running tests which target any other framework. If you have more than one target framewrok specified, <code class="language-plaintext highlighter-rouge">dotnet test</code> will run tests for all of them.</p>
 
 <h2 id="application-startup-">Application startup <a id="application-startup"></a></h2>
 
-<p><code class="highlighter-rouge">RC1</code> supported two launch modes:</p>
+<p><code class="language-plaintext highlighter-rouge">RC1</code> supported two launch modes:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">"emitEntryPoint":true</code> - the application is compiled to an <code class="highlighter-rouge">.exe</code>, and has to have a static <code class="highlighter-rouge">Main</code> method. This hasn’t change.</li>
+  <li><code class="language-plaintext highlighter-rouge">"emitEntryPoint":true</code> - the application is compiled to an <code class="language-plaintext highlighter-rouge">.exe</code>, and has to have a static <code class="language-plaintext highlighter-rouge">Main</code> method. This hasn’t change.</li>
   <li>
-    <p><code class="highlighter-rouge">"emitEntryPoint":false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code class="highlighter-rouge">project.json</code>, like this:</p>
+    <p><code class="language-plaintext highlighter-rouge">"emitEntryPoint":false</code> - a dll project could also be run as a console app, if you included an appropriate command in <code class="language-plaintext highlighter-rouge">project.json</code>, like this:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"commands": { "run": "My.Project.Name" }
 </code></pre></div>    </div>
 
-    <p>In this mode, the loading process was similiar to how Asp.Net <code class="highlighter-rouge">Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code class="highlighter-rouge">Main</code> method (non-static), create the containing class instance and inject dependencies into it’s constructor, then run <code class="highlighter-rouge">Main</code>. This was very convienient, because you had access to things like <code class="highlighter-rouge">IApplicationEnvironment</code> or <code class="highlighter-rouge">IServiceProvider</code>. This also meant that additional work had to be done by <code class="highlighter-rouge">dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of “magic” too.</p>
+    <p>In this mode, the loading process was similiar to how Asp.Net <code class="language-plaintext highlighter-rouge">Startup</code> class works. The <a href="https://github.com/aspnet/dnx/blob/brecon/rc1-update2/src/Microsoft.Dnx.ApplicationHost/Program.cs">ApplicationHost</a> was responsible for running console applications. It would look for <code class="language-plaintext highlighter-rouge">Main</code> method (non-static), create the containing class instance and inject dependencies into it’s constructor, then run <code class="language-plaintext highlighter-rouge">Main</code>. This was very convienient, because you had access to things like <code class="language-plaintext highlighter-rouge">IApplicationEnvironment</code> or <code class="language-plaintext highlighter-rouge">IServiceProvider</code>. This also meant that additional work had to be done by <code class="language-plaintext highlighter-rouge">dnx</code> to locate the startup class and provide all of the dependencies. And it was kind of “magic” too.</p>
   </li>
 </ul>
 
-<p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code class="highlighter-rouge">IServiceProvider</code> is defined in <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code class="highlighter-rouge">Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won’t. That was a problem for <code class="highlighter-rouge">dnx</code> - versions of you’re dependencies and <code class="highlighter-rouge">dnx</code> version had to match (you couldn’t have <code class="highlighter-rouge">beta5</code> dependencies and use <code class="highlighter-rouge">dnx</code> <code class="highlighter-rouge">v.1.0.0-beta4</code>).</p>
+<p>Apart of the additional logic required in the second startup mode, there is also the issue of dependencies. <code class="language-plaintext highlighter-rouge">IServiceProvider</code> is defined in <code class="language-plaintext highlighter-rouge">Microsoft.Extensions.DependencyInjection.Abstractions</code> and to provide it, the runtime would also have to create some default instance. This adds a dependency on <code class="language-plaintext highlighter-rouge">Microsoft.Extensions.DependencyInjection</code> in the runtime - which means that your application should depend on exact same version. It may work with a newer version, but considering the rapid development of APIs in .Net Core and possible namespace/method name changes, it most probably won’t. That was a problem for <code class="language-plaintext highlighter-rouge">dnx</code> - versions of you’re dependencies and <code class="language-plaintext highlighter-rouge">dnx</code> version had to match (you couldn’t have <code class="language-plaintext highlighter-rouge">beta5</code> dependencies and use <code class="language-plaintext highlighter-rouge">dnx</code> <code class="language-plaintext highlighter-rouge">v.1.0.0-beta4</code>).</p>
 
-<p>Because <code class="highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="highlighter-rouge">static void Main</code>. So is the automatic <code class="highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
+<p>Because <code class="language-plaintext highlighter-rouge">dotnet</code> is aimed to be more universal, this mode is now gone. We’re back to the “raw” <code class="language-plaintext highlighter-rouge">static void Main</code>. So is the automatic <code class="language-plaintext highlighter-rouge">Startup</code> lookup in Asp.Net - you have to add the boilerplate code yourself). In Asp.Net Core 1.0.0, it would look like this<a id="aspnet-main"></a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public static void Main(string[] args)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public static void Main(string[] args)
 {
     var host = new WebHostBuilder()
         .UseKestrel()
@@ -188,10 +188,10 @@
 }
 </code></pre></div></div>
 
-<p>Now, the <code class="highlighter-rouge">WebHostBuilder</code> is responsible for creating instance of <code class="highlighter-rouge">IApplicationEnvironment</code>, etc. and passing these dependencies to <code class="highlighter-rouge">Startup</code> class. So the <code class="highlighter-rouge">Startup</code> class does not have to change, the only change is in the <code class="highlighter-rouge">Main</code> method.</p>
+<p>Now, the <code class="language-plaintext highlighter-rouge">WebHostBuilder</code> is responsible for creating instance of <code class="language-plaintext highlighter-rouge">IApplicationEnvironment</code>, etc. and passing these dependencies to <code class="language-plaintext highlighter-rouge">Startup</code> class. So the <code class="language-plaintext highlighter-rouge">Startup</code> class does not have to change, the only change is in the <code class="language-plaintext highlighter-rouge">Main</code> method.</p>
 
-<p>Some of these services that were provided in <code class="highlighter-rouge">dnx</code> has moved to other places, like <code class="highlighter-rouge">IApplicationEnvironment</code>:
-https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcements/issues/171, https://github.com/aspnet/PlatformAbstractions/issues/37. Most of them, including <code class="highlighter-rouge">ApplicationBasePath</code> can now be accessed by a static field: <code class="highlighter-rouge">Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application</code>. That’s it for “dependency injection as a first class citizen” (at least for barebone console apps) and we’re back to static classes.</p>
+<p>Some of these services that were provided in <code class="language-plaintext highlighter-rouge">dnx</code> has moved to other places, like <code class="language-plaintext highlighter-rouge">IApplicationEnvironment</code>:
+https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcements/issues/171, https://github.com/aspnet/PlatformAbstractions/issues/37. Most of them, including <code class="language-plaintext highlighter-rouge">ApplicationBasePath</code> can now be accessed by a static field: <code class="language-plaintext highlighter-rouge">Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application</code>. That’s it for “dependency injection as a first class citizen” (at least for barebone console apps) and we’re back to static classes.</p>
 
 <h2 id="migration-process">Migration process</h2>
 
@@ -199,7 +199,7 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <h2 id="using-dotnet-with-old-projects">Using dotnet with old projects</h2>
 
-<p>As mentioned before, the tooling/SDK is now completely separate from Core Framework libraries. This also means that you’re dependencie versions does no longer have to match tooling version (previously, you weren’t able to have a dependency on, say, <code class="highlighter-rouge">-beta8</code> libraries and compile with <code class="highlighter-rouge">-rc1</code> <em>dnu</em>). The consequence is that you can still depend on older <code class="highlighter-rouge">-rc1</code> libraries and use new <code class="highlighter-rouge">dotnet</code> commands. This gives you a little more flexibility in the migration process.</p>
+<p>As mentioned before, the tooling/SDK is now completely separate from Core Framework libraries. This also means that you’re dependencie versions does no longer have to match tooling version (previously, you weren’t able to have a dependency on, say, <code class="language-plaintext highlighter-rouge">-beta8</code> libraries and compile with <code class="language-plaintext highlighter-rouge">-rc1</code> <em>dnu</em>). The consequence is that you can still depend on older <code class="language-plaintext highlighter-rouge">-rc1</code> libraries and use new <code class="language-plaintext highlighter-rouge">dotnet</code> commands. This gives you a little more flexibility in the migration process.</p>
 
 <p>Let’s get down to business and see, how does the migration process go. The experience can vary depending on how complicated is your project and how much (if any) dependencies does it have on .Net Core libraries.</p>
 
@@ -214,53 +214,53 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <h3 id="a-library-project-with-no-project-dependencies-targeting-net451-and-dnx451-">A library project, with no project dependencies, targeting net451 and dnx451 <a name="library-app"></a></h3>
 
-<p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
+<p>This is the simplest case - no dependencies on other projects, only nugets, no <code class="language-plaintext highlighter-rouge">dnxcore</code>, just good old .Net Framework.</p>
 
-<p>Surprisingly (or maybe not), <code class="highlighter-rouge">dotnet restore</code> and <code class="highlighter-rouge">dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code class="highlighter-rouge">bin</code> folder.</p>
+<p>Surprisingly (or maybe not), <code class="language-plaintext highlighter-rouge">dotnet restore</code> and <code class="language-plaintext highlighter-rouge">dotnet build</code> have no problems. The only difference: all the required dll dependencies are copied to output <code class="language-plaintext highlighter-rouge">bin</code> folder.</p>
 
 <h3 id="a-console-app-">A console app <a name="console-app"></a></h3>
 
-<p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code class="highlighter-rouge">emitEntryPoint</code></a>. In that case, you have to add a static <code class="highlighter-rouge">Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
+<p>Same as with a library project - no real changes needed. That is, unless you were using the startup model without <a href="#application-startup"><code class="language-plaintext highlighter-rouge">emitEntryPoint</code></a>. In that case, you have to add a static <code class="language-plaintext highlighter-rouge">Main</code> method and possibly create a dependency injection container by yourself (as described in <a href="#application-startup">Application Startup</a>).</p>
 
 <h3 id="aspnet-mvc-application-">ASP.NET MVC application <a name="mvc-app"></a></h3>
 
 <p>A full ASP.NET MVC application will require some more work. Follow these steps:</p>
 
 <ol>
-  <li>In <em>project.json</em> <code class="highlighter-rouge">dependendcies</code> section, make these renames:
+  <li>In <em>project.json</em> <code class="language-plaintext highlighter-rouge">dependendcies</code> section, make these renames:
     <ul>
-      <li>AspNetCore namespace: <code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
-      <li>AspNet versions: <code class="highlighter-rouge">1.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
-      <li>MVC versions: <code class="highlighter-rouge">6.0.0-rc1*</code> =&gt; <code class="highlighter-rouge">1.0.0</code></li>
-      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+      <li>AspNetCore namespace: <code class="language-plaintext highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="language-plaintext highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li>AspNet versions: <code class="language-plaintext highlighter-rouge">1.0.0-rc1*</code> =&gt; <code class="language-plaintext highlighter-rouge">1.0.0</code></li>
+      <li>MVC versions: <code class="language-plaintext highlighter-rouge">6.0.0-rc1*</code> =&gt; <code class="language-plaintext highlighter-rouge">1.0.0</code></li>
+      <li><code class="language-plaintext highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="language-plaintext highlighter-rouge">Microsoft.Extensions.*</code></li>
     </ul>
 
-    <p>Some of the versions or namespaces may actually be incorrect. If there’s just an issue, just try referencing the newest one (preferrably stable). Continue to fix dependencies until <code class="highlighter-rouge">dotnet restore</code> suceeds.</p>
+    <p>Some of the versions or namespaces may actually be incorrect. If there’s just an issue, just try referencing the newest one (preferrably stable). Continue to fix dependencies until <code class="language-plaintext highlighter-rouge">dotnet restore</code> suceeds.</p>
   </li>
-  <li>Get rid of <em>project.json</em> <code class="highlighter-rouge">commands</code> section.</li>
+  <li>Get rid of <em>project.json</em> <code class="language-plaintext highlighter-rouge">commands</code> section.</li>
   <li>In code, rename namespaces:
     <ul>
-      <li><code class="highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="highlighter-rouge">Microsoft.AspNetCore.*</code></li>
-      <li><code class="highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="highlighter-rouge">Microsoft.Extensions.*</code></li>
+      <li><code class="language-plaintext highlighter-rouge">Microsoft.AspNet.*</code> =&gt; <code class="language-plaintext highlighter-rouge">Microsoft.AspNetCore.*</code></li>
+      <li><code class="language-plaintext highlighter-rouge">Microsoft.Framework.*</code> =&gt; <code class="language-plaintext highlighter-rouge">Microsoft.Extensions.*</code></li>
     </ul>
   </li>
-  <li>Try doing <code class="highlighter-rouge">dotnet build</code> and fix the remaining compilation errors.</li>
-  <li>In <em>project.json</em> set <code class="highlighter-rouge">buildOptions:emitEntryPoint</code> to <code class="highlighter-rouge">true</code> and add <a href="#aspnet-main">static <code class="highlighter-rouge">Main</code> method</a> or fix the existing one.</li>
-  <li>In <em>projectJson</em>, set <a href="https://github.com/aspnet/cli-samples/issues/19"><code class="highlighter-rouge">buildOptions:preserveCompilationContext</code></a> to <code class="highlighter-rouge">true</code> - this is required for Razor views compilation.</li>
+  <li>Try doing <code class="language-plaintext highlighter-rouge">dotnet build</code> and fix the remaining compilation errors.</li>
+  <li>In <em>project.json</em> set <code class="language-plaintext highlighter-rouge">buildOptions:emitEntryPoint</code> to <code class="language-plaintext highlighter-rouge">true</code> and add <a href="#aspnet-main">static <code class="language-plaintext highlighter-rouge">Main</code> method</a> or fix the existing one.</li>
+  <li>In <em>projectJson</em>, set <a href="https://github.com/aspnet/cli-samples/issues/19"><code class="language-plaintext highlighter-rouge">buildOptions:preserveCompilationContext</code></a> to <code class="language-plaintext highlighter-rouge">true</code> - this is required for Razor views compilation.</li>
   <li>If the project compiles, try running it. There will probably be some minor problems in views, but they should’n be hard to fix.</li>
 </ol>
 
-<p>If you encounter strange errors with loading dependency assemblies or anything that seems like <code class="highlighter-rouge">rc1</code> leftover, try <a href="#hunt-down-rc1">Hunting down rc1 references</a>.</p>
+<p>If you encounter strange errors with loading dependency assemblies or anything that seems like <code class="language-plaintext highlighter-rouge">rc1</code> leftover, try <a href="#hunt-down-rc1">Hunting down rc1 references</a>.</p>
 
 <h3 id="tests-1">Tests</h3>
 
-<p>Unit testing seems to be the most moving part of the whole thing. It is a part of tooling and depends strongly on how dotnet runs applications. It seems like with every preview of <code class="highlighter-rouge">dotnet</code> tool, a matching <code class="highlighter-rouge">xunit</code> runner has to be released. And it’s really easy to get confused. Fortunately, xunit team keeps the docs up to date: https://xunit.github.io/docs/getting-started-dotnet-core.html.</p>
+<p>Unit testing seems to be the most moving part of the whole thing. It is a part of tooling and depends strongly on how dotnet runs applications. It seems like with every preview of <code class="language-plaintext highlighter-rouge">dotnet</code> tool, a matching <code class="language-plaintext highlighter-rouge">xunit</code> runner has to be released. And it’s really easy to get confused. Fortunately, xunit team keeps the docs up to date: https://xunit.github.io/docs/getting-started-dotnet-core.html.</p>
 
 <h4 id="targeting-desktop-net">Targeting desktop .NET</h4>
 
 <p>The .NET CLI runner is capable of running tests which target desktop .NET (minimum version 4.5.1), in addition to .NET Core. To target desktop .NET, use this frameworks section instead:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
     "frameworks": {
         "net451": {
             "dependencies": {
@@ -275,21 +275,21 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <h2 id="hunt-down-old-references-">Hunt down old references <a id="hunt-down-rc1"></a></h2>
 
-<p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code class="highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
+<p>If you have a decent dependency tree, it is possible that some of the dependencies will still be using older <code class="language-plaintext highlighter-rouge">-rc1</code> libraries. You can use <em>project.lock.json</em> to hunt them down. <em>project.lock.json</em> contains the whole resolved dependency tree. It’s a json, and it’s a big one - I don’t recommend trying to parse it in your memory (or even starring at it to long) - your eyes may soon start bleeding. But you can search it for any version strings that contain <code class="language-plaintext highlighter-rouge">-rc1</code> - these are the bad dependencies that we have to get rid of.</p>
 
 <h2 id="net-core-on-server">.Net Core on server</h2>
 
-<p>If you want to run your app on IIS, there is a <em>“windows (server hosting)”</em> position on the <a href="https://www.microsoft.com/net/download#winserverhost">.Net Core download</a> page. This will install .Net Core and the <strong>ASP.NET Core Module for IIS</strong>, which is a <a href="https://github.com/aspnet/Announcements/issues/164">replacement for the old <code class="highlighter-rouge">HttpPaltformHandler</code></a> (and which I’m waiting to see being <a href="https://github.com/aspnet/IISIntegration/issues/105#issuecomment-205082952">open sourced</a>).</p>
+<p>If you want to run your app on IIS, there is a <em>“windows (server hosting)”</em> position on the <a href="https://www.microsoft.com/net/download#winserverhost">.Net Core download</a> page. This will install .Net Core and the <strong>ASP.NET Core Module for IIS</strong>, which is a <a href="https://github.com/aspnet/Announcements/issues/164">replacement for the old <code class="language-plaintext highlighter-rouge">HttpPaltformHandler</code></a> (and which I’m waiting to see being <a href="https://github.com/aspnet/IISIntegration/issues/105#issuecomment-205082952">open sourced</a>).</p>
 
 <h3 id="publishing-to-iis">Publishing to IIS</h3>
 
-<p>There is a new tool: , which adds <code class="highlighter-rouge">dotnet-publish-iis</code> command. As promising as it may seem, it doesn’t handle IIS deployment (i.e. with MSDeploy). What it does is just add or modify <em>web.config</em> file to inclide <em>Asp.Net Core Module for IIS</em> with the right parameters. The deployment part you have to handle yourself, but Visual Studio will make it easy for you.</p>
+<p>There is a new tool: , which adds <code class="language-plaintext highlighter-rouge">dotnet-publish-iis</code> command. As promising as it may seem, it doesn’t handle IIS deployment (i.e. with MSDeploy). What it does is just add or modify <em>web.config</em> file to inclide <em>Asp.Net Core Module for IIS</em> with the right parameters. The deployment part you have to handle yourself, but Visual Studio will make it easy for you.</p>
 
 <h3 id="server-mode-garbage-collection">Server-mode Garbage Collection</h3>
 
 <p>When targeting full .Net Framework, if you want <a href="https://msdn.microsoft.com/en-us/library/cc165011(v=office.11).aspx">server garbage collection</a>, you have to <a href="https://docs.asp.net/en/latest/migration/rc1-to-rtm.html#server-garbage-collection-gc">enable it</a> in  <em>project.json</em> or <em>app.config</em>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
     "runtimeOptions": {
         "configProperties": {
             "System.GC.Server": true
@@ -298,7 +298,7 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 }
 </code></pre></div></div>
 
-<p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="highlighter-rouge">runtimeOptions</code></a>.</p>
+<p>There are also some more <a href="https://github.com/dotnet/cli/blob/rel/1.0.0/Documentation/specs/runtime-configuration-file.md">settings that you can put in <code class="language-plaintext highlighter-rouge">runtimeOptions</code></a>.</p>
 
 
 	  ]]></description>
@@ -311,11 +311,11 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 	  <pubDate>2015-12-03T00:00:00+01:00</pubDate>
 	  <guid>//aspnet5-reference-csproj</guid>
 	  <description><![CDATA[
-	     <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:</p>
+	     <p>If you want to share some common code between <code class="language-plaintext highlighter-rouge">aspnet5</code> and regular <code class="language-plaintext highlighter-rouge">csproj</code> projects, you basically have three options:</p>
 <ul>
   <li>create a nuget from the common library and push it to a shared nuget repository</li>
-  <li>use <code class="highlighter-rouge">dnu wrap</code> to wrap existing <code class="highlighter-rouge">csproj</code> into aspnet5 <code class="highlighter-rouge">project.json</code></li>
-  <li>maintain two versions of your shared project - a  <code class="highlighter-rouge">project.json</code> for aspnet5 and a <code class="highlighter-rouge">csproj</code> for regular .net</li>
+  <li>use <code class="language-plaintext highlighter-rouge">dnu wrap</code> to wrap existing <code class="language-plaintext highlighter-rouge">csproj</code> into aspnet5 <code class="language-plaintext highlighter-rouge">project.json</code></li>
+  <li>maintain two versions of your shared project - a  <code class="language-plaintext highlighter-rouge">project.json</code> for aspnet5 and a <code class="language-plaintext highlighter-rouge">csproj</code> for regular .net</li>
 </ul>
 
 <p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
@@ -331,19 +331,19 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
 <p>If the shared code doesn’t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
 
-<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="highlighter-rouge">dnu wrap</code></h3>
+<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="language-plaintext highlighter-rouge">dnu wrap</code></h3>
 
-<p>There is one other way - <code class="highlighter-rouge">dnu</code> has a handy command named <code class="highlighter-rouge">wrap</code>. It wraps your existing <code class="highlighter-rouge">.csproj</code> files into <code class="highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
+<p>There is one other way - <code class="language-plaintext highlighter-rouge">dnu</code> has a handy command named <code class="language-plaintext highlighter-rouge">wrap</code>. It wraps your existing <code class="language-plaintext highlighter-rouge">.csproj</code> files into <code class="language-plaintext highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
 
 <p>You can do something like this:</p>
 
 <ol>
   <li>
-    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
+    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="language-plaintext highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="language-plaintext highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
 
     <p><!-- language: lang-json --></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
      "projects": [ "src", "test" ],
      "sdk": {
          "version": "1.0.0-rc1-final"
@@ -352,15 +352,15 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>In the same directory that contains <code class="highlighter-rouge">global.json</code> execute <code class="highlighter-rouge">dnu wrap</code> for each existing <code class="highlighter-rouge">.csproj</code> project.</p>
+    <p>In the same directory that contains <code class="language-plaintext highlighter-rouge">global.json</code> execute <code class="language-plaintext highlighter-rouge">dnu wrap</code> for each existing <code class="language-plaintext highlighter-rouge">.csproj</code> project.</p>
   </li>
 </ol>
 
  		dnu wrap src/my.project/my.project.csproj<br />
 
-<p>This should create a directory <code class="highlighter-rouge">wrap</code> containing <code class="highlighter-rouge">project.json</code> files that wrap <code class="highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
+<p>This should create a directory <code class="language-plaintext highlighter-rouge">wrap</code> containing <code class="language-plaintext highlighter-rouge">project.json</code> files that wrap <code class="language-plaintext highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
 
 	{
 		"version": "1.0.0-*",
@@ -376,7 +376,7 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 	}
 </code></pre></div></div>
 
-<p>Note that <code class="highlighter-rouge">wrap</code> directory is also added to <code class="highlighter-rouge">projects</code> section in <code class="highlighter-rouge">global.json</code>.</p>
+<p>Note that <code class="language-plaintext highlighter-rouge">wrap</code> directory is also added to <code class="language-plaintext highlighter-rouge">projects</code> section in <code class="language-plaintext highlighter-rouge">global.json</code>.</p>
 
 <ol>
   <li>
@@ -384,15 +384,15 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 
     <p><!-- language: lang-json --></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "my.project": ""
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "my.project": ""
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>to <code class="highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="highlighter-rouge">wrap</code> directory.</p>
+<p>to <code class="language-plaintext highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="language-plaintext highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="language-plaintext highlighter-rouge">wrap</code> directory.</p>
 
 <ol>
-  <li>Now you’re good to go - you can use all classes from <code class="highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="highlighter-rouge">csproj</code>.</li>
+  <li>Now you’re good to go - you can use all classes from <code class="language-plaintext highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="language-plaintext highlighter-rouge">csproj</code>.</li>
 </ol>
 
 <p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
@@ -409,9 +409,9 @@ https://github.com/dotnet/cli/issues/216, https://github.com/aspnet/Announcement
 	  <pubDate>2015-11-26T00:00:00+01:00</pubDate>
 	  <guid>//aspnet5-reflectiontypeloadexception</guid>
 	  <description><![CDATA[
-	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+	     <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="language-plaintext highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
 Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
    at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
    at System.Reflection.RuntimeAssembly.get_DefinedTypes()
@@ -424,19 +424,19 @@ Now listening on: http://localhost:5000
 Application started. Press Ctrl+C to shut down.
 </code></pre></div></div>
 
-<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
+<p>The exception occurs in <code class="language-plaintext highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="language-plaintext highlighter-rouge">dnvm list</code>. Then I ran <code class="language-plaintext highlighter-rouge">dnu restore</code> to be sure:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
 (...)
 Done, without errors.
 Restore complete, 18523ms elapsed
 </code></pre></div></div>
 
-<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
+<p>I also tried removing all packages from <code class="language-plaintext highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
 
 <p>Try to compile then:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
 (...)
 Build succeeded.
     0 Warning(s)
@@ -449,39 +449,39 @@ Total projects built: 1
 
 <p>Seems ok to me. What the hell is causing the problem then?</p>
 
-<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="language-plaintext highlighter-rouge">dnx</code> has a little option called <code class="language-plaintext highlighter-rouge">--debug</code>. Let’s try this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
 Process Id: 15396
 Waiting for the debugger to attach...
 </code></pre></div></div>
 
-<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
-In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
+<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="language-plaintext highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="language-plaintext highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
+In the <code class="language-plaintext highlighter-rouge">dnx</code> console window you should now see:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
 </code></pre></div></div>
 
-<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
-Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
+<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="language-plaintext highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
+Now, repeat the process - restart <code class="language-plaintext highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
 
 <p>And voila, we have our exception caught. What now? How to get details for this exception? 
-Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
-If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
-In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
+Click OK, then open a Watch window (<code class="language-plaintext highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="language-plaintext highlighter-rouge">Name</code> column, type <code class="language-plaintext highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
+If caught exception is of type <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="language-plaintext highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
+In fact, you may have already caught the exception which is the real cause of error, even before <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
 
 <p>In my case the problem was:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
 
 Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
 </code></pre></div></div>
 
-<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
-It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
-I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
+<p>The compilation error came from a project that my main app was referencing. Why did <code class="language-plaintext highlighter-rouge">dnu build</code> succeed then? 
+It seems like <code class="language-plaintext highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
+I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="language-plaintext highlighter-rouge">dnu build --recursive</code>, or running <code class="language-plaintext highlighter-rouge">dnu</code> at the root directory level. 
 Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
 I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
-If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
+If the runtime exception was at least a little bit more meaningfull - just <code class="language-plaintext highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
 
 <p>I hope that will be fixed in next releases!</p>
 

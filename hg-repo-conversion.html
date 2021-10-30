@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -154,9 +156,9 @@ Or has grown so big that you can’t even clone it?</p>
   <li>some CI systems (like appveyor or travis) use a single configuration file per repo - stuffing multiple projects into these files will just complicate the build and obfuscate results</li>
 </ul>
 
-<h1 id="powering-up-convert-with-some-scripts">Powering up <code class="highlighter-rouge">convert</code> with some scripts</h1>
+<h1 id="powering-up-convert-with-some-scripts">Powering up <code class="language-plaintext highlighter-rouge">convert</code> with some scripts</h1>
 
-<p><code class="highlighter-rouge">convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let’s face it - you won’t be right for the first time and will need to do some tweaking.</p>
+<p><code class="language-plaintext highlighter-rouge">convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let’s face it - you won’t be right for the first time and will need to do some tweaking.</p>
 
 <p>That’s why I created a few powershell scripts and template files to help us with conversion.</p>
 
@@ -164,9 +166,9 @@ Or has grown so big that you can’t even clone it?</p>
 
 <ol>
   <li>
-    <p>Enable the <code class="highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
+    <p>Enable the <code class="language-plaintext highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
  convert =
 </code></pre></div>    </div>
   </li>
@@ -174,7 +176,7 @@ Or has grown so big that you can’t even clone it?</p>
     <p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there.</p>
   </li>
   <li>
-    <p>Create two files: <code class="highlighter-rouge">branchmap.txt</code> and <code class="highlighter-rouge">filemap.txt</code> (you may copy them from <code class="highlighter-rouge">branchmap.sample.txt</code> and <code class="highlighter-rouge">filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code class="highlighter-rouge">convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial.</p>
+    <p>Create two files: <code class="language-plaintext highlighter-rouge">branchmap.txt</code> and <code class="language-plaintext highlighter-rouge">filemap.txt</code> (you may copy them from <code class="language-plaintext highlighter-rouge">branchmap.sample.txt</code> and <code class="language-plaintext highlighter-rouge">filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code class="language-plaintext highlighter-rouge">convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial.</p>
   </li>
 </ol>
 
@@ -184,7 +186,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>Let’s use the repo at https://bitbucket.org/heavymetaldev/convert-me as an example. The structure looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- convert-me
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- convert-me
     |-- .hgignore
     |-- top-secret.txt
     |-- sln
@@ -207,11 +209,11 @@ Or has grown so big that you can’t even clone it?</p>
   <p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
 </blockquote>
 
-<p>There are two solution files <code class="highlighter-rouge">MyProject.Core</code> and <code class="highlighter-rouge">MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code class="highlighter-rouge">top-secret.txt</code>, as it contains confidential data.</p>
+<p>There are two solution files <code class="language-plaintext highlighter-rouge">MyProject.Core</code> and <code class="language-plaintext highlighter-rouge">MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code class="language-plaintext highlighter-rouge">top-secret.txt</code>, as it contains confidential data.</p>
 
-<p><code class="highlighter-rouge">Repo A</code> should look like this:</p>
+<p><code class="language-plaintext highlighter-rouge">Repo A</code> should look like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-A
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Core
@@ -225,9 +227,9 @@ Or has grown so big that you can’t even clone it?</p>
         |   |-- MyProject.Core.Utils.csproj
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
+<p><code class="language-plaintext highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-B
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-B
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Desktop
@@ -243,7 +245,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>The extended filemap format supports lines in the following forms:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
 include path/to/file
 exclude path/to/file
 rename from/file to/file
@@ -257,13 +259,13 @@ include sln:path/to/something.sln
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
-  <li><code class="highlighter-rouge">sln:</code> is specifically for C# solution files. This will parse the <code class="highlighter-rouge">.sln</code> file and generate include entries for every <code class="highlighter-rouge">csproj</code> it contains. In other words, this will include the whole solution.</li>
+  <li><code class="language-plaintext highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="language-plaintext highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
+  <li><code class="language-plaintext highlighter-rouge">sln:</code> is specifically for C# solution files. This will parse the <code class="language-plaintext highlighter-rouge">.sln</code> file and generate include entries for every <code class="language-plaintext highlighter-rouge">csproj</code> it contains. In other words, this will include the whole solution.</li>
 </ul>
 
-<p>Let’s look at our sample repo. For converting to <code class="highlighter-rouge">repo-a</code>, we can use the following <code class="highlighter-rouge">filemap.txt</code> content:</p>
+<p>Let’s look at our sample repo. For converting to <code class="language-plaintext highlighter-rouge">repo-a</code>, we can use the following <code class="language-plaintext highlighter-rouge">filemap.txt</code> content:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include r:.*/MyProject\.Core(\..*){0,1}/
 exclude top-secret.txt
 </code></pre></div></div>
@@ -272,9 +274,9 @@ exclude top-secret.txt
   <p>By default, everything that’s not included gets excluded, so the last line isn’t really necessary, but we’ll leave it there for verbosity.</p>
 </blockquote>
 
-<p>This will generate the following <code class="highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
+<p>This will generate the following <code class="language-plaintext highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ".hgignore"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ".hgignore"
 include "sln/MyProject.Core"
 include "src/MyProject.Core.Api"
 include "src/MyProject.Core.Model"
@@ -295,37 +297,37 @@ remove top-secret.txt
   <p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it’s subdirectories. But since the file is autogenerated, this is not a worry.</p>
 </blockquote>
 
-<p>For <code class="highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="highlighter-rouge">sln:</code> prefix:</p>
+<p>For <code class="language-plaintext highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="language-plaintext highlighter-rouge">sln:</code> prefix:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include sln:sln/MyProject.Desktop/MyProject.Desktop.sln
 exclude top-secret.txt
 </code></pre></div></div>
 
 <h1 id="conversion-process">Conversion Process</h1>
 
-<p>We will use <code class="highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
+<p>We will use <code class="language-plaintext highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
 </code></pre></div></div>
 
-<p>This script takes care of configuring and calling <code class="highlighter-rouge">hg convert</code>. It will:</p>
+<p>This script takes care of configuring and calling <code class="language-plaintext highlighter-rouge">hg convert</code>. It will:</p>
 
 <ol>
-  <li>Take <code class="highlighter-rouge">filemap.txt</code> (if it exists), generate <code class="highlighter-rouge">filemap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code></li>
-  <li>Take <code class="highlighter-rouge">branchmap.txt</code> (if it exists), generate <code class="highlighter-rouge">branchmap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code> (more of branchmap later)</li>
-  <li>Check if the target repository already exists (use <code class="highlighter-rouge">-force</code> to force overwrite)</li>
-  <li>Convert the repository at <code class="highlighter-rouge">path/to/source/convert-me</code>, starting at revision <code class="highlighter-rouge">123</code> and save it at <code class="highlighter-rouge">path/to/target/repo-a</code></li>
+  <li>Take <code class="language-plaintext highlighter-rouge">filemap.txt</code> (if it exists), generate <code class="language-plaintext highlighter-rouge">filemap.gen.txt</code> and pass it to <code class="language-plaintext highlighter-rouge">convert</code></li>
+  <li>Take <code class="language-plaintext highlighter-rouge">branchmap.txt</code> (if it exists), generate <code class="language-plaintext highlighter-rouge">branchmap.gen.txt</code> and pass it to <code class="language-plaintext highlighter-rouge">convert</code> (more of branchmap later)</li>
+  <li>Check if the target repository already exists (use <code class="language-plaintext highlighter-rouge">-force</code> to force overwrite)</li>
+  <li>Convert the repository at <code class="language-plaintext highlighter-rouge">path/to/source/convert-me</code>, starting at revision <code class="language-plaintext highlighter-rouge">123</code> and save it at <code class="language-plaintext highlighter-rouge">path/to/target/repo-a</code></li>
 </ol>
 
-<p><code class="highlighter-rouge">startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code class="highlighter-rouge">0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
+<p><code class="language-plaintext highlighter-rouge">startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code class="language-plaintext highlighter-rouge">0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
 
 <ol>
   <li>Setup filemap</li>
   <li>
-    <p>Convert only the newest revision, using <code class="highlighter-rouge">startrev</code> parameter, i.e:</p>
+    <p>Convert only the newest revision, using <code class="language-plaintext highlighter-rouge">startrev</code> parameter, i.e:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
 </code></pre></div>    </div>
   </li>
   <li>Check the converted repository - try to build everything</li>
@@ -334,20 +336,20 @@ exclude top-secret.txt
   <li>
     <p>Start full conversion from revision 0</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>If everything goes rigth, we got now two separate repositories, <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this).</p>
+<p>If everything goes rigth, we got now two separate repositories, <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this).</p>
 
 <p>But wait, there are also some other scenarios whe should cover.</p>
 
 <h3 id="automated-branchmap">Automated branchmap</h3>
 
-<p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="highlighter-rouge">branchmap.txt</code> support the following line format:</p>
+<p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="language-plaintext highlighter-rouge">branchmap.txt</code> support the following line format:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
 original_branch_name new_branch_name
 
 # this is extended format:
@@ -356,30 +358,30 @@ r:!release default
 * default
 </code></pre></div></div>
 
-<p>Similar to filemap, <code class="highlighter-rouge">r:</code> and <code class="highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
+<p>Similar to filemap, <code class="language-plaintext highlighter-rouge">r:</code> and <code class="language-plaintext highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="language-plaintext highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
 
-<p>For example, my <code class="highlighter-rouge">branchmap.txt</code> could look like this:</p>
+<p>For example, my <code class="language-plaintext highlighter-rouge">branchmap.txt</code> could look like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default
 r:release/.* release
 dev dev
 </code></pre></div></div>
 
-<p>All branches that match <code class="highlighter-rouge">release/*</code> pattern will be renamed to <code class="highlighter-rouge">release</code>. Branch <code class="highlighter-rouge">dev</code> will remain <code class="highlighter-rouge">dev</code>. Everything else will be renamed to <code class="highlighter-rouge">default</code>.</p>
+<p>All branches that match <code class="language-plaintext highlighter-rouge">release/*</code> pattern will be renamed to <code class="language-plaintext highlighter-rouge">release</code>. Branch <code class="language-plaintext highlighter-rouge">dev</code> will remain <code class="language-plaintext highlighter-rouge">dev</code>. Everything else will be renamed to <code class="language-plaintext highlighter-rouge">default</code>.</p>
 
 <blockquote>
-  <p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code class="highlighter-rouge">* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code class="highlighter-rouge">branchmap.gen.txt</code> to see, if everything looks like you wanted.</p>
+  <p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code class="language-plaintext highlighter-rouge">* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code class="language-plaintext highlighter-rouge">branchmap.gen.txt</code> to see, if everything looks like you wanted.</p>
 </blockquote>
 
 <h3 id="appending-revisions-to-existing-repo">Appending revisions to existing repo</h3>
 
-<p>The last thing I want to mention is appending parts of history onto one another. Let’s go back to our <code class="highlighter-rouge">convert-me</code> repo. The news of switching to new repositories hasn’t reach one developer, who just pushed some critical changes in <code class="highlighter-rouge">MyProject.Core.Model</code> and <code class="highlighter-rouge">MyProject.Desktop.WinForms</code> in <code class="highlighter-rouge">convert-me</code> repo (instead of <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code> respectively) - lets call them “offending changes”. How to transfer these changes to new repos without breaking anything? Run <code class="highlighter-rouge">convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
+<p>The last thing I want to mention is appending parts of history onto one another. Let’s go back to our <code class="language-plaintext highlighter-rouge">convert-me</code> repo. The news of switching to new repositories hasn’t reach one developer, who just pushed some critical changes in <code class="language-plaintext highlighter-rouge">MyProject.Core.Model</code> and <code class="language-plaintext highlighter-rouge">MyProject.Desktop.WinForms</code> in <code class="language-plaintext highlighter-rouge">convert-me</code> repo (instead of <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code> respectively) - lets call them “offending changes”. How to transfer these changes to new repos without breaking anything? Run <code class="language-plaintext highlighter-rouge">convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
 
-<p><code class="highlighter-rouge">convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
+<p><code class="language-plaintext highlighter-rouge">convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
 
 <ol>
   <li>specify offending changes (starting from the first revision that hasn’t been converted before)</li>
-  <li>Check offending changes parent and find corresponding commits in <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code></li>
+  <li>Check offending changes parent and find corresponding commits in <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code></li>
   <li>Convert offending changes and append them onto these corresponding parent commits. We will use the same filemaps and branchmaps to filter only required files.</li>
 </ol>
 
@@ -488,17 +490,32 @@ dev dev
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

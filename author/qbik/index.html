@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -297,7 +299,6 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
                 <p>Have you ever needed to split a repository, or take out just a few directories, retaining their history? 
 Or maybe your repo contains too many (possibly unrelated) projects? 
 Or has grown so big that you can’t even clone it?</p>
-
  
             
                 <a class="read-more" href="/hg-repo-conversion">&raquo;</a>
@@ -331,8 +332,7 @@ Or has grown so big that you can’t even clone it?</p>
         <section class="post-excerpt">
             <p>
             
-                <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
-
+                <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="language-plaintext highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
  
             
                 <a class="read-more" href="/configuring-mercurial-keyring">&raquo;</a>
@@ -367,7 +367,6 @@ Or has grown so big that you can’t even clone it?</p>
             <p>
             
                 <p>Appveyor is a great CI service for Windows apps. It’s simple, free (for open-source) and easy to setup. Sometimes even public, open source projects may want to have private subrepositories. Appveyor supports such a setup and in this post I will show you, how to configure private subrepo for mercruial.</p>
-
  
             
                 <a class="read-more" href="/appveyor-private-subrepos">&raquo;</a>
@@ -415,17 +414,32 @@ Or has grown so big that you can’t even clone it?</p>
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

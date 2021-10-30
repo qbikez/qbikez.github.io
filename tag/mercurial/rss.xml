@@ -35,9 +35,9 @@ Or has grown so big that you can’t even clone it?</p>
   <li>some CI systems (like appveyor or travis) use a single configuration file per repo - stuffing multiple projects into these files will just complicate the build and obfuscate results</li>
 </ul>
 
-<h1 id="powering-up-convert-with-some-scripts">Powering up <code class="highlighter-rouge">convert</code> with some scripts</h1>
+<h1 id="powering-up-convert-with-some-scripts">Powering up <code class="language-plaintext highlighter-rouge">convert</code> with some scripts</h1>
 
-<p><code class="highlighter-rouge">convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let’s face it - you won’t be right for the first time and will need to do some tweaking.</p>
+<p><code class="language-plaintext highlighter-rouge">convert</code> is a rather low-level tool and needs a few configuration files and commandline options to work the way you want. And let’s face it - you won’t be right for the first time and will need to do some tweaking.</p>
 
 <p>That’s why I created a few powershell scripts and template files to help us with conversion.</p>
 
@@ -45,9 +45,9 @@ Or has grown so big that you can’t even clone it?</p>
 
 <ol>
   <li>
-    <p>Enable the <code class="highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
+    <p>Enable the <code class="language-plaintext highlighter-rouge">convert</code> extension in <a href="http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/">mercurial.ini</a>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
  convert =
 </code></pre></div>    </div>
   </li>
@@ -55,7 +55,7 @@ Or has grown so big that you can’t even clone it?</p>
     <p>Clone or download <a href="https://gist.github.com/qbikez/e900456032833fb2baaaee87e19a8ccd">this gist</a>. I recommend creating a separate directory (and possibly version controling it) for every conversion you make  and copying these files there.</p>
   </li>
   <li>
-    <p>Create two files: <code class="highlighter-rouge">branchmap.txt</code> and <code class="highlighter-rouge">filemap.txt</code> (you may copy them from <code class="highlighter-rouge">branchmap.sample.txt</code> and <code class="highlighter-rouge">filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code class="highlighter-rouge">convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial.</p>
+    <p>Create two files: <code class="language-plaintext highlighter-rouge">branchmap.txt</code> and <code class="language-plaintext highlighter-rouge">filemap.txt</code> (you may copy them from <code class="language-plaintext highlighter-rouge">branchmap.sample.txt</code> and <code class="language-plaintext highlighter-rouge">filemap.sample.txt</code>). These are the config files we will use to tell mercurial which directories to inlcude in converted repo and how to treat branches. As you will see, these files support an extended syntax (in comparison to what <code class="language-plaintext highlighter-rouge">convert</code> understands). They are then used to generate <em>real</em> branchmap/filemap files for mercurial.</p>
   </li>
 </ol>
 
@@ -65,7 +65,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>Let’s use the repo at https://bitbucket.org/heavymetaldev/convert-me as an example. The structure looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- convert-me
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- convert-me
     |-- .hgignore
     |-- top-secret.txt
     |-- sln
@@ -88,11 +88,11 @@ Or has grown so big that you can’t even clone it?</p>
   <p>This repository contains c# projets, but scripts and methods described here can be as well applied to any other mercurial repo.</p>
 </blockquote>
 
-<p>There are two solution files <code class="highlighter-rouge">MyProject.Core</code> and <code class="highlighter-rouge">MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code class="highlighter-rouge">top-secret.txt</code>, as it contains confidential data.</p>
+<p>There are two solution files <code class="language-plaintext highlighter-rouge">MyProject.Core</code> and <code class="language-plaintext highlighter-rouge">MyProject.Desktop</code>. I want to move these solutions to two separate repositories (<code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code>), along with the projects they refer to). Additionally, I want to remove the toplevel file <code class="language-plaintext highlighter-rouge">top-secret.txt</code>, as it contains confidential data.</p>
 
-<p><code class="highlighter-rouge">Repo A</code> should look like this:</p>
+<p><code class="language-plaintext highlighter-rouge">Repo A</code> should look like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-A
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Core
@@ -106,9 +106,9 @@ Or has grown so big that you can’t even clone it?</p>
         |   |-- MyProject.Core.Utils.csproj
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
+<p><code class="language-plaintext highlighter-rouge">Repo B</code> should contain remaining projects and files:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-B
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|-- Repo-B
     |-- .hgignore
     |-- sln
     |   |-- MyProject.Desktop
@@ -124,7 +124,7 @@ Or has grown so big that you can’t even clone it?</p>
 
 <p>The extended filemap format supports lines in the following forms:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
 include path/to/file
 exclude path/to/file
 rename from/file to/file
@@ -138,13 +138,13 @@ include sln:path/to/something.sln
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
-  <li><code class="highlighter-rouge">sln:</code> is specifically for C# solution files. This will parse the <code class="highlighter-rouge">.sln</code> file and generate include entries for every <code class="highlighter-rouge">csproj</code> it contains. In other words, this will include the whole solution.</li>
+  <li><code class="language-plaintext highlighter-rouge">r:</code> indicates that this entry is a regex. <code class="language-plaintext highlighter-rouge">r:!</code> is a negated regex (i.e.: everything that does not match this pattern).</li>
+  <li><code class="language-plaintext highlighter-rouge">sln:</code> is specifically for C# solution files. This will parse the <code class="language-plaintext highlighter-rouge">.sln</code> file and generate include entries for every <code class="language-plaintext highlighter-rouge">csproj</code> it contains. In other words, this will include the whole solution.</li>
 </ul>
 
-<p>Let’s look at our sample repo. For converting to <code class="highlighter-rouge">repo-a</code>, we can use the following <code class="highlighter-rouge">filemap.txt</code> content:</p>
+<p>Let’s look at our sample repo. For converting to <code class="language-plaintext highlighter-rouge">repo-a</code>, we can use the following <code class="language-plaintext highlighter-rouge">filemap.txt</code> content:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include r:.*/MyProject\.Core(\..*){0,1}/
 exclude top-secret.txt
 </code></pre></div></div>
@@ -153,9 +153,9 @@ exclude top-secret.txt
   <p>By default, everything that’s not included gets excluded, so the last line isn’t really necessary, but we’ll leave it there for verbosity.</p>
 </blockquote>
 
-<p>This will generate the following <code class="highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
+<p>This will generate the following <code class="language-plaintext highlighter-rouge">filemap.gen.txt</code> for mercurial to use:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ".hgignore"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ".hgignore"
 include "sln/MyProject.Core"
 include "src/MyProject.Core.Api"
 include "src/MyProject.Core.Model"
@@ -176,37 +176,37 @@ remove top-secret.txt
   <p>Some of these entries are in fact obsolete. Once we include a directory, there is no need to include all it’s subdirectories. But since the file is autogenerated, this is not a worry.</p>
 </blockquote>
 
-<p>For <code class="highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="highlighter-rouge">sln:</code> prefix:</p>
+<p>For <code class="language-plaintext highlighter-rouge">repo-b</code>, I will go minimalist and use <code class="language-plaintext highlighter-rouge">sln:</code> prefix:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include .hgignore
 include sln:sln/MyProject.Desktop/MyProject.Desktop.sln
 exclude top-secret.txt
 </code></pre></div></div>
 
 <h1 id="conversion-process">Conversion Process</h1>
 
-<p>We will use <code class="highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
+<p>We will use <code class="language-plaintext highlighter-rouge">hg-convert.ps1</code> script to do the conversion. Sample usage:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS&gt; .\hg-convert path/to/source/convert-me path/to/target/repo-a -startrev 123
 </code></pre></div></div>
 
-<p>This script takes care of configuring and calling <code class="highlighter-rouge">hg convert</code>. It will:</p>
+<p>This script takes care of configuring and calling <code class="language-plaintext highlighter-rouge">hg convert</code>. It will:</p>
 
 <ol>
-  <li>Take <code class="highlighter-rouge">filemap.txt</code> (if it exists), generate <code class="highlighter-rouge">filemap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code></li>
-  <li>Take <code class="highlighter-rouge">branchmap.txt</code> (if it exists), generate <code class="highlighter-rouge">branchmap.gen.txt</code> and pass it to <code class="highlighter-rouge">convert</code> (more of branchmap later)</li>
-  <li>Check if the target repository already exists (use <code class="highlighter-rouge">-force</code> to force overwrite)</li>
-  <li>Convert the repository at <code class="highlighter-rouge">path/to/source/convert-me</code>, starting at revision <code class="highlighter-rouge">123</code> and save it at <code class="highlighter-rouge">path/to/target/repo-a</code></li>
+  <li>Take <code class="language-plaintext highlighter-rouge">filemap.txt</code> (if it exists), generate <code class="language-plaintext highlighter-rouge">filemap.gen.txt</code> and pass it to <code class="language-plaintext highlighter-rouge">convert</code></li>
+  <li>Take <code class="language-plaintext highlighter-rouge">branchmap.txt</code> (if it exists), generate <code class="language-plaintext highlighter-rouge">branchmap.gen.txt</code> and pass it to <code class="language-plaintext highlighter-rouge">convert</code> (more of branchmap later)</li>
+  <li>Check if the target repository already exists (use <code class="language-plaintext highlighter-rouge">-force</code> to force overwrite)</li>
+  <li>Convert the repository at <code class="language-plaintext highlighter-rouge">path/to/source/convert-me</code>, starting at revision <code class="language-plaintext highlighter-rouge">123</code> and save it at <code class="language-plaintext highlighter-rouge">path/to/target/repo-a</code></li>
 </ol>
 
-<p><code class="highlighter-rouge">startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code class="highlighter-rouge">0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
+<p><code class="language-plaintext highlighter-rouge">startrev</code> specifies the revision at which the conversion process should start (and convert it and all of its descendants). If you specify <code class="language-plaintext highlighter-rouge">0</code> (default), it will convert whole repository (which may take a considerable time if the repo is big). For testing purpose, I recommend starting with the latest revision. This way, only this one revision will be converted and you can check, if you have included everything you need in the filemap. My process is as follows (this should will save you some time and frustration):</p>
 
 <ol>
   <li>Setup filemap</li>
   <li>
-    <p>Convert only the newest revision, using <code class="highlighter-rouge">startrev</code> parameter, i.e:</p>
+    <p>Convert only the newest revision, using <code class="language-plaintext highlighter-rouge">startrev</code> parameter, i.e:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 55
 </code></pre></div>    </div>
   </li>
   <li>Check the converted repository - try to build everything</li>
@@ -215,20 +215,20 @@ exclude top-secret.txt
   <li>
     <p>Start full conversion from revision 0</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PS&gt; .\hg-convert ../convert-me ../repo-a -startrev 0
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>If everything goes rigth, we got now two separate repositories, <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this).</p>
+<p>If everything goes rigth, we got now two separate repositories, <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code>. Notify other developers of the change, so no one tries to push to the old repo (renaming or removing it might also be a good way to prevent this).</p>
 
 <p>But wait, there are also some other scenarios whe should cover.</p>
 
 <h3 id="automated-branchmap">Automated branchmap</h3>
 
-<p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="highlighter-rouge">branchmap.txt</code> support the following line format:</p>
+<p>Branchmap defines the mapping between branch names in old repo and new repo. <code class="language-plaintext highlighter-rouge">branchmap.txt</code> support the following line format:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this is th basic mercurial stuff:
 original_branch_name new_branch_name
 
 # this is extended format:
@@ -237,30 +237,30 @@ r:!release default
 * default
 </code></pre></div></div>
 
-<p>Similar to filemap, <code class="highlighter-rouge">r:</code> and <code class="highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
+<p>Similar to filemap, <code class="language-plaintext highlighter-rouge">r:</code> and <code class="language-plaintext highlighter-rouge">r:!</code> denotes regex to match/notmatch. A single <code class="language-plaintext highlighter-rouge">*</code> means - you guessed it - “everything”.</p>
 
-<p>For example, my <code class="highlighter-rouge">branchmap.txt</code> could look like this:</p>
+<p>For example, my <code class="language-plaintext highlighter-rouge">branchmap.txt</code> could look like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default
 r:release/.* release
 dev dev
 </code></pre></div></div>
 
-<p>All branches that match <code class="highlighter-rouge">release/*</code> pattern will be renamed to <code class="highlighter-rouge">release</code>. Branch <code class="highlighter-rouge">dev</code> will remain <code class="highlighter-rouge">dev</code>. Everything else will be renamed to <code class="highlighter-rouge">default</code>.</p>
+<p>All branches that match <code class="language-plaintext highlighter-rouge">release/*</code> pattern will be renamed to <code class="language-plaintext highlighter-rouge">release</code>. Branch <code class="language-plaintext highlighter-rouge">dev</code> will remain <code class="language-plaintext highlighter-rouge">dev</code>. Everything else will be renamed to <code class="language-plaintext highlighter-rouge">default</code>.</p>
 
 <blockquote>
-  <p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code class="highlighter-rouge">* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code class="highlighter-rouge">branchmap.gen.txt</code> to see, if everything looks like you wanted.</p>
+  <p>Note that the order matters here. If a branch matches multiple patterns, the last one will always win. So, start with the most generic one. If you write <code class="language-plaintext highlighter-rouge">* default</code> at the end of file, everything before it will be  effectively ignored. You may want to inspect <code class="language-plaintext highlighter-rouge">branchmap.gen.txt</code> to see, if everything looks like you wanted.</p>
 </blockquote>
 
 <h3 id="appending-revisions-to-existing-repo">Appending revisions to existing repo</h3>
 
-<p>The last thing I want to mention is appending parts of history onto one another. Let’s go back to our <code class="highlighter-rouge">convert-me</code> repo. The news of switching to new repositories hasn’t reach one developer, who just pushed some critical changes in <code class="highlighter-rouge">MyProject.Core.Model</code> and <code class="highlighter-rouge">MyProject.Desktop.WinForms</code> in <code class="highlighter-rouge">convert-me</code> repo (instead of <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code> respectively) - lets call them “offending changes”. How to transfer these changes to new repos without breaking anything? Run <code class="highlighter-rouge">convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
+<p>The last thing I want to mention is appending parts of history onto one another. Let’s go back to our <code class="language-plaintext highlighter-rouge">convert-me</code> repo. The news of switching to new repositories hasn’t reach one developer, who just pushed some critical changes in <code class="language-plaintext highlighter-rouge">MyProject.Core.Model</code> and <code class="language-plaintext highlighter-rouge">MyProject.Desktop.WinForms</code> in <code class="language-plaintext highlighter-rouge">convert-me</code> repo (instead of <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code> respectively) - lets call them “offending changes”. How to transfer these changes to new repos without breaking anything? Run <code class="language-plaintext highlighter-rouge">convert</code> again? But this will recreate these repositories, effectively breaking them for everyone who has them checked out.</p>
 
-<p><code class="highlighter-rouge">convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
+<p><code class="language-plaintext highlighter-rouge">convert</code> gives us a way to append parts of converted history into an existing repo. And this is exactly what we need in this case. We will:</p>
 
 <ol>
   <li>specify offending changes (starting from the first revision that hasn’t been converted before)</li>
-  <li>Check offending changes parent and find corresponding commits in <code class="highlighter-rouge">repo-a</code> and <code class="highlighter-rouge">repo-b</code></li>
+  <li>Check offending changes parent and find corresponding commits in <code class="language-plaintext highlighter-rouge">repo-a</code> and <code class="language-plaintext highlighter-rouge">repo-b</code></li>
   <li>Convert offending changes and append them onto these corresponding parent commits. We will use the same filemaps and branchmaps to filter only required files.</li>
 </ol>
 
@@ -284,7 +284,7 @@ dev dev
 	  <pubDate>2017-01-09T00:00:00+01:00</pubDate>
 	  <guid>//configuring-mercurial-keyring</guid>
 	  <description><![CDATA[
-	     <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
+	     <p>If you don’t want to type your username and password everytime you do a pull or push to mercurial, you have to store your credentials somewhere. On windows, the commandline <code class="language-plaintext highlighter-rouge">hg</code> does not store credentials (you have to enter them every time). If you configure credentials in TortoiseHG, the username and password will be stored in plain-text, in <em>mercurial.ini</em> file. This is not the most secure way to do it, and mercurial will even warn you about that.</p>
 
 <h1 id="keyring">Keyring</h1>
 
@@ -292,14 +292,14 @@ dev dev
 
 <h1 id="installing-keyring-on-windows">Installing keyring on Windows</h1>
 
-<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code class="highlighter-rouge">mercurial_keyring</code></a> says that installation “in some cases (Windows…) requires more care”. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
-What we will do is install <code class="highlighter-rouge">python2</code> from chocolatey, use <code class="highlighter-rouge">pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
+<p>The <a href="https://bitbucket.org/Mekk/mercurial_keyring#rst-header-id3">guide for <code class="language-plaintext highlighter-rouge">mercurial_keyring</code></a> says that installation “in some cases (Windows…) requires more care”. I will focus here on Windows installation, specifically the case when you use TortoiseHG distribution of mercurial.
+What we will do is install <code class="language-plaintext highlighter-rouge">python2</code> from chocolatey, use <code class="language-plaintext highlighter-rouge">pip</code> to install all required python modules, then configure path to these modules in <em>mercurial.ini</em>.</p>
 
 <ol>
   <li>
-    <p>If you don’t have it already, install <code class="highlighter-rouge">python2</code>:</p>
+    <p>If you don’t have it already, install <code class="language-plaintext highlighter-rouge">python2</code>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y python2
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y python2
  &gt; refreshenv
 </code></pre></div>    </div>
 
@@ -308,19 +308,19 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
     </blockquote>
   </li>
   <li>
-    <p>install <code class="highlighter-rouge">mercurial_keyring</code></p>
+    <p>install <code class="language-plaintext highlighter-rouge">mercurial_keyring</code></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; pip install --user mercurial_keyring
 </code></pre></div>    </div>
 
     <blockquote>
-      <p>pip will handle installation of all dependencies, including <code class="highlighter-rouge">keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code class="highlighter-rouge">mercurial_extension_utils</code></a>, etc.</p>
+      <p>pip will handle installation of all dependencies, including <code class="language-plaintext highlighter-rouge">keyring</code>, <a href="https://bitbucket.org/Mekk/mercurial-extension_utils/#rst-header-id3"><code class="language-plaintext highlighter-rouge">mercurial_extension_utils</code></a>, etc.</p>
     </blockquote>
   </li>
   <li>
     <p>Configure exension in <em>mercurial.ini</em>:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [extensions]
  mercurial_keyring = C:/Python27/Lib/site-packages/mercurial_keyring.py
 </code></pre></div>    </div>
   </li>
@@ -330,7 +330,7 @@ What we will do is install <code class="highlighter-rouge">python2</code> from c
 
 <p>Let’s try it out:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg clone https://bitbucket.org/heavymetaldev/top-secret tmp
 keyring: username not specified in hgrc (or in url). Password will not be saved.
 http authorization required
 realm: Bitbucket.org HTTP
@@ -338,14 +338,14 @@ url: https://bitbucket.org/heavymetaldev/top-secret
 user:
 </code></pre></div></div>
 
-<p>Note that <code class="highlighter-rouge">keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  https://qbik@bitbucket.org/heavymetaldev/top-secret) or configure in <code class="highlighter-rouge">mercurial.ini</code>:</p>
+<p>Note that <code class="language-plaintext highlighter-rouge">keyring</code> apparently is working, but it says it will not save password. To configure username, either add it to repo url (like:  https://qbik@bitbucket.org/heavymetaldev/top-secret) or configure in <code class="language-plaintext highlighter-rouge">mercurial.ini</code>:</p>
 
 <pre><code class="language-`">[auth]
 bitbucket.org.prefix = bitbucket.org
 bitbucket.org.username = qbik
 </code></pre>
 
-<p>TortoiseHG does exactly that when you configure credentials there (with <code class="highlighter-rouge">mercurial_keyring</code> enabled).</p>
+<p>TortoiseHG does exactly that when you configure credentials there (with <code class="language-plaintext highlighter-rouge">mercurial_keyring</code> enabled).</p>
 
 <p>Now, you can safely store your credentials, not worrying about it leaking somewhere.</p>
 
@@ -391,14 +391,14 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>
     <p>Install Git for Windows:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y git
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y git
 </code></pre></div>    </div>
   </li>
-  <li>Make sure you have <code class="highlighter-rouge">ssh.exe</code> on PATH (it will most probably be in ‘c:\Program Files\Git\usr\bin’)</li>
+  <li>Make sure you have <code class="language-plaintext highlighter-rouge">ssh.exe</code> on PATH (it will most probably be in ‘c:\Program Files\Git\usr\bin’)</li>
   <li>
-    <p>List the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh</code> directory</p>
+    <p>List the content of <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh</code> directory</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ls $env:USERPROFILE/.ssh
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ls $env:USERPROFILE/.ssh
 </code></pre></div>    </div>
 
     <p>If you have a default identity already, you’ll some <em>id_*</em> files.</p>
@@ -406,7 +406,7 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>
     <p>Generate a ssh key (or use an existing one)</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 </code></pre></div>    </div>
   </li>
   <li>
@@ -415,25 +415,25 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
     <ol>
       <li>Open a browser and log in to Bitbucket.</li>
       <li>Choose <em>avatar</em> &gt; <strong>Bitbucket settings</strong> from the menu bar, then click <strong>SSH Settings</strong> on the left.</li>
-      <li>Add a new key. This is a public key, which value is the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with “<em>ssh-rsa</em> …”)</li>
+      <li>Add a new key. This is a public key, which value is the content of <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with “<em>ssh-rsa</em> …”)</li>
     </ol>
   </li>
   <li>
     <p>create a private HG repo and clone it over SSH:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
 </code></pre></div>    </div>
 
     <blockquote>
-      <p>If you see <code class="highlighter-rouge">remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:</p>
+      <p>If you see <code class="language-plaintext highlighter-rouge">remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:</p>
       <ol>
-        <li>Mercurial doesn’t use the private key from <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
+        <li>Mercurial doesn’t use the private key from <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
         <li>Public SSH key is not properly configured in BitBucket</li>
       </ol>
 
-      <p>You can add <code class="highlighter-rouge">--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
+      <p>You can add <code class="language-plaintext highlighter-rouge">--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
 
-      <p><code class="highlighter-rouge">ssh hg@bitbucket.org "hg -R heavymetaldev/top-secret serve --stdio"</code></p>
+      <p><code class="language-plaintext highlighter-rouge">ssh hg@bitbucket.org "hg -R heavymetaldev/top-secret serve --stdio"</code></p>
 
       <p>You can use this command to further debug ssh issues.</p>
     </blockquote>
@@ -450,15 +450,15 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>Save private key in AppVeyor’s encrypted environment variable</li>
 </ol>
 
-<p>In the build script (during <code class="highlighter-rouge">install</code> phase), we need to:</p>
+<p>In the build script (during <code class="language-plaintext highlighter-rouge">install</code> phase), we need to:</p>
 <ol>
-  <li>Extract private key from environment variable to file <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
-  <li>Add Bitbucket’s SSL certificate fingerprint to <code class="highlighter-rouge">$env:USERPROFILE/.ssh/known_hosts</code></li>
+  <li>Extract private key from environment variable to file <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
+  <li>Add Bitbucket’s SSL certificate fingerprint to <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/known_hosts</code></li>
 </ol>
 
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
 </code></pre></div></div>
 
 <p>Instead of configuring it at account level, add it as <a href="https://confluence.atlassian.com/display/BITBUCKET/Use+access+keys">read-only access key</a> to specific repo that you will be cloning.</p>
@@ -466,16 +466,16 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
 <p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
 
 <blockquote>
-  <p>Open the generated private key and copy base-64 body of the key <em>between</em> <code class="highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code> and <code class="highlighter-rouge">-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
+  <p>Open the generated private key and copy base-64 body of the key <em>between</em> <code class="language-plaintext highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code> and <code class="language-plaintext highlighter-rouge">-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
 
   <p>Copy the contents of private key to clipboard as shown above and open Encrypt data tool in AppVeyor. Encrypt the value of clipboard using that page.</p>
 </blockquote>
 
 <p>Paste the encrypted value into the build script (or configure it in web UI). It will look something like this:</p>
 
-<p><code class="highlighter-rouge">appveyor.yml</code>:</p>
+<p><code class="language-plaintext highlighter-rouge">appveyor.yml</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
   priv_key:
     secure: &lt;encryped-value&gt;
   subrepo_owner: heavymetaldev
@@ -485,10 +485,10 @@ install:
   - ps: .\clone-subrepo.ps1
 </code></pre></div></div>
 
-<p>The additional environment variables (<code class="highlighter-rouge">subrepo_*</code>) are used to determine repository url and branch name to checkout.
-<code class="highlighter-rouge">clone-subrepo.ps1</code> is where the real job is done:</p>
+<p>The additional environment variables (<code class="language-plaintext highlighter-rouge">subrepo_*</code>) are used to determine repository url and branch name to checkout.
+<code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code> is where the real job is done:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get repo url and branch from env variables 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get repo url and branch from env variables 
 $owner = $env:subrepo_owner
 $repoName = $env:subrepo_name
 $repo = "$owner/$repoName"
@@ -554,13 +554,13 @@ finally {
 }
 </code></pre></div></div>
 
-<p>This is everything you need to get this working. Commit <code class="highlighter-rouge">appveyor.yml</code> and <code class="highlighter-rouge">clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
+<p>This is everything you need to get this working. Commit <code class="language-plaintext highlighter-rouge">appveyor.yml</code> and <code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
 
 <h2 id="changing-appveyor-build-info">Changing Appveyor build info</h2>
 
-<p>You may also want to include some information about  the status of your subrepo in Appveyor’s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code class="highlighter-rouge">clone-subrepo.ps1</code>:</p>
+<p>You may also want to include some information about  the status of your subrepo in Appveyor’s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ($env:appveyor -ne $null) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ($env:appveyor -ne $null) {
 	Update-AppveyorBuild -message "subrepo [$br](https://bitbucket.org/$repo/commits/$id): $message" -Committed $ts -CommitterName $authorname -CommitterEmail $authorEmail 
 	#-CommitId $id
 } 
@@ -570,30 +570,30 @@ finally {
 
 <p>Until now, the inner repository was not a real <a href="https://www.mercurial-scm.org/wiki/Subrepository">hg subrepo</a> - the script determined it’s location and branch. Let’s now make it a subrepo and tie the exact revision to parent repository revision.</p>
 
-<p>Add <code class="highlighter-rouge">.hgsub</code> to your public repo (this will be the “parent”):</p>
+<p>Add <code class="language-plaintext highlighter-rouge">.hgsub</code> to your public repo (this will be the “parent”):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top-secret = top-secret
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top-secret = top-secret
 
 [subpaths]
 https://bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
 ssh://hg@bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">top-secret</code> is the name of the private repository. 
-The <code class="highlighter-rouge">subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it’s name after slash, so we need to remap: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code class="highlighter-rouge">ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
+<p><code class="language-plaintext highlighter-rouge">top-secret</code> is the name of the private repository. 
+The <code class="language-plaintext highlighter-rouge">subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it’s name after slash, so we need to remap: <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code class="language-plaintext highlighter-rouge">ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
 
 <p>After commiting, do a clean update:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg update -C
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg update -C
 </code></pre></div></div>
 
-<p>This will create <code class="highlighter-rouge">top-secret</code> directory and set it’s default url to <code class="highlighter-rouge">ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code class="highlighter-rouge">top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo.</p>
+<p>This will create <code class="language-plaintext highlighter-rouge">top-secret</code> directory and set it’s default url to <code class="language-plaintext highlighter-rouge">ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code class="language-plaintext highlighter-rouge">top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo.</p>
 
-<p>One last thing we need to do is to move <code class="highlighter-rouge">id_rsa</code> initalization directly to <code class="highlighter-rouge">appveyor.yml</code>, to <code class="highlighter-rouge">init</code> phase. The reason for this is the chicken-egg problem we now have: <code class="highlighter-rouge">install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code class="highlighter-rouge">appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code class="highlighter-rouge">init</code> script without the repo being checked out.</p>
+<p>One last thing we need to do is to move <code class="language-plaintext highlighter-rouge">id_rsa</code> initalization directly to <code class="language-plaintext highlighter-rouge">appveyor.yml</code>, to <code class="language-plaintext highlighter-rouge">init</code> phase. The reason for this is the chicken-egg problem we now have: <code class="language-plaintext highlighter-rouge">install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code class="language-plaintext highlighter-rouge">appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code class="language-plaintext highlighter-rouge">init</code> script without the repo being checked out.</p>
 
-<p><code class="highlighter-rouge">appveyor.yml</code> will now look like this (note that we don’t need <code class="highlighter-rouge">subrepo_*</code> ariables any more):</p>
+<p><code class="language-plaintext highlighter-rouge">appveyor.yml</code> will now look like this (note that we don’t need <code class="language-plaintext highlighter-rouge">subrepo_*</code> ariables any more):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
   priv_key:
     secure: &lt;encryped-value&gt;
 init: 
@@ -610,9 +610,9 @@ init:
 <h2 id="notes-and-resources">Notes and resources</h2>
 
 <ul>
-  <li>You can find sample repo at: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
+  <li>You can find sample repo at: <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
   <li>The build status at https://ci.appveyor.com/project/qbikez/appveyor-wrapper.</li>
-  <li>The private repo is at <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/top-secret</code>, but you won’t find it there, because, well.. it’s private :)</li>
+  <li>The private repo is at <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/top-secret</code>, but you won’t find it there, because, well.. it’s private :)</li>
 </ul>
 
 	  ]]></description>

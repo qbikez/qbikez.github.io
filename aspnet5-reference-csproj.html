@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -133,11 +135,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <section class="post-content">
             
-            <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:</p>
+            <p>If you want to share some common code between <code class="language-plaintext highlighter-rouge">aspnet5</code> and regular <code class="language-plaintext highlighter-rouge">csproj</code> projects, you basically have three options:</p>
 <ul>
   <li>create a nuget from the common library and push it to a shared nuget repository</li>
-  <li>use <code class="highlighter-rouge">dnu wrap</code> to wrap existing <code class="highlighter-rouge">csproj</code> into aspnet5 <code class="highlighter-rouge">project.json</code></li>
-  <li>maintain two versions of your shared project - a  <code class="highlighter-rouge">project.json</code> for aspnet5 and a <code class="highlighter-rouge">csproj</code> for regular .net</li>
+  <li>use <code class="language-plaintext highlighter-rouge">dnu wrap</code> to wrap existing <code class="language-plaintext highlighter-rouge">csproj</code> into aspnet5 <code class="language-plaintext highlighter-rouge">project.json</code></li>
+  <li>maintain two versions of your shared project - a  <code class="language-plaintext highlighter-rouge">project.json</code> for aspnet5 and a <code class="language-plaintext highlighter-rouge">csproj</code> for regular .net</li>
 </ul>
 
 <p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
@@ -153,19 +155,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <p>If the shared code doesn’t change to often, I would go with a shared nuget repository. But if the shared code is constantly changed, going through pack-push-restore process could be painful and time-consuming.</p>
 
-<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="highlighter-rouge">dnu wrap</code></h3>
+<h3 id="wrapping-csproj-with-dnu-wrap">Wrapping csproj with <code class="language-plaintext highlighter-rouge">dnu wrap</code></h3>
 
-<p>There is one other way - <code class="highlighter-rouge">dnu</code> has a handy command named <code class="highlighter-rouge">wrap</code>. It wraps your existing <code class="highlighter-rouge">.csproj</code> files into <code class="highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
+<p>There is one other way - <code class="language-plaintext highlighter-rouge">dnu</code> has a handy command named <code class="language-plaintext highlighter-rouge">wrap</code>. It wraps your existing <code class="language-plaintext highlighter-rouge">.csproj</code> files into <code class="language-plaintext highlighter-rouge">project.json</code> files that can be then referenced by aspnet5 projects.</p>
 
 <p>You can do something like this:</p>
 
 <ol>
   <li>
-    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
+    <p>Add a <a href="http://docs.asp.net/en/latest/conceptual-overview/understanding-aspnet5-apps.html#the-global-json-file"><code class="language-plaintext highlighter-rouge">global.json</code></a> file in the some top-level directory that contains your projects. In the <code class="language-plaintext highlighter-rouge">projects</code> section, list directories that contain your source-code, for example:</p>
 
     <p><!-- language: lang-json --></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
      "projects": [ "src", "test" ],
      "sdk": {
          "version": "1.0.0-rc1-final"
@@ -174,15 +176,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>In the same directory that contains <code class="highlighter-rouge">global.json</code> execute <code class="highlighter-rouge">dnu wrap</code> for each existing <code class="highlighter-rouge">.csproj</code> project.</p>
+    <p>In the same directory that contains <code class="language-plaintext highlighter-rouge">global.json</code> execute <code class="language-plaintext highlighter-rouge">dnu wrap</code> for each existing <code class="language-plaintext highlighter-rouge">.csproj</code> project.</p>
   </li>
 </ol>
 
  		dnu wrap src/my.project/my.project.csproj<br />
 
-<p>This should create a directory <code class="highlighter-rouge">wrap</code> containing <code class="highlighter-rouge">project.json</code> files that wrap <code class="highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
+<p>This should create a directory <code class="language-plaintext highlighter-rouge">wrap</code> containing <code class="language-plaintext highlighter-rouge">project.json</code> files that wrap <code class="language-plaintext highlighter-rouge">.csprojs</code>. A sample file  looks like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- language: lang-json --&gt;
 
 	{
 		"version": "1.0.0-*",
@@ -198,7 +200,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	}
 </code></pre></div></div>
 
-<p>Note that <code class="highlighter-rouge">wrap</code> directory is also added to <code class="highlighter-rouge">projects</code> section in <code class="highlighter-rouge">global.json</code>.</p>
+<p>Note that <code class="language-plaintext highlighter-rouge">wrap</code> directory is also added to <code class="language-plaintext highlighter-rouge">projects</code> section in <code class="language-plaintext highlighter-rouge">global.json</code>.</p>
 
 <ol>
   <li>
@@ -206,15 +208,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <p><!-- language: lang-json --></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "my.project": ""
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "my.project": ""
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>to <code class="highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="highlighter-rouge">wrap</code> directory.</p>
+<p>to <code class="language-plaintext highlighter-rouge">dependencies</code> section. Aspnet should automatically pick up <code class="language-plaintext highlighter-rouge">global.json</code> file in root directory, and will look for projects in all directories listed there, including <code class="language-plaintext highlighter-rouge">wrap</code> directory.</p>
 
 <ol>
-  <li>Now you’re good to go - you can use all classes from <code class="highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="highlighter-rouge">csproj</code>.</li>
+  <li>Now you’re good to go - you can use all classes from <code class="language-plaintext highlighter-rouge">my.project</code>, step into them while debugging, go to definition, etc. Note that in your solution, you still have the old <code class="language-plaintext highlighter-rouge">csproj</code>.</li>
 </ol>
 
 <p>You can find a sample code here: https://github.com/heavymetaldev/aspnet5-wrap.</p>
@@ -297,17 +299,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -153,7 +155,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <span class="p">}</span>
 </code></pre></div></div>
 
-<p>This works fine on my local machine (using IIS Express). Surprisingly, after publishing to Azure Website, I received a download alert instead of file content inside the browser. After some quick debugging, I found out that the file extension (<code class="highlighter-rouge">.xhtml</code> in this case) was being mapped to <code class="highlighter-rouge">application/octet-stream</code> instead of <code class="highlighter-rouge">application/xhtml+xml</code>. Interestingly, GetMimeMapping uses IIS MIME mapping: http://www.c-sharpcorner.com/Blogs/47150/. 
+<p>This works fine on my local machine (using IIS Express). Surprisingly, after publishing to Azure Website, I received a download alert instead of file content inside the browser. After some quick debugging, I found out that the file extension (<code class="language-plaintext highlighter-rouge">.xhtml</code> in this case) was being mapped to <code class="language-plaintext highlighter-rouge">application/octet-stream</code> instead of <code class="language-plaintext highlighter-rouge">application/xhtml+xml</code>. Interestingly, GetMimeMapping uses IIS MIME mapping: http://www.c-sharpcorner.com/Blogs/47150/. 
 So, my local IIS has this extension mapped and Azure has not. This may be a cool feature, but in this case it just gets in my way. So, instead of adding mappings to my web.config, I decided to hardcode the mapping dictionary, using this little class: https://github.com/samuelneff/MimeTypeMap/blob/master/src/MimeTypeMap.cs 
 This gist is similar, but it does not containt xhtml: https://gist.github.com/atifaziz/14553</p>
 
@@ -229,17 +231,32 @@ This gist is similar, but it does not containt xhtml: https://gist.github.com/at
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

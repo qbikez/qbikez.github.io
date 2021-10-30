@@ -1,0 +1,12 @@
+{
+	"version": 3,
+	"file": "3-col-portfolio.css",
+	"sources": [
+		"3-col-portfolio.scss"
+	],
+	"sourcesContent": [
+		"/*!\n * Start Bootstrap - 3 Col Portfolio (http://startbootstrap.com/)\n * Copyright 2013-2016 Start Bootstrap\n * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)\n */\n\n// .row {\n//   display: -webkit-box;\n//   display: -webkit-flex;\n//   display: -ms-flexbox;\n//   display:         flex;\n//   flex-wrap: wrap;\n//   flex-direction: row;\n// }\n// .row > [class*='col-'] {\n//   display: flex;\n  \n// }\n\n.portfolio-cell {\n    padding-bottom: 25px;\n    padding-left: 10px;\n    padding-right: 10px;\n    height: 100%;    \n    .portfolio-item {\n            border-style: solid;\n            border-width: 1px;\n            border-color: #DDE4E6;\n            border-radius: 0 0 4px 4px;\n\n            img {\n                padding: 3px;\n            }\n        }\n}\n\n\n\nfooter {\n    margin: 50px 0;\n}"
+	],
+	"names": [],
+	"mappings": "AAAA,uMAIG;AAeH,AAAA,eAAe,CAAC,EACZ,cAAc,EAAE,IAAI,EACpB,YAAY,EAAE,IAAI,EAClB,aAAa,EAAE,IAAI,EACnB,MAAM,EAAE,IAAI,GAWf;;AAfD,AAKI,eALW,CAKX,eAAe,CAAC,EACR,YAAY,EAAE,KAAK,EACnB,YAAY,EAAE,GAAG,EACjB,YAAY,EAAE,OAAO,EACrB,aAAa,EAAE,WAAW,GAK7B;;AAdT,AAWY,eAXG,CAKX,eAAe,CAMP,GAAG,CAAC,EACA,OAAO,EAAE,GAAG,GACf;;AAMb,AAAA,MAAM,CAAC,EACH,MAAM,EAAE,MAAM,GACjB"
+}

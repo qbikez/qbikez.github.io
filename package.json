@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "preinstall": "bundle install",
-    "build": "bundle exec jekyll build -d _site",
-    "start": "bundle exec jekyll serve --drafts --port 4001 --incremental --livereload"
+    "build": "pwsh ./build.ps1",
+    "start": "pwsh ./run.ps1"
   },
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jeet": "^7.1.0",
-    "node-sass": "^4.5.3"
+    "jeet": "^7.2.0",
+    "node-sass": "^4.14.1"
   }
 }

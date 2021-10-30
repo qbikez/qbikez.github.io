@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -133,9 +135,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <section class="post-content">
             
-            <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
+            <p>Today I ran into a problem with starting my AspNet5 app. (for the record, I’m using aspnet version <code class="language-plaintext highlighter-rouge">1.0.0-beta8</code>) This is what happened:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx web
 Application startup exception: System.Reflection.ReflectionTypeLoadException: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property
    at System.Reflection.RuntimeModule.GetTypes(RuntimeModule module)
    at System.Reflection.RuntimeAssembly.get_DefinedTypes()
@@ -148,19 +150,19 @@ Now listening on: http://localhost:5000
 Application started. Press Ctrl+C to shut down.
 </code></pre></div></div>
 
-<p>The exception occurs in <code class="highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="highlighter-rouge">dnvm list</code>. Then I ran <code class="highlighter-rouge">dnu restore</code> to be sure:</p>
+<p>The exception occurs in <code class="language-plaintext highlighter-rouge">FindStartupType</code> method, before app is even started. A quick search led me to  this SO thread: <a href="http://stackoverflow.com/questions/30919381/run-asp-net5-web-application-with-kestrel-server-on-windows">Run ASPNET5 web application with Kestrel</a>, which suggests there may be a mismatch between current dnx version and downloaded package dependencies. I double checked current dnx version using <code class="language-plaintext highlighter-rouge">dnvm list</code>. Then I ran <code class="language-plaintext highlighter-rouge">dnu restore</code> to be sure:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu restore
 (...)
 Done, without errors.
 Restore complete, 18523ms elapsed
 </code></pre></div></div>
 
-<p>I also tried removing all packages from <code class="highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
+<p>I also tried removing all packages from <code class="language-plaintext highlighter-rouge">%UserProfile%\.dnx\packages</code> and restoring them again, but that didn’t help either.</p>
 
 <p>Try to compile then:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnu build
 (...)
 Build succeeded.
     0 Warning(s)
@@ -173,39 +175,39 @@ Total projects built: 1
 
 <p>Seems ok to me. What the hell is causing the problem then?</p>
 
-<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="highlighter-rouge">dnx</code> has a little option called <code class="highlighter-rouge">--debug</code>. Let’s try this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
+<p>How can I debug this exception, when my code isn’t even running yet? Turns out that  <code class="language-plaintext highlighter-rouge">dnx</code> has a little option called <code class="language-plaintext highlighter-rouge">--debug</code>. Let’s try this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; dnx --debug web
 Process Id: 15396
 Waiting for the debugger to attach...
 </code></pre></div></div>
 
-<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
-In the <code class="highlighter-rouge">dnx</code> console window you should now see:</p>
+<p>Ok, Let’s attach Visual studio and see what happens. In VS, do <code class="language-plaintext highlighter-rouge">Debug -&gt; Attach to Process</code>, then find <code class="language-plaintext highlighter-rouge">dnx.exe</code> process and attach to it (if there is more than one, just try to attach to each of them). 
+In the <code class="language-plaintext highlighter-rouge">dnx</code> console window you should now see:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Debugger attached.
 </code></pre></div></div>
 
-<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
-Now, repeat the process - restart <code class="highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
+<p>If the exception is still thrown, and nothing happens in VS, you need to enable breaking on exceptions in VS. Go to <code class="language-plaintext highlighter-rouge">Debug -&gt; Windows -&gt; Exception Settings</code> and make sure “Common Language Runtime Exceptions” is checked. (Remember to uncheck it after you’re done with debugging, otherwise debugger will break on all sort of internal exceptions.) 
+Now, repeat the process - restart <code class="language-plaintext highlighter-rouge">dnx --debug web</code> and attach VS debugger to it.</p>
 
 <p>And voila, we have our exception caught. What now? How to get details for this exception? 
-Click OK, then open a Watch window (<code class="highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="highlighter-rouge">Name</code> column, type <code class="highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
-If caught exception is of type <code class="highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
-In fact, you may have already caught the exception which is the real cause of error, even before <code class="highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
+Click OK, then open a Watch window (<code class="language-plaintext highlighter-rouge">Debug -&gt; Windows -&gt; Watch -&gt; Watch1</code>). In the <code class="language-plaintext highlighter-rouge">Name</code> column, type <code class="language-plaintext highlighter-rouge">$exception</code>. This is a <a href="https://msdn.microsoft.com/en-us/library/ms164891.aspx">clever pseudo-variable</a>, which displays information on the last exception.
+If caught exception is of type <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code>, look for <code class="language-plaintext highlighter-rouge">LoaderExceptions</code> field and check if there are any understandable exceptions or messages. 
+In fact, you may have already caught the exception which is the real cause of error, even before <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code> is thrown.</p>
 
 <p>In my case the problem was:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception thrown: 'Microsoft.Dnx.Compilation.CSharp.RoslynCompilationException' in Microsoft.Dnx.Compilation.CSharp.dll
 
 Additional information: c:\projects\dnxtest\dnxtest.core\FilePositionCommand.cs(272,21): DNX,Version=v4.5.1 error CS0162: Unreachable code detected
 </code></pre></div></div>
 
-<p>The compilation error came from a project that my main app was referencing. Why did <code class="highlighter-rouge">dnu build</code> succeed then? 
-It seems like <code class="highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
-I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="highlighter-rouge">dnu build --recursive</code>, or running <code class="highlighter-rouge">dnu</code> at the root directory level. 
+<p>The compilation error came from a project that my main app was referencing. Why did <code class="language-plaintext highlighter-rouge">dnu build</code> succeed then? 
+It seems like <code class="language-plaintext highlighter-rouge">dnu</code> doesn’t do full compilation of referenced projects. It checks referenced classes, fields, etc., but it completely ignores any code errors. 
+I’m sure there’s a reason for such behavior, but I think there should be also a way to compile everything, something like <code class="language-plaintext highlighter-rouge">dnu build --recursive</code>, or running <code class="language-plaintext highlighter-rouge">dnu</code> at the root directory level. 
 Of corse, if you’re using Visual Studio or VS Code, you will see compilation errors. But if you like to stick with commandline and simpler editors - 
 I currently don’t see other way than compiling every project separately. Of course you can write a script that does that, but - shouldn’t something like that be included ‘out of the box’? 
-If the runtime exception was at least a little bit more meaningfull - just <code class="highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
+If the runtime exception was at least a little bit more meaningfull - just <code class="language-plaintext highlighter-rouge">RoslynCompilationException</code> instead of cryptic <code class="language-plaintext highlighter-rouge">ReflectionTypeLoadException</code> - that would be enough.</p>
 
 <p>I hope that will be fixed in next releases!</p>
 
@@ -286,17 +288,32 @@ If the runtime exception was at least a little bit more meaningfull - just <code
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

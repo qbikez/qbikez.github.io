@@ -1,24 +1,10 @@
-/*!
- * Start Bootstrap - 3 Col Portfolio (http://startbootstrap.com/)
- * Copyright 2013-2016 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
- */
-/* line 20 */
-.portfolio-cell {
-  padding-bottom: 25px;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: 100%; }
-  /* line 25 */
-  .portfolio-cell .portfolio-item {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #DDE4E6;
-    border-radius: 0 0 4px 4px; }
-    /* line 31 */
-    .portfolio-cell .portfolio-item img {
-      padding: 3px; }
+/*! Start Bootstrap - 3 Col Portfolio (http://startbootstrap.com/) Copyright 2013-2016 Start Bootstrap Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE) */
+.portfolio-cell { padding-bottom: 25px; padding-left: 10px; padding-right: 10px; height: 100%; }
 
-/* line 39 */
-footer {
-  margin: 50px 0; }
+.portfolio-cell .portfolio-item { border-style: solid; border-width: 1px; border-color: #DDE4E6; border-radius: 0 0 4px 4px; }
+
+.portfolio-cell .portfolio-item img { padding: 3px; }
+
+footer { margin: 50px 0; }
+
+/*# sourceMappingURL=3-col-portfolio.css.map */

@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -270,8 +272,6 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
             <p>
             
                 <p>Web Deploy is a great way to publish websites if you use Windows + IIS hosting, especially inside company’s infrastructure.</p>
-
-<p>[Microsoft.Web.Management.Server.ManagementAuthorization]::Grant($username, “$site”, $false)</p>
  
             
                 <a class="read-more" href="/iis-web-deploy-permissions">&raquo;</a>
@@ -305,8 +305,7 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
         <section class="post-excerpt">
             <p>
             
-                <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="highlighter-rouge">dnx</code> projects forward and switch to <code class="highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
-
+                <p>Net Core 1.0.0 has been released some time ago and is here to stay. Maybe it’s time to move “old” <code class="language-plaintext highlighter-rouge">dnx</code> projects forward and switch to <code class="language-plaintext highlighter-rouge">dotnet</code>? Because, as someone avesome said: <em>new is always better!</em></p>
  
             
                 <a class="read-more" href="/dnx-to-dotnet-migration">&raquo;</a>
@@ -341,7 +340,6 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
             <p>
             
                 <p>This came as a little surprise for me, especially that rc2 was released not so long ago, but here it is! <a href="http://www.hanselman.com/blog/NETCore10IsNowReleased.aspx">.Net Core 1.0 is finally released</a>.</p>
-
  
             
                 <a class="read-more" href="/net-core-1-0-released">&raquo;</a>
@@ -371,15 +369,14 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
         <section class="post-excerpt">
             <p>
             
-                <p>If you want to share some common code between <code class="highlighter-rouge">aspnet5</code> and regular <code class="highlighter-rouge">csproj</code> projects, you basically have three options:</p>
+                <p>If you want to share some common code between <code class="language-plaintext highlighter-rouge">aspnet5</code> and regular <code class="language-plaintext highlighter-rouge">csproj</code> projects, you basically have three options:</p>
 <ul>
   <li>create a nuget from the common library and push it to a shared nuget repository</li>
-  <li>use <code class="highlighter-rouge">dnu wrap</code> to wrap existing <code class="highlighter-rouge">csproj</code> into aspnet5 <code class="highlighter-rouge">project.json</code></li>
-  <li>maintain two versions of your shared project - a  <code class="highlighter-rouge">project.json</code> for aspnet5 and a <code class="highlighter-rouge">csproj</code> for regular .net</li>
+  <li>use <code class="language-plaintext highlighter-rouge">dnu wrap</code> to wrap existing <code class="language-plaintext highlighter-rouge">csproj</code> into aspnet5 <code class="language-plaintext highlighter-rouge">project.json</code></li>
+  <li>maintain two versions of your shared project - a  <code class="language-plaintext highlighter-rouge">project.json</code> for aspnet5 and a <code class="language-plaintext highlighter-rouge">csproj</code> for regular .net</li>
 </ul>
 
 <p>The last option is the most error-prone and harder to maintain, so I will just ignore it.</p>
-
  
             
                 <a class="read-more" href="/aspnet5-reference-csproj">&raquo;</a>
@@ -423,17 +420,32 @@ As as DevOps believer, I attempt to automate everything (mostly with PowerShell)
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -169,14 +171,14 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>
     <p>Install Git for Windows:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y git
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; choco install -y git
 </code></pre></div>    </div>
   </li>
-  <li>Make sure you have <code class="highlighter-rouge">ssh.exe</code> on PATH (it will most probably be in ‘c:\Program Files\Git\usr\bin’)</li>
+  <li>Make sure you have <code class="language-plaintext highlighter-rouge">ssh.exe</code> on PATH (it will most probably be in ‘c:\Program Files\Git\usr\bin’)</li>
   <li>
-    <p>List the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh</code> directory</p>
+    <p>List the content of <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh</code> directory</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ls $env:USERPROFILE/.ssh
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ls $env:USERPROFILE/.ssh
 </code></pre></div>    </div>
 
     <p>If you have a default identity already, you’ll some <em>id_*</em> files.</p>
@@ -184,7 +186,7 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>
     <p>Generate a ssh key (or use an existing one)</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 </code></pre></div>    </div>
   </li>
   <li>
@@ -193,25 +195,25 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
     <ol>
       <li>Open a browser and log in to Bitbucket.</li>
       <li>Choose <em>avatar</em> &gt; <strong>Bitbucket settings</strong> from the menu bar, then click <strong>SSH Settings</strong> on the left.</li>
-      <li>Add a new key. This is a public key, which value is the content of <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with “<em>ssh-rsa</em> …”)</li>
+      <li>Add a new key. This is a public key, which value is the content of <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa.pub</code> (will probably start with “<em>ssh-rsa</em> …”)</li>
     </ol>
   </li>
   <li>
     <p>create a private HG repo and clone it over SSH:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; hg clone ssh://hg@bitbucket.org/heavymetaldev/top-secret
 </code></pre></div>    </div>
 
     <blockquote>
-      <p>If you see <code class="highlighter-rouge">remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:</p>
+      <p>If you see <code class="language-plaintext highlighter-rouge">remote: Permission denied (publickey).</code>, then there is something wrong with SSH key, i.e.:</p>
       <ol>
-        <li>Mercurial doesn’t use the private key from <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
+        <li>Mercurial doesn’t use the private key from <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
         <li>Public SSH key is not properly configured in BitBucket</li>
       </ol>
 
-      <p>You can add <code class="highlighter-rouge">--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
+      <p>You can add <code class="language-plaintext highlighter-rouge">--debug</code> switch to see the commands that are invoked undearneath. You will see that mercurial calls:</p>
 
-      <p><code class="highlighter-rouge">ssh hg@bitbucket.org "hg -R heavymetaldev/top-secret serve --stdio"</code></p>
+      <p><code class="language-plaintext highlighter-rouge">ssh hg@bitbucket.org "hg -R heavymetaldev/top-secret serve --stdio"</code></p>
 
       <p>You can use this command to further debug ssh issues.</p>
     </blockquote>
@@ -228,15 +230,15 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
   <li>Save private key in AppVeyor’s encrypted environment variable</li>
 </ol>
 
-<p>In the build script (during <code class="highlighter-rouge">install</code> phase), we need to:</p>
+<p>In the build script (during <code class="language-plaintext highlighter-rouge">install</code> phase), we need to:</p>
 <ol>
-  <li>Extract private key from environment variable to file <code class="highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
-  <li>Add Bitbucket’s SSL certificate fingerprint to <code class="highlighter-rouge">$env:USERPROFILE/.ssh/known_hosts</code></li>
+  <li>Extract private key from environment variable to file <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/id_rsa</code></li>
+  <li>Add Bitbucket’s SSL certificate fingerprint to <code class="language-plaintext highlighter-rouge">$env:USERPROFILE/.ssh/known_hosts</code></li>
 </ol>
 
 <p>First, generate a new SSH key that will be used by AppVeyor and add it to Bitbucket (like in the previous paragraph).</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f "id_rsa_appveyor_top-secret"
 </code></pre></div></div>
 
 <p>Instead of configuring it at account level, add it as <a href="https://confluence.atlassian.com/display/BITBUCKET/Use+access+keys">read-only access key</a> to specific repo that you will be cloning.</p>
@@ -244,16 +246,16 @@ BitBucket has a guide on <a href="https://confluence.atlassian.com/display/BITBU
 <p>Now, we need to configure the SSH key in AppVeyor. The process is very similar to the <a href="https://www.appveyor.com/docs/how-to/private-git-sub-modules/#appveyoryml">git way</a>.</p>
 
 <blockquote>
-  <p>Open the generated private key and copy base-64 body of the key <em>between</em> <code class="highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code> and <code class="highlighter-rouge">-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
+  <p>Open the generated private key and copy base-64 body of the key <em>between</em> <code class="language-plaintext highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code> and <code class="language-plaintext highlighter-rouge">-----END RSA PRIVATE KEY-----</code> into clipboard (without these BEGIN / END lines).</p>
 
   <p>Copy the contents of private key to clipboard as shown above and open Encrypt data tool in AppVeyor. Encrypt the value of clipboard using that page.</p>
 </blockquote>
 
 <p>Paste the encrypted value into the build script (or configure it in web UI). It will look something like this:</p>
 
-<p><code class="highlighter-rouge">appveyor.yml</code>:</p>
+<p><code class="language-plaintext highlighter-rouge">appveyor.yml</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
   priv_key:
     secure: &lt;encryped-value&gt;
   subrepo_owner: heavymetaldev
@@ -263,10 +265,10 @@ install:
   - ps: .\clone-subrepo.ps1
 </code></pre></div></div>
 
-<p>The additional environment variables (<code class="highlighter-rouge">subrepo_*</code>) are used to determine repository url and branch name to checkout.
-<code class="highlighter-rouge">clone-subrepo.ps1</code> is where the real job is done:</p>
+<p>The additional environment variables (<code class="language-plaintext highlighter-rouge">subrepo_*</code>) are used to determine repository url and branch name to checkout.
+<code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code> is where the real job is done:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get repo url and branch from env variables 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get repo url and branch from env variables 
 $owner = $env:subrepo_owner
 $repoName = $env:subrepo_name
 $repo = "$owner/$repoName"
@@ -332,13 +334,13 @@ finally {
 }
 </code></pre></div></div>
 
-<p>This is everything you need to get this working. Commit <code class="highlighter-rouge">appveyor.yml</code> and <code class="highlighter-rouge">clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
+<p>This is everything you need to get this working. Commit <code class="language-plaintext highlighter-rouge">appveyor.yml</code> and <code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code> to a new, public repository and add it to appveyor.</p>
 
 <h2 id="changing-appveyor-build-info">Changing Appveyor build info</h2>
 
-<p>You may also want to include some information about  the status of your subrepo in Appveyor’s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code class="highlighter-rouge">clone-subrepo.ps1</code>:</p>
+<p>You may also want to include some information about  the status of your subrepo in Appveyor’s build message. <a href="https://www.appveyor.com/docs/build-worker-api/#update-build-details">Update-AppveyorBuild</a> can update build details. Add the following code to <code class="language-plaintext highlighter-rouge">clone-subrepo.ps1</code>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ($env:appveyor -ne $null) {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ($env:appveyor -ne $null) {
 	Update-AppveyorBuild -message "subrepo [$br](https://bitbucket.org/$repo/commits/$id): $message" -Committed $ts -CommitterName $authorname -CommitterEmail $authorEmail 
 	#-CommitId $id
 } 
@@ -348,30 +350,30 @@ finally {
 
 <p>Until now, the inner repository was not a real <a href="https://www.mercurial-scm.org/wiki/Subrepository">hg subrepo</a> - the script determined it’s location and branch. Let’s now make it a subrepo and tie the exact revision to parent repository revision.</p>
 
-<p>Add <code class="highlighter-rouge">.hgsub</code> to your public repo (this will be the “parent”):</p>
+<p>Add <code class="language-plaintext highlighter-rouge">.hgsub</code> to your public repo (this will be the “parent”):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top-secret = top-secret
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top-secret = top-secret
 
 [subpaths]
 https://bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
 ssh://hg@bitbucket\.org/([^/]*)/([^/]*)/([^/]*)$ = ssh://hg@bitbucket.org/\1/\3
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">top-secret</code> is the name of the private repository. 
-The <code class="highlighter-rouge">subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it’s name after slash, so we need to remap: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code class="highlighter-rouge">ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
+<p><code class="language-plaintext highlighter-rouge">top-secret</code> is the name of the private repository. 
+The <code class="language-plaintext highlighter-rouge">subpaths</code> section is needed, because by default mercurial constructs subrepo url by adding it’s name after slash, so we need to remap: <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper/top-secret</code> to  <code class="language-plaintext highlighter-rouge">ssh://hg@bitbucket.org/heavymetaldev/top-secret</code>. Appveyor clones repos over https, but private subrepo needs to be accessed over ssh.</p>
 
 <p>After commiting, do a clean update:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg update -C
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hg update -C
 </code></pre></div></div>
 
-<p>This will create <code class="highlighter-rouge">top-secret</code> directory and set it’s default url to <code class="highlighter-rouge">ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code class="highlighter-rouge">top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo.</p>
+<p>This will create <code class="language-plaintext highlighter-rouge">top-secret</code> directory and set it’s default url to <code class="language-plaintext highlighter-rouge">ssh://hg@bitbucket.com/heavymetaldev/top-secret</code>. Go to <code class="language-plaintext highlighter-rouge">top-secret</code> folder, update the subrepo to desired revision and commit changes in the parent repo.</p>
 
-<p>One last thing we need to do is to move <code class="highlighter-rouge">id_rsa</code> initalization directly to <code class="highlighter-rouge">appveyor.yml</code>, to <code class="highlighter-rouge">init</code> phase. The reason for this is the chicken-egg problem we now have: <code class="highlighter-rouge">install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code class="highlighter-rouge">appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code class="highlighter-rouge">init</code> script without the repo being checked out.</p>
+<p>One last thing we need to do is to move <code class="language-plaintext highlighter-rouge">id_rsa</code> initalization directly to <code class="language-plaintext highlighter-rouge">appveyor.yml</code>, to <code class="language-plaintext highlighter-rouge">init</code> phase. The reason for this is the chicken-egg problem we now have: <code class="language-plaintext highlighter-rouge">install</code> phase takes place <strong>after</strong> repo clone and update, but mercurial (unlike git) updates all subrepos on parent repo update, so it needs the ssh credentials <strong>before</strong> doing the update. Fortunatelly, appveyor is clever enough to read <code class="language-plaintext highlighter-rouge">appveyor.yml</code> content <strong>before</strong> cloning, so it can execute <code class="language-plaintext highlighter-rouge">init</code> script without the repo being checked out.</p>
 
-<p><code class="highlighter-rouge">appveyor.yml</code> will now look like this (note that we don’t need <code class="highlighter-rouge">subrepo_*</code> ariables any more):</p>
+<p><code class="language-plaintext highlighter-rouge">appveyor.yml</code> will now look like this (note that we don’t need <code class="language-plaintext highlighter-rouge">subrepo_*</code> ariables any more):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>environment:
   priv_key:
     secure: &lt;encryped-value&gt;
 init: 
@@ -388,9 +390,9 @@ init:
 <h2 id="notes-and-resources">Notes and resources</h2>
 
 <ul>
-  <li>You can find sample repo at: <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
+  <li>You can find sample repo at: <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/appveyor-wrapper</code></li>
   <li>The build status at https://ci.appveyor.com/project/qbikez/appveyor-wrapper.</li>
-  <li>The private repo is at <code class="highlighter-rouge">https://bitbucket.org/heavymetaldev/top-secret</code>, but you won’t find it there, because, well.. it’s private :)</li>
+  <li>The private repo is at <code class="language-plaintext highlighter-rouge">https://bitbucket.org/heavymetaldev/top-secret</code>, but you won’t find it there, because, well.. it’s private :)</li>
 </ul>
 
 
@@ -488,17 +490,32 @@ init:
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

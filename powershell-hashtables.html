@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -140,26 +142,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <p>Usually, Powershell is used as a “glue” to stitch a bunch of commands and programs together. It does not need to be a performance daemon to do that (and nobody says it is). Flexibility comes with a price. 
 But there are cases, where your doing seemingly trivial things, but your script just takes years to finish.</p>
 
-<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
+<p>There is a useful cmdlet  <a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="language-plaintext highlighter-rouge">Measure-Command</code></a> that measures how long a piece of code takes to run. The usage is very simple:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$timespan = Measure-Command {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$timespan = Measure-Command {
     # do whatever you want to measure here
 }
 </code></pre></div></div>
 
 <p>That’s nice if you know or suspect which part of code is slow. But I would like to have something that’s more like instrumentation. What I want is a list of called functions with their total run times and number of calls.</p>
 
-<p>That’s why I created a little wrapper around <code class="highlighter-rouge">Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code class="highlighter-rouge">Measure-function</code></a>, that’s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
+<p>That’s why I created a little wrapper around <code class="language-plaintext highlighter-rouge">Measure-Command</code>, called <a href="https://gist.github.com/qbikez/f59aa687035f879f70729d3d5dc311ad"><code class="language-plaintext highlighter-rouge">Measure-function</code></a>, that’s able to easily gather measurements of multiple functions. So now, if I have a function that I want to measure:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
     # i'm doing some heavy loading here
     return $something
   }
 </code></pre></div></div>
 
-<p>I just wrap the body with <code class="highlighter-rouge">Measure-Function</code> like this:</p>
+<p>I just wrap the body with <code class="language-plaintext highlighter-rouge">Measure-Function</code> like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function Get-Something {
     Measure-Function "$($MyInvocation.MyCommand.Name)" {
       # i'm doing some heavy loading here
       return $something
@@ -167,15 +169,15 @@ But there are cases, where your doing seemingly trivial things, but your script 
   }
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
+<p><code class="language-plaintext highlighter-rouge">Measure-Function</code> takes care of aggregating measurements, and makes sure not to measure recurence invocation. To get the results, do:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
 </code></pre></div></div>
 
 <p>Now, to pinpoint bottlenecks in your code, you can follow these steps:</p>
 
 <ol>
-  <li>Start with the entry point of your script and add <code class="highlighter-rouge">Measure-Function</code> to it and functions that it calls.</li>
+  <li>Start with the entry point of your script and add <code class="language-plaintext highlighter-rouge">Measure-Function</code> to it and functions that it calls.</li>
   <li>Run the code and see, which function takes the most time.</li>
   <li>Repeat step on with the slowest functions, until you find the bottleneck.</li>
 </ol>
@@ -186,7 +188,7 @@ But there are cases, where your doing seemingly trivial things, but your script 
 
 <p>Take a look at these three simple scenarios :</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># $h is a hastable of size 10000 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># $h is a hastable of size 10000 
 $size = 10000
 $h = @{
 }
@@ -217,7 +219,7 @@ $global:perfcounters | format-table -AutoSize -Wrap | out-string | write-host
 
 <p>Each loop is enumerating over a hashtable and accessing stored values. Should be a matter of milliseconds, right? Well, let’s see…</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name                                           elapsed          count
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name                                           elapsed          count
 ----                                           -------          -----
 enumerating 10000 items with property accessor 00:00:30.4342957     1
 enumerating 10000 items by keys                00:00:00.0479557     1
@@ -226,13 +228,13 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
 
 <p>As it turns out, accessing hashtable keys by property accessor takes ~800 times longer!</p>
 
-<p>At a first glance, I would think that the form <code class="highlighter-rouge">$h.$k</code> would be just a syntactic sugar for <code class="highlighter-rouge">$h[$k]</code>. But it really isn’t (and can’t) be that simple. <code class="highlighter-rouge">$k</code> may not only be a key inside hashtable - it may as well be a property, like <code class="highlighter-rouge">Count</code> or a method like <code class="highlighter-rouge">ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
+<p>At a first glance, I would think that the form <code class="language-plaintext highlighter-rouge">$h.$k</code> would be just a syntactic sugar for <code class="language-plaintext highlighter-rouge">$h[$k]</code>. But it really isn’t (and can’t) be that simple. <code class="language-plaintext highlighter-rouge">$k</code> may not only be a key inside hashtable - it may as well be a property, like <code class="language-plaintext highlighter-rouge">Count</code> or a method like <code class="language-plaintext highlighter-rouge">ContainsKey</code>. So underneath, powershell has to do some really time-consuming stuff, invoking reflection, dynamics, and what not - just to get you a value from hashtable.</p>
 
-<p>The conclusion is simple: if you know you’re working with a potentially big hashtable, don’t go for shortcuts and use plain old <code class="highlighter-rouge">$h[$k]</code>. But if you’re not in a tight loop - just go with what you think is more readable.</p>
+<p>The conclusion is simple: if you know you’re working with a potentially big hashtable, don’t go for shortcuts and use plain old <code class="language-plaintext highlighter-rouge">$h[$k]</code>. But if you’re not in a tight loop - just go with what you think is more readable.</p>
 
 <p>Reference:</p>
 <ul>
-  <li><a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="highlighter-rouge">Measure-Command</code></a></li>
+  <li><a href="https://technet.microsoft.com/en-us/library/ee176899.aspx"><code class="language-plaintext highlighter-rouge">Measure-Command</code></a></li>
   <li>There is also 
 <a href="http://stackoverflow.com/questions/7523143/powershell-2-and-net-optimize-for-extremely-large-hash-tables">a discussion on powershell hashtable insert</a>.</li>
 </ul>
@@ -332,17 +334,32 @@ enumerating 10000 items by enumerator          00:00:00.1173057     1
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

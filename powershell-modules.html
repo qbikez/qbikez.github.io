@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -155,14 +157,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Require">Project site</a>
 <i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Require">Powershell Gallery</a></p>
 
-<p>Module installation and loading in one simple command: <code class="highlighter-rouge">require Some-Module</code>.</p>
+<p>Module installation and loading in one simple command: <code class="language-plaintext highlighter-rouge">require Some-Module</code>.</p>
 
 <h3 id="newtonsoftjson">Newtonsoft.Json</h3>
 
 <p class="project-info"><i class="fa fa-github" aria-hidden="true"></i><a href="https://github.com/qbikez/ps-entropy/tree/master/src/Newtonsoft.Json">Project site</a>
 <i class="fa fa-terminal" aria-hidden="true"></i><a href="https://www.powershellgallery.com/packages/Newtonsoft.Json">Powershell Gallery</a></p>
 
-<p>A wrapper for <code class="highlighter-rouge">Newtonsoft.Json</code> library serialization.</p>
+<p>A wrapper for <code class="language-plaintext highlighter-rouge">Newtonsoft.Json</code> library serialization.</p>
 
 <h3 id="beam">Beam</h3>
 
@@ -200,17 +202,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"

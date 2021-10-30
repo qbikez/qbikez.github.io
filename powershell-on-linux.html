@@ -35,7 +35,9 @@
 
     <!-- [[! mermaid ]] -->
     <link rel="stylesheet" href="//unpkg.com/mermaid@7.0.5/dist/mermaid.dark.min.css">
-
+    
+    <!-- [[! wasabi ]] -->
+    <link href="/assets/css/wasabi.css" rel="stylesheet">
     <!-- [[! Ghost outputs important style and meta data with this tag ]] -->
         <link rel="canonical" href="/" />
     <meta name="referrer" content="origin" />
@@ -144,7 +146,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p>The installation (here, for Ubuntu 14.04) is pretty straightforward:</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.9/powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb
-<span class="nv">$ </span><span class="nb">sudo </span>apt-get install libunwind8 libicu52
+<span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>libunwind8 libicu52
 <span class="nv">$ </span><span class="nb">sudo </span>dpkg <span class="nt">-i</span> powershell_6.0.0-alpha.9-1ubuntu1.14.04.1_amd64.deb</code></pre></figure>
 
 <p>So now, I can do this:</p>
@@ -163,48 +165,48 @@ hello world!</code></pre></figure>
 <h1 id="what-works">What works?</h1>
 
 <blockquote>
-  <p>Note: This is PowerShell <code class="highlighter-rouge">v6.0.0-alpha.9</code>, so you can expect “Alpha-quality” and “things won’t work”.</p>
+  <p>Note: This is PowerShell <code class="language-plaintext highlighter-rouge">v6.0.0-alpha.9</code>, so you can expect “Alpha-quality” and “things won’t work”.</p>
 </blockquote>
 
 <p>Let’s take a look at available preinstalled modules:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Get-Module -ListAvailable
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="n">PS</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Get-Module</span><span class="w"> </span><span class="nt">-ListAvailable</span><span class="w">
 
-    Directory: /opt/microsoft/powershell/6.0.0-alpha.9/Modules
+    </span><span class="n">Directory:</span><span class="w"> </span><span class="nx">/opt/microsoft/powershell/6.0.0-alpha.9/Modules</span><span class="w">
 
 
-ModuleType Version    Name                                ExportedCommands
----------- -------    ----                                ----------------
-Manifest   1.0.1.0    Microsoft.PowerShell.Archive        <span class="o">{</span><span class="nb">Compress-Archive</span>, <span class="nb">Expand-Archive</span><span class="o">}</span>
-Manifest   3.0.0.0    Microsoft.PowerShell.Host           <span class="o">{</span><span class="nb">Start-Transcript</span>, <span class="nb">Stop-Transcript</span><span class="o">}</span>
-Manifest   3.1.0.0    Microsoft.PowerShell.Management     <span class="o">{</span><span class="nb">Add-Content</span>, <span class="nb">Clear-Content</span>, <span class="nb">Clear-ItemProperty</span>, Join-Path...<span class="o">}</span>
-Manifest   3.0.0.0    Microsoft.PowerShell.Security       <span class="o">{</span><span class="nb">Get-Credential</span>, <span class="nb">Get-ExecutionPolicy</span>, <span class="nb">Set-ExecutionPolicy</span>, ConvertFrom-SecureString...<span class="o">}</span>
-Manifest   3.1.0.0    Microsoft.PowerShell.Utility        <span class="o">{</span><span class="nb">Format-List</span>, <span class="nb">Format-Custom</span>, <span class="nb">Format-Table</span>, Format-Wide...<span class="o">}</span>
-Binary     1.0.0.1    PackageManagement                   <span class="o">{</span>Find-Package, Get-Package, Get-PackageProvider, Get-PackageSource...<span class="o">}</span>
-Script     3.3.9      Pester                              <span class="o">{</span>Describe, Context, It, Should...<span class="o">}</span>
-Script     1.0.0.1    PowerShellGet                       <span class="o">{</span>Install-Module, Find-Module, Save-Module, Update-Module...<span class="o">}</span>
-Script     0.0        PSDesiredStateConfiguration         <span class="o">{</span>IsHiddenResource, StrongConnect, <span class="nb">Write</span>-MetaConfigFile, Get-InnerMostErrorRecord...<span class="o">}</span>
-Script     1.2        PSReadLine                          <span class="o">{</span>Get-PSReadlineKeyHandler, <span class="nb">Set</span>-PSReadlineKeyHandler, Remove-PSReadlineKeyHandler, Get-PSReadlineO...</code></pre></figure>
+</span><span class="n">ModuleType</span><span class="w"> </span><span class="nx">Version</span><span class="w">    </span><span class="nx">Name</span><span class="w">                                </span><span class="nx">ExportedCommands</span><span class="w">
+</span><span class="o">----------</span><span class="w"> </span><span class="o">-------</span><span class="w">    </span><span class="o">----</span><span class="w">                                </span><span class="o">----------------</span><span class="w">
+</span><span class="n">Manifest</span><span class="w">   </span><span class="nx">1.0.1.0</span><span class="w">    </span><span class="nx">Microsoft.PowerShell.Archive</span><span class="w">        </span><span class="p">{</span><span class="n">Compress-Archive</span><span class="p">,</span><span class="w"> </span><span class="nx">Expand-Archive</span><span class="p">}</span><span class="w">
+</span><span class="n">Manifest</span><span class="w">   </span><span class="nx">3.0.0.0</span><span class="w">    </span><span class="nx">Microsoft.PowerShell.Host</span><span class="w">           </span><span class="p">{</span><span class="n">Start-Transcript</span><span class="p">,</span><span class="w"> </span><span class="nx">Stop-Transcript</span><span class="p">}</span><span class="w">
+</span><span class="n">Manifest</span><span class="w">   </span><span class="nx">3.1.0.0</span><span class="w">    </span><span class="nx">Microsoft.PowerShell.Management</span><span class="w">     </span><span class="p">{</span><span class="n">Add-Content</span><span class="p">,</span><span class="w"> </span><span class="nx">Clear-Content</span><span class="p">,</span><span class="w"> </span><span class="nx">Clear-ItemProperty</span><span class="p">,</span><span class="w"> </span><span class="nx">Join-Path...</span><span class="p">}</span><span class="w">
+</span><span class="n">Manifest</span><span class="w">   </span><span class="nx">3.0.0.0</span><span class="w">    </span><span class="nx">Microsoft.PowerShell.Security</span><span class="w">       </span><span class="p">{</span><span class="n">Get-Credential</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-ExecutionPolicy</span><span class="p">,</span><span class="w"> </span><span class="nx">Set-ExecutionPolicy</span><span class="p">,</span><span class="w"> </span><span class="nx">ConvertFrom-SecureString...</span><span class="p">}</span><span class="w">
+</span><span class="n">Manifest</span><span class="w">   </span><span class="nx">3.1.0.0</span><span class="w">    </span><span class="nx">Microsoft.PowerShell.Utility</span><span class="w">        </span><span class="p">{</span><span class="n">Format-List</span><span class="p">,</span><span class="w"> </span><span class="nx">Format-Custom</span><span class="p">,</span><span class="w"> </span><span class="nx">Format-Table</span><span class="p">,</span><span class="w"> </span><span class="nx">Format-Wide...</span><span class="p">}</span><span class="w">
+</span><span class="n">Binary</span><span class="w">     </span><span class="nx">1.0.0.1</span><span class="w">    </span><span class="nx">PackageManagement</span><span class="w">                   </span><span class="p">{</span><span class="n">Find-Package</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-Package</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-PackageProvider</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-PackageSource...</span><span class="p">}</span><span class="w">
+</span><span class="n">Script</span><span class="w">     </span><span class="nx">3.3.9</span><span class="w">      </span><span class="nx">Pester</span><span class="w">                              </span><span class="p">{</span><span class="n">Describe</span><span class="p">,</span><span class="w"> </span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">It</span><span class="p">,</span><span class="w"> </span><span class="nx">Should...</span><span class="p">}</span><span class="w">
+</span><span class="n">Script</span><span class="w">     </span><span class="nx">1.0.0.1</span><span class="w">    </span><span class="nx">PowerShellGet</span><span class="w">                       </span><span class="p">{</span><span class="n">Install-Module</span><span class="p">,</span><span class="w"> </span><span class="nx">Find-Module</span><span class="p">,</span><span class="w"> </span><span class="nx">Save-Module</span><span class="p">,</span><span class="w"> </span><span class="nx">Update-Module...</span><span class="p">}</span><span class="w">
+</span><span class="n">Script</span><span class="w">     </span><span class="nx">0.0</span><span class="w">        </span><span class="nx">PSDesiredStateConfiguration</span><span class="w">         </span><span class="p">{</span><span class="n">IsHiddenResource</span><span class="p">,</span><span class="w"> </span><span class="nx">StrongConnect</span><span class="p">,</span><span class="w"> </span><span class="nx">Write-MetaConfigFile</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-InnerMostErrorRecord...</span><span class="p">}</span><span class="w">
+</span><span class="n">Script</span><span class="w">     </span><span class="nx">1.2</span><span class="w">        </span><span class="nx">PSReadLine</span><span class="w">                          </span><span class="p">{</span><span class="n">Get-PSReadlineKeyHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">Set-PSReadlineKeyHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">Remove-PSReadlineKeyHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">Get-PSReadlineO...</span></code></pre></figure>
 
 <p>Note that PowerShellGet is available, so you should be able to install modules from <a href="http://powershellgallery.com">Powershell Gallery</a>:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Install-Module PathUtils</code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="n">PS</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Install-Module</span><span class="w"> </span><span class="nx">PathUtils</span></code></pre></figure>
 
 <p>But this seem to be broken for now:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">    PackageManagement\Install-Package : Could not <span class="nb">compare</span> <span class="s2">"6.0.0-alpha"</span> to <span class="s2">"5.0"</span><span class="nb">.</span> Error:
-    <span class="s2">"Cannot convert value "</span>5.0<span class="s2">" to type "</span>System.Management.Automation.SemanticVersion<span class="s2">". Error:
-    "</span>Cannot <span class="k">process </span>argument because the value of argument <span class="s2">"version"</span> is not valid. Change the value of the <span class="s2">"version"</span> argument and run the operation again.</code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="w">    </span><span class="n">PackageManagement\Install-Package</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">Could</span><span class="w"> </span><span class="nx">not</span><span class="w"> </span><span class="nx">compare</span><span class="w"> </span><span class="s2">"6.0.0-alpha"</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="s2">"5.0"</span><span class="o">.</span><span class="w"> </span><span class="nx">Error:</span><span class="w">
+    </span><span class="s2">"Cannot convert value "</span><span class="mf">5.0</span><span class="s2">" to type "</span><span class="n">System.Management.Automation.SemanticVersion</span><span class="s2">". Error:
+    "</span><span class="nx">Cannot</span><span class="w"> </span><span class="nx">process</span><span class="w"> </span><span class="nx">argument</span><span class="w"> </span><span class="nx">because</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">argument</span><span class="w"> </span><span class="s2">"version"</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">not</span><span class="w"> </span><span class="nx">valid.</span><span class="w"> </span><span class="nx">Change</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="s2">"version"</span><span class="w"> </span><span class="nx">argument</span><span class="w"> </span><span class="nx">and</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">operation</span><span class="w"> </span><span class="nx">again.</span></code></pre></figure>
 
 <p>There already is a <a href="https://github.com/bmanikm/PowerShell/commit/97eb76cf9841faf1754028842ee5a1eb11516538">fix for this particular problem</a>. If you want to use that patch:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nv">$ </span><span class="nb">sudo cp</span> /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1 /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak
-<span class="nv">$ </span><span class="nb">sudo wget </span>https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1 -O /opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="err">$</span><span class="w"> </span><span class="n">sudo</span><span class="w"> </span><span class="nx">cp</span><span class="w"> </span><span class="nx">/opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</span><span class="w"> </span><span class="nx">/opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1.bak</span><span class="w">
+</span><span class="err">$</span><span class="w"> </span><span class="n">sudo</span><span class="w"> </span><span class="nx">wget</span><span class="w"> </span><span class="nx">https://raw.githubusercontent.com/bmanikm/PowerShell/97eb76cf9841faf1754028842ee5a1eb11516538/src/Modules/Shared/PowerShellGet/PSModule.psm1</span><span class="w"> </span><span class="nt">-O</span><span class="w"> </span><span class="nx">/opt/microsoft/powershell/6.0.0-alpha.9/Modules/PowerShellGet/PSModule.psm1</span></code></pre></figure>
 
-<p>And voila, <code class="highlighter-rouge">Install-Module</code> works.</p>
+<p>And voila, <code class="language-plaintext highlighter-rouge">Install-Module</code> works.</p>
 
 <blockquote>
-  <p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code class="highlighter-rouge">Import-Module PathUtils</code> will work, whereas <code class="highlighter-rouge">Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
+  <p>Watch out: Unix is case-sensitive! Although Powershell is not, you have to use the right casing of module names. So <code class="language-plaintext highlighter-rouge">Import-Module PathUtils</code> will work, whereas <code class="language-plaintext highlighter-rouge">Import-Module pathutils</code> will fail. Also, the name of the psd1 file has to match exactly the name of the module (this is important for module maintainers).</p>
 </blockquote>
 
 <h1 id="open-source-everything">Open source everything</h1>
@@ -236,7 +238,7 @@ But the fact that I can now look into PS source code and see, how they do things
 
 <p>So, you will be able to do something like:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="nb">PS</span><span class="o">&gt;</span> Invoke-Command -ComputerName MyLinux <span class="o">{</span> wtite-host <span class="s2">"this is me executing remotely"</span> <span class="o">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="n">PS</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Invoke-Command</span><span class="w"> </span><span class="nt">-ComputerName</span><span class="w"> </span><span class="nx">MyLinux</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">wtite-host</span><span class="w"> </span><span class="s2">"this is me executing remotely"</span><span class="w"> </span><span class="p">}</span></code></pre></figure>
 
 <p>And that will work over SSH, without the struggle of setting up WINRM.</p>
 
@@ -339,17 +341,32 @@ But the fact that I can now look into PS source code and see, how they do things
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2017</section>
+            <section class="copyright"><a href="/author/qbik">qbik</a> @ <a href="/">Heavy Metal Dev</a> &copy; 2021</section>
             <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/biomadeira/jasper">Jasper</a></section>
         </footer>
     </div>
     <script type="text/javascript" src="/assets/js/index.js"></script>
 
+    <!-- [[! mermaid - markdown graphs ]] -->
     <script src="/assets/js/mermaid.js"></script>
     <script>$(document).ready(function() {
         mermaid.init(undefined, ".language-mermaid");
     });</script>
 
+    <!-- [[! wasabi - directory structure ]] -->
+   
+<script src="/assets/js/wasabi.js"></script>
+
+<script>
+  var nodes = document.getElementsByClassName("language-wasabi");
+  while(nodes.length > 0) {
+    // source code is wrapped in <pre>
+    var srcNode = nodes[0].parentNode;
+    var myProject = new Wasabi.Project(srcNode);
+    myProject.replace();    
+  }
+  
+</script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"
