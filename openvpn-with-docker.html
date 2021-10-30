@@ -330,8 +330,12 @@ push "route 172.17.0.0 255.255.0.0"
             <div>
                 <applause-button style="width: 58px; height: 58px; position: absolute; top: -29px; left: 50%; margin-left: -29px;"
                     color=rgb(79,177,186)
-                    url=http://heavymetaldev.com/openvpn-with-docker >
+                    url=http://heavymetaldev.com/openvpn-with-docker 
+                >
                 </applause-button>
+                <script>
+                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); });
+                </script>
             </div>
             
             <!-- Everything inside the #author tags pulls data from the author -->

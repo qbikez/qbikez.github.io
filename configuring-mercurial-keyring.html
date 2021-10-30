@@ -222,8 +222,12 @@ bitbucket.org.username = qbik
             <div>
                 <applause-button style="width: 58px; height: 58px; position: absolute; top: -29px; left: 50%; margin-left: -29px;"
                     color=rgb(79,177,186)
-                    url=http://heavymetaldev.com/configuring-mercurial-keyring >
+                    url=http://heavymetaldev.com/configuring-mercurial-keyring 
+                >
                 </applause-button>
+                <script>
+                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); });
+                </script>
             </div>
             
             <!-- Everything inside the #author tags pulls data from the author -->
