@@ -275,12 +275,7 @@ Allows the specified user to publish website through webdeploy
                 <script>
                     document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { 
                         window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); 
-                        ga('send', {
-                            hitType: 'event',
-                            eventCategory: 'praise',
-                            eventAction: 'clap',
-                            eventLabel: 'clapped!'
-                        });
+                        gtag('event', 'clap');
                     });
                 </script>
             </div>
@@ -405,9 +400,22 @@ Allows the specified user to publish website through webdeploy
 </script>
     <!-- Add Google Analytics  -->
     	 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NC55WVG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-62540719-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-62540719-1');
+</script>
+
 <!-- End Google Tag Manager (noscript) -->
+<script>
+</script>
 
 <!-- appinsights -->
 <script type="text/javascript">
