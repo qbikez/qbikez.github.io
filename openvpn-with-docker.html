@@ -334,7 +334,15 @@ push "route 172.17.0.0 255.255.0.0"
                 >
                 </applause-button>
                 <script>
-                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); });
+                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { 
+                        window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); 
+                        ga('send', {
+                            hitType: 'event',
+                            eventCategory: 'praise',
+                            eventAction: 'clap',
+                            eventLabel: 'clapped!'
+                        });
+                    });
                 </script>
             </div>
             
@@ -386,12 +394,12 @@ push "route 172.17.0.0 255.255.0.0"
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
             })();
         </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="https://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
     </div>
 
             
@@ -406,7 +414,7 @@ push "route 172.17.0.0 255.255.0.0"
 
     <!-- [[! next_post ]] -->
     
-        <a class="read-next-story no-cover" href="/import-resources-to-terraform">
+        <a class="read-next-story " style="background-image: url(/assets/images/future-mars.jpg)" href="/import-resources-to-terraform">
             <section class="post">
                 <h2>How to: import resources into terraform</h2>
                 <p>So you'd like to start using infrastructure as code, but have a bunch of existing...</p>

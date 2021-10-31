@@ -241,7 +241,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 >
                 </applause-button>
                 <script>
-                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); });
+                    document.getElementsByTagName('applause-button')[0].addEventListener("clapped", () => { 
+                        window.appInsights.trackEvent({ name: "clap", path: window.location.pathname }); 
+                        ga('send', {
+                            hitType: 'event',
+                            eventCategory: 'praise',
+                            eventAction: 'clap',
+                            eventLabel: 'clapped!'
+                        });
+                    });
                 </script>
             </div>
             
