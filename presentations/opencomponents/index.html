@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Reveal JS presentation</title>
+  <title>OpenComponents</title>
 
   <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
   <meta name="author" content="Hakim El Hattab">
@@ -29,15 +29,13 @@
 	
 	
 	
-  <link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
-  
 	
 
 
 
   <!-- Revealjs Theme -->
   
-  <link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/beige.css" id="theme">
+  <link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/black.css" id="theme">
   
   
 
@@ -51,8 +49,17 @@
 
    <!-- css list -->
 	
+  <link rel="stylesheet" href="presentation.css">
+  
 
    
+<style>
+  :root {
+     --r-block-margin: 0px 0px 0px 0px;;
+        
+  }
+</style>
+
 
 </head>
 
@@ -69,10 +76,18 @@
 
 
     
-        <section >
+        <section data-layout=":title_main"data-text="&lt;!-- .slide: data-layout=&#34;:title_main&#34; --&gt;
+
+# Open Components
+
+## A Micro Frontend Framework
+
+Jakub Pawłowski" >
             
-            <h1>Open Components</h1>
-<h2>A micro-frontend framework</h2>
+            <!-- .slide: data-layout=":title_main" -->
+<h1>Open Components</h1>
+<h2>A Micro Frontend Framework</h2>
+<p>Jakub Pawłowski</p>
 
             </section>
     
@@ -80,25 +95,269 @@
 
 
     
-        <section >
+    <section>
+        <section data-text="# Micro Frontends" >
+            <h1>Micro Frontends</h1>
+
+            </section>
+        
+            <section data-theme="dark"data-text="&lt;!-- .slide: data-theme=&#34;dark&#34; --&gt;
+
+## App Architecture
+
+:::img{style=&#34;width:150%&#34;}
+![monolith](img/the-monolith.drawio.svg){.fragment style=&#34;height:100%; margin-right:5%&#34;}
+![front-and-back](img/front-and-back.drawio.svg){.fragment style=&#34;height:100%; margin-right:5%&#34;}
+![microservices](img/microservices.drawio.svg){.fragment style=&#34;height:100%;&#34; data-id=&#34;img&#34;}
+:::
+
+
+note:
+* split image into 3, use draw.io" >
+                <!-- .slide: data-theme="dark" -->
+<h2>App Architecture</h2>
+<div style="width:150%" class="img">
+<p><img src="img/the-monolith.drawio.svg" alt="monolith" class="fragment" style="height:100%; margin-right:5%">
+<img src="img/front-and-back.drawio.svg" alt="front-and-back" class="fragment" style="height:100%; margin-right:5%">
+<img src="img/microservices.drawio.svg" alt="microservices" class="fragment" style="height:100%;" data-id="img"></p>
+</div>
+<aside class="notes"></aside>
+<ul>
+<li>split image into 3, use <a href="http://draw.io">draw.io</a></li>
+</ul>
+
+            </section>
+        
+            <section data-theme="dark"data-text="&lt;!--.slide: data-theme=&#34;dark&#34;  --&gt;
+
+## Micro-everything
+
+## 
+
+:::img{style=&#34;height:120%; margin-top:-5%; display:flex; justify-content: center;&#34; data-id=&#34;img&#34;}
+![monolith-frontback-microservices](img/microfrontends.drawio.svg){style=&#34;height: 100%&#34;}
+:::
+
+note: ![monolith-frontback-microservices](img/verticals-headline.png)" >
+                <!--.slide: data-theme="dark"  -->
+<h2>Micro-everything</h2>
+<h2></h2>
+<div style="height:120%; margin-top:-5%; display:flex; justify-content: center;" data-id="img" class="img">
+<p><img src="img/microfrontends.drawio.svg" alt="monolith-frontback-microservices" style="height: 100%"></p>
+</div>
+<aside class="notes"> <img src="img/verticals-headline.png" alt="monolith-frontback-microservices"></aside>
+
+            </section>
+        
+            <section data-text=":::wrapper1 {style=&#34;display:flex; justify-content: center&#34;}
+:::wrapper2 {style=&#34;width:90%&#34;}
+
+:::img no-wrap {style=&#34;width=100%; display:flex; justify-content: right;&#34;}
+![three-teams](img/three-teams.png){style=&#34;width:100%&#34;}
+:::
+
+:::credits no-wrap {style=&#34;font-size:0.5em; display: flex; justify-content: right;&#34;}
+https://micro-frontends.org/
+:::
+
+:::
+:::" >
+                <div style="display:flex; justify-content: center" class="wrapper1">
+<div style="width:90%" class="wrapper2">
+<div style="width=100%; display:flex; justify-content: right;" class="img no-wrap">
+<p><img src="img/three-teams.png" alt="three-teams" style="width:100%"></p>
+</div>
+<div style="font-size:0.5em; display: flex; justify-content: right;" class="credits no-wrap">
+<p><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></p>
+</div>
+</div>
+</div>
+
+            </section>
+        
+            <section data-layout="guestline/058_Basic-Text,-side-title---dark" data-extractbackground="false"data-text="&lt;!-- .slide: data-layout=&#34;guestline/058_Basic-Text,-side-title---dark&#34; data-extractbackground=&#34;false&#34; --&gt;
+
+## Autonomy
+
+:::img fragment{style=&#34;width:130%; display: flex; justify-content: center; margin-top: 5%;&#34;}
+![oc-composition](img/autonomy.drawio.svg){style=&#34;width:95%; margin-top:-20%; margin-left: -20%&#34;}
+:::
+
+note:
+* own tech stack
+* self contained
+* customer focused
+* has a mission" >
+                <!-- .slide: data-layout="guestline/058_Basic-Text,-side-title---dark" data-extractbackground="false" -->
+<h2>Autonomy</h2>
+<div style="width:130%; display: flex; justify-content: center; margin-top: 5%;" class="img fragment">
+<p><img src="img/autonomy.drawio.svg" alt="oc-composition" style="width:95%; margin-top:-20%; margin-left: -20%"></p>
+</div>
+<aside class="notes"></aside>
+<ul>
+<li>own tech stack</li>
+<li>self contained</li>
+<li>customer focused</li>
+<li>has a mission</li>
+</ul>
+
+            </section>
+        
+            <section data-text="# Micro Frontends
+
+## Advantages
+
+* team autonomy
+* reduced scope
+* experiment &amp; rework
+* reusability (potentially)
+* breaking down the monolith
+
+note:
+  * http &amp; cacheable {.fragment}
+
+  * immutability {.fragment}
+  * reusability (potentially) {.fragment}
+
+  * small, autonomous teams
+  * customer focused" >
+                <h1>Micro Frontends</h1>
+<h2>Advantages</h2>
+<ul>
+<li>team autonomy</li>
+<li>reduced scope</li>
+<li>experiment &amp; rework</li>
+<li>reusability (potentially)</li>
+<li>breaking down the monolith</li>
+</ul>
+<aside class="notes"></aside>
+<ul>
+<li class="fragment">
+<p>http &amp; cacheable</p>
+</li>
+<li class="fragment">
+<p>immutability</p>
+</li>
+<li class="fragment">
+<p>reusability (potentially)</p>
+</li>
+<li>
+<p>small, autonomous teams</p>
+</li>
+<li>
+<p>customer focused</p>
+</li>
+</ul>
+
+            </section>
+        
+            <section data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide"data-text="&lt;!-- .slide: data-layout=&#34;guestline/046_Basic-Text---2-Seperate-columns---Dark---wide&#34; --&gt;
+
+# Challenges
+
+## Yes,
+
+* own tech stach {.fragment data-fragment-index=&#34;1&#34;}
+* independent deployments {.fragment data-fragment-index=&#34;2&#34;}
+* self contained {.fragment data-fragment-index=&#34;3&#34;}
+* customer focused {.fragment data-fragment-index=&#34;4&#34;}
+
+## But...
+
+* library hell {.fragment data-fragment-index=&#34;1&#34;}
+* versioning {.fragment data-fragment-index=&#34;2&#34;}
+* coherent styling {.fragment data-fragment-index=&#34;3&#34;}
+* component interaction {.fragment data-fragment-index=&#34;4&#34;}
+
+note:
+
+# Micro Frontends
+## Challenges
+* coherent styling {.fragment}
+* dependencies &amp; versioning {.fragment}
+* interaction between components {.fragment}" >
+                <!-- .slide: data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide" -->
+<h1>Challenges</h1>
+<h2>Yes,</h2>
+<ul>
+<li class="fragment" data-fragment-index="1">own tech stach</li>
+<li class="fragment" data-fragment-index="2">independent deployments</li>
+<li class="fragment" data-fragment-index="3">self contained</li>
+<li class="fragment" data-fragment-index="4">customer focused</li>
+</ul>
+<h2>But…</h2>
+<ul>
+<li class="fragment" data-fragment-index="1">library hell</li>
+<li class="fragment" data-fragment-index="2">versioning</li>
+<li class="fragment" data-fragment-index="3">coherent styling</li>
+<li class="fragment" data-fragment-index="4">component interaction</li>
+</ul>
+<aside class="notes"></aside>
+<h1>Micro Frontends</h1>
+<h2>Challenges</h2>
+<ul>
+<li class="fragment">coherent styling</li>
+<li class="fragment">dependencies &amp; versioning</li>
+<li class="fragment">interaction between components</li>
+</ul>
+
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+        <section data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide"data-text="&lt;!-- .slide: data-layout=&#34;guestline/046_Basic-Text---2-Seperate-columns---Dark---wide&#34; --&gt;
+
+## Composition
+
+##
+
+:::wrapper1 {style=&#34;display:flex; justify-content: center&#34;}
+:::wrapper2 {style=&#34;width:90%&#34;}
+
+:::img no-wrap {style=&#34;width=100%; margin-top: -100px; display:flex; justify-content: right;&#34;}
+![three-teams](img/three-teams.png){style=&#34;width:100%&#34;}
+:::
+
+:::credits no-wrap {style=&#34;font-size:0.5em; display: flex; justify-content: right;&#34;}
+https://micro-frontends.org/
+:::
+
+:::
+:::
+
+### How to implement?{.fragment}
+
+* separate pages, interlinked{.fragment}
+* iframes{.fragment}
+* Server Side Includes{.fragment}
+* Web Components{.fragment}
+* custom frameworks{.fragment}" >
             
-            <h1>Agenda</h1>
+            <!-- .slide: data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide" -->
+<h2>Composition</h2>
+<h2></h2>
+<div style="display:flex; justify-content: center" class="wrapper1">
+<div style="width:90%" class="wrapper2">
+<div style="width=100%; margin-top: -100px; display:flex; justify-content: right;" class="img no-wrap">
+<p><img src="img/three-teams.png" alt="three-teams" style="width:100%"></p>
+</div>
+<div style="font-size:0.5em; display: flex; justify-content: right;" class="credits no-wrap">
+<p><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></p>
+</div>
+</div>
+</div>
+<h3 class="fragment">How to implement?</h3>
 <ul>
-<li>Microfrontends
-<ul>
-<li>a microservices approach to UI</li>
-<li>advantages &amp; challenges</li>
-<li>examples</li>
-</ul>
-</li>
-<li>open components - a microfrontend framework
-<ul>
-<li>architecture</li>
-<li>anatomy of a component</li>
-<li>data flow</li>
-</ul>
-</li>
-<li>demo</li>
+<li class="fragment">separate pages, interlinked</li>
+<li class="fragment">iframes</li>
+<li class="fragment">Server Side Includes</li>
+<li class="fragment">Web Components</li>
+<li class="fragment">custom frameworks</li>
 </ul>
 
             </section>
@@ -108,55 +367,278 @@
 
     
     <section>
-        <section >
-            <h1>Microservices and UI</h1>
+        <section data-layout=":quote"data-text="&lt;!-- .slide: data-layout=&#34;:quote&#34; --&gt;
+
+# OpenComponents
+
+##
+
+:::
+OpenComponents is an open-source, **&#34;batteries included&#34;** micro frontends framework
+
+:::
+
+notes:
+
+https://github.com/opencomponents/oc" >
+            <!-- .slide: data-layout=":quote" -->
+<h1>OpenComponents</h1>
+<h2></h2>
+<div class="">
+<p>OpenComponents is an open-source, <strong>“batteries included”</strong> micro frontends framework</p>
+</div>
+<p>notes:</p>
+<p><a href="https://github.com/opencomponents/oc">https://github.com/opencomponents/oc</a></p>
 
             </section>
         
-            <section >
-                <h2>evolution of approaches</h2>
-<p><img src="img/monolith-frontback-microservices.png" alt="monolith-frontback-microservices"></p>
-<p style="font-size:0.5em; text-align:right; margin-top:-40px; "><em><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></em></p>
+            <section data-text="# Composition" >
+                <h1>Composition</h1>
 
             </section>
         
-            <section >
-                <h2>Micro frontends</h2>
-<p><img src="img/verticals-headline.png" alt="monolith-frontback-microservices"></p>
-<p style="font-size:0.5em; text-align:right; margin-top:-40px; "><em><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></em></p>
+            <section data-text=":::img{.no-wrap style=&#34;width:160%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px&#34;}
+![oc-artictecture](img/oc-architecture-3.drawio.svg){style=&#34;width:80%; margin-top:-5%&#34;}
+:::" >
+                <div class="no-wrap img" style="width:160%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px">
+<p><img src="img/oc-architecture-3.drawio.svg" alt="oc-artictecture" style="width:80%; margin-top:-5%"></p>
+</div>
 
             </section>
         
-            <section >
-                <h1>Advantages</h1>
+            <section data-layout="guestline/024_Basic-bullets-large-text---blue-swoosh---dark"data-text="&lt;!-- .slide: data-layout=&#34;guestline/024_Basic-bullets-large-text---blue-swoosh---dark&#34; --&gt;
+
+## Component structure
+
+## 
+
+:::img{.no-wrap style=&#34;width:140%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px&#34;}
+![oc-composition](img/oc-parts-1.svg){.no-embedd style=&#34;width:80%; margin-top:-5%&#34;}
+:::" >
+                <!-- .slide: data-layout="guestline/024_Basic-bullets-large-text---blue-swoosh---dark" -->
+<h2>Component structure</h2>
+<h2></h2>
+<div class="no-wrap img" style="width:140%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px">
+<p><img src="img/oc-parts-1.svg" alt="oc-composition" class="no-embedd" style="width:80%; margin-top:-5%"></p>
+</div>
+
+            </section>
+        
+            <section data-layout="guestline/024_Basic-bullets-large-text---blue-swoosh---dark"data-text="&lt;!-- .slide: data-layout=&#34;guestline/024_Basic-bullets-large-text---blue-swoosh---dark&#34; --&gt;
+
+## Component structure
+
+## 
+
+:::img{.no-wrap style=&#34;width:140%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px&#34;}
+![oc-composition](img/oc-parts-2.drawio.svg){style=&#34;width:80%; margin-top:-5%&#34;}
+:::" >
+                <!-- .slide: data-layout="guestline/024_Basic-bullets-large-text---blue-swoosh---dark" -->
+<h2>Component structure</h2>
+<h2></h2>
+<div class="no-wrap img" style="width:140%; display: flex; justify-content: center; margin-top: 20px; margin-left: -140px">
+<p><img src="img/oc-parts-2.drawio.svg" alt="oc-composition" style="width:80%; margin-top:-5%"></p>
+</div>
+
+            </section>
+        
+            <section data-layout="guestline/058_Basic-Text,-side-title---dark" data-extractbackground="false"data-text="
+&lt;!-- .slide: data-layout=&#34;guestline/058_Basic-Text,-side-title---dark&#34; data-extractbackground=&#34;false&#34; --&gt;
+
+## Data flow
+
+:::img{style=&#34;width:120%; display: flex; justify-content: center; margin-top: 5%;&#34;}
+![oc-composition](img/oc-data-flow.svg){style=&#34;width:90%; margin-top:-20%; margin-left: -20%&#34; data-fragments=&#34;g4944|g4957|g5042|g4992|g4978|g4985|g5004|g5011|g5018|g5025&#34;}
+:::" >
+                <!-- .slide: data-layout="guestline/058_Basic-Text,-side-title---dark" data-extractbackground="false" -->
+<h2>Data flow</h2>
+<div style="width:120%; display: flex; justify-content: center; margin-top: 5%;" class="img">
+<p><img src="img/oc-data-flow.svg" alt="oc-composition" style="width:90%; margin-top:-20%; margin-left: -20%" data-fragments="g4944|g4957|g5042|g4992|g4978|g4985|g5004|g5011|g5018|g5025"></p>
+</div>
+
+            </section>
+        
+            <section data-text="## Interaction 
+
+## via Events
+
+:::wrapper{style=&#34;width:120%;&#34;}
+
+:::producer
+```typescript
+// oc-buy-now
+window.oc.events.fire(&#39;webshop:add-to-cart&#39;, {
+  id: &#39;product123&#39;,
+  amount: 1
+});
+```
+:::
+
+:::consumer{style=&#34;margin-top: 40px&#34;}
+```typescript
+// oc-basket
+window.oc.events.on(&#34;webshop:add-to-cart&#34;, (_eventDetails, eventData) =&gt; {
+  const { id, amount } = eventData;
+  handleAddToCart(id, amount);
+});
+```
+:::
+
+:::" >
+                <h2>Interaction</h2>
+<h2>via Events</h2>
+<div style="width:120%;" class="wrapper">
+<div class="producer">
+<pre><code class="language-typescript">// oc-buy-now
+window.oc.events.fire('webshop:add-to-cart', {
+  id: 'product123',
+  amount: 1
+});
+</code></pre>
+</div>
+<div style="margin-top: 40px" class="consumer">
+<pre><code class="language-typescript">// oc-basket
+window.oc.events.on(&quot;webshop:add-to-cart&quot;, (_eventDetails, eventData) =&gt; {
+  const { id, amount } = eventData;
+  handleAddToCart(id, amount);
+});
+</code></pre>
+</div>
+</div>
+
+            </section>
+        
+            <section data-text="## Versioning
+
+##
+
+:::img{.no-wrap style=&#34;width:130%; display: flex; justify-content: center; margin-top: -70px; margin-left: -140px&#34;}
+![oc-artictecture](img/oc-versioning.drawio.svg){style=&#34;width:80%; margin-top:-5%&#34;}
+:::
+" >
+                <h2>Versioning</h2>
+<h2></h2>
+<div class="no-wrap img" style="width:130%; display: flex; justify-content: center; margin-top: -70px; margin-left: -140px">
+<p><img src="img/oc-versioning.drawio.svg" alt="oc-artictecture" style="width:80%; margin-top:-5%"></p>
+</div>
+
+            </section>
+        
+            <section data-text="# Testing in isolation
+
+:::no-wrap {style=&#34;width:120%; display: flex; justify-content: center; margin-top: -150px&#34;}
+
+![oc-registry](img/scr-oc-registry.png){.r-stack .fragment .one-at-a-time}
+
+![skyscanner](img/scr-oc-preview.png){.r-stack .fragment .one-at-a-time}
+
+:::" >
+                <h1>Testing in isolation</h1>
+<div style="width:120%; display: flex; justify-content: center; margin-top: -150px" class="no-wrap">
+<p><img src="img/scr-oc-registry.png" alt="oc-registry" class="r-stack fragment one-at-a-time"></p>
+<p><img src="img/scr-oc-preview.png" alt="skyscanner" class="r-stack fragment one-at-a-time"></p>
+</div>
+
+            </section>
+        
+
+    </section>
+    
+
+
+
+    
+        <section data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide"data-text="&lt;!-- .slide: data-layout=&#34;guestline/046_Basic-Text---2-Seperate-columns---Dark---wide&#34; --&gt;
+
+# Micro frontends
+
+## Challenges
+
+* library hell
+* versioning
+* coherent styling
+* component interaction
+
+## Ingredients
+ 
+* ✅ client-side templates
+* ✅ server-side registry with versioning
+* ⚒️ do it yourself :)
+* ✅ custom events" >
+            
+            <!-- .slide: data-layout="guestline/046_Basic-Text---2-Seperate-columns---Dark---wide" -->
+<h1>Micro frontends</h1>
+<h2>Challenges</h2>
 <ul>
-<li>technology agnostic</li>
-<li>team’s ownership over whole stack</li>
-<li>independent deployments</li>
-<li>reusability (potentially)</li>
-</ul>
-
-            </section>
-        
-            <section >
-                <h2>Challenges</h2>
-<ul>
+<li>library hell</li>
+<li>versioning</li>
 <li>coherent styling</li>
-<li>dependencies &amp; versioning</li>
-<li>interaction between components</li>
+<li>component interaction</li>
+</ul>
+<h2>Ingredients</h2>
+<ul>
+<li>✅ client-side templates</li>
+<li>✅ server-side registry with versioning</li>
+<li>⚒️ do it yourself :)</li>
+<li>✅ custom events</li>
 </ul>
 
             </section>
-        
-            <section >
-                <h2>Composition</h2>
-<p><img src="img/three-teams.png" alt="three-teams"></p>
-<p style="font-size:0.5em; text-align:right; margin-top:-40px; "><em><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></em></p>
+    
+
+
+
+    
+    <section>
+        <section data-text="## Examples" >
+            <h2>Examples</h2>
 
             </section>
         
-            <section >
-                <h2>Real-life examples</h2>
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![guestline](img/scr-dbm.png)" >
+                <!-- .slide: data-layout=":none" -->
+<p><img src="img/scr-dbm.png" alt="guestline"></p>
+
+            </section>
+        
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![guestline](img/scr-rlx.png)" >
+                <!-- .slide: data-layout=":none" -->
+<p><img src="img/scr-rlx.png" alt="guestline"></p>
+
+            </section>
+        
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![guestline](img/scr-roompicker-before.png)" >
+                <!-- .slide: data-layout=":none" -->
+<p><img src="img/scr-roompicker-before.png" alt="guestline"></p>
+
+            </section>
+        
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![guestline](img/scr-roompicker-after.png)" >
+                <!-- .slide: data-layout=":none" -->
+<p><img src="img/scr-roompicker-after.png" alt="guestline"></p>
+
+            </section>
+        
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![opentable](img/scr-opentable.png)" >
+                <!-- .slide: data-layout=":none" -->
+<p><img src="img/scr-opentable.png" alt="opentable"></p>
+
+            </section>
+        
+            <section data-layout=":none"data-text="&lt;!-- .slide: data-layout=&#34;:none&#34; --&gt;
+
+![skyscanner](img/scr-skyscanner.png)" >
+                <!-- .slide: data-layout=":none" -->
 <p><img src="img/scr-skyscanner.png" alt="skyscanner"></p>
 
             </section>
@@ -168,39 +650,82 @@
 
 
     
-    <section>
-        <section >
-            <h1>Open Components</h1>
-<blockquote>
-<p>OpenComponents is an open-source, “batteries included” micro frontends framework</p>
-</blockquote>
+        <section data-text="# Links
 
-            </section>
-        
-            <section >
-                <ul>
-<li>a server-side registry (node.js) + client-side template (unopinionated)</li>
-<li>a redux-like data flow</li>
-<li>CLI to rule them all</li>
+##
+
+* https://opencomponents.github.io/
+  OpenComponents home
+
+* https://micro-frontends.org/
+  A nice introduction to micro frontends
+
+* https://martinfowler.com/articles/micro-frontends.html
+  Martin Fowler&#39;s take on it" >
+            
+            <h1>Links</h1>
+<h2></h2>
+<ul>
+<li>
+<p><a href="https://opencomponents.github.io/">https://opencomponents.github.io/</a>
+OpenComponents home</p>
+</li>
+<li>
+<p><a href="https://micro-frontends.org/">https://micro-frontends.org/</a>
+A nice introduction to micro frontends</p>
+</li>
+<li>
+<p><a href="https://martinfowler.com/articles/micro-frontends.html">https://martinfowler.com/articles/micro-frontends.html</a>
+Martin Fowler’s take on it</p>
+</li>
 </ul>
 
             </section>
-        
-            <section >
-                <h2>Architecture</h2>
-<p><img src="img/oc-composition.svg" alt="oc-composition"></p>
+    
+
+
+
+    
+    <section>
+        <section data-layout="guestline/157_End-slide" data-extractbackground="false"data-text="&lt;!-- .slide: data-layout=&#34;guestline/157_End-slide&#34; data-extractbackground=&#34;false&#34; --&gt;
+
+:::wrapper
+:::{style=&#34;text-align: center; margin-top: -220px;&#34;}
+# Don&#39;t forget
+
+![guestline](img/guestline-logo.png){style=&#34;height: 1em; padding-top: 1em&#34;} Guestline - we&#39;re hiring!{.fragment data-fragment-index=&#34;2&#34; }
+
+![](img/eventory.webp){.fragment data-fragment-index=&#34;1&#34; style=&#34;width: 400px; margin-top: -50px;&#34;}" >
+            <!-- .slide: data-layout="guestline/157_End-slide" data-extractbackground="false" -->
+<div class="wrapper">
+<div style="text-align: center; margin-top: -220px;" class="">
+<h1>Don’t forget</h1>
+<p class="fragment" data-fragment-index="2"><img src="img/guestline-logo.png" alt="guestline" style="height: 1em; padding-top: 1em"> Guestline - we’re hiring!</p>
+<p><img src="img/eventory.webp" alt="" class="fragment" data-fragment-index="1" style="width: 400px; margin-top: -50px;"></p>
+</div>
+</div>
 
             </section>
         
-            <section >
-                <h2>Anatomy of a component</h2>
-<p><img src="img/oc-parts.svg" alt="oc-composition"></p>
+            <section data-layout="guestline/157_End-slide" data-extractbackground="false"data-text="&lt;!-- .slide: data-layout=&#34;guestline/157_End-slide&#34; data-extractbackground=&#34;false&#34; --&gt;
 
-            </section>
-        
-            <section >
-                <h2>Data flow</h2>
-<p><img src="img/oc-component-flow.svg" alt="oc-composition"></p>
+:::wrapper
+:::{style=&#34;text-align: center; margin-top: -220px;&#34;}
+
+# Thank you!
+
+:::links{style=&#34;margin-top:305px&#34;}
+[![twitter](img/twitter.svg){style=&#34;height: 1em; padding-top: 1em&#34;}](https://twitter.com/qbikez) [![twitter](img/github.png){style=&#34;height: 1em; padding-top: 1em&#34;}](https://github.com/qbikez) @qbikez
+:::" >
+                <!-- .slide: data-layout="guestline/157_End-slide" data-extractbackground="false" -->
+<div class="wrapper">
+<div style="text-align: center; margin-top: -220px;" class="">
+<h1>Thank you!</h1>
+<div style="margin-top:305px" class="links">
+<p><a href="https://twitter.com/qbikez"><img src="img/twitter.svg" alt="twitter" style="height: 1em; padding-top: 1em"></a> <a href="https://github.com/qbikez"><img src="img/github.png" alt="twitter" style="height: 1em; padding-top: 1em"></a> @qbikez</p>
+</div>
+</div>
+</div>
 
             </section>
         
@@ -211,35 +736,9 @@
 
 
     
-        <section >
-            
-            <h1>Demo</h1>
-
-            </section>
-    
-
-
-
-    
-        <section >
+        <section data-text="# Questions?" >
             
             <h1>Questions?</h1>
-
-            </section>
-    
-
-
-
-    
-        <section >
-            
-            <h1>References</h1>
-<ul>
-<li><a href="https://www.cuelogic.com/blog/micro-frontends-frameworks">https://www.cuelogic.com/blog/micro-frontends-frameworks</a></li>
-<li><a href="https://micro-frontends.org/">https://micro-frontends.org/</a></li>
-<li><a href="https://opencomponents.github.io/">https://opencomponents.github.io/</a></li>
-<li><a href="https://martinfowler.com/articles/micro-frontends.html">https://martinfowler.com/articles/micro-frontends.html</a></li>
-</ul>
 
             </section>
     
@@ -278,223 +777,291 @@
 
 <script src="libs/reveal.js/4.3.1/plugin/zoom/zoom.js"></script>
 <script src="libs/reveal.js/4.3.1/plugin/search/search.js"></script>
-<script src="libs/reveal.js/4.3.1/plugin/menu/menu.js"></script>
+
 <script src="libs/reveal.js/4.3.1/plugin/chalkboard/plugin.js"></script>
 
 <!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/plugin.js"></script>  -->
 <!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/recorder.js"></script>-->
 <!--	<script src="libs/reveal.js/4.3.1/plugin/audio-slideshow/RecordRTC.js"></script>-->
 
-  
+  <script>
+  const revealOptions = () => {
+    const printPlugins = [
+        RevealNotes,
+        RevealHighlight,
+        RevealMath.MathJax3,
+        RevealAnimate,
+        RevealChalkboard, 
+        RevealEmbedTweet,
+        RevealChart,
+      ];
 
-<script>
-  const printPlugins = [
-      RevealNotes,
-      RevealHighlight,
-      RevealMath.MathJax3,
-      RevealAnimate,
-      RevealChalkboard, 
-			RevealEmbedTweet,
-			RevealChart,
-		];
-
-		const plugins =  [...printPlugins,
-		RevealZoom, 
-		RevealSearch, 
-				RevealMarkdown, 
-				RevealMenu, 
-				RevealFullscreen,
-				RevealAnything,
-				//RevealAudioSlideshow,
-				//RevealAudioRecorder,
-				RevealCustomControls, 
-				// poll
-				// question
-				// seminar
-				Verticator 
-				 ]
-
-
-		// Also available as an ES module, see:
-		// https://revealjs.com/initialization/
-		Reveal.initialize({
-			controls: true,
-      controlsTutorial: true,
-      controlsLayout: 'bottom-right',
-      controlsBackArrows: 'faded',
-      progress: true,
-      slideNumber: false,
-      //#showSlideNumber "all" "print" "speaker"
-      hash: true, //# hash: false,
-      //# respondToHashChanges: true,
-      //# history: false,
-      keyboard: true,
-      //#keyboardCondition: null,
-      overview: true,
-      center: true,
-      touch: true,
-      loop: false,
-      rtl: false,
-      //#navigationMode: 'default', linear grid
-      shuffle: false,
-      fragments: true,
-      fragmentInURL: false,
-      embedded: false,
-      help: true,
-      //#pause: true
-      showNotes: false,
-      autoPlayMedia: false, // TODO fix this to a nullable value
-      //#preloadIframes: null. true false
-      //#autoAnimate: true
-      //#autoAnimateMatcher: null,
-      //#autoAnimateEasing: 'ease',
-      //autoAnimateDuration: 1.0,
-      //#autoAnimateUnmatched: true
-      //#autoAnimateStyles: []
-      autoSlide: 0, // TODO fix this to a falseable value
-      autoSlideStoppable: true,
-      autoSlideMethod: '0',
-      defaultTiming: 120,
-      mouseWheel: false,
-      //#previewLinks: false
-      //#postMessage: true, // TODO : this can cause issues with the vscode api ???
-      //#postMessageEvents: false,
-      //#focusBodyOnPageVisibilityChange: true,
-      transition: 'slide',
-      transitionSpeed: 'default',
-      backgroundTransition: 'fade',
-      //#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
-      //#pdfSeparateFragments: true,
-      //#pdfPageHeightOffset: -1,
-      viewDistance: 3,
-      //#mobileViewDistance: 2,
-      display: 'block',
-      //#hideInactiveCursor: true,
-      //#hideCursorTime: 5000
-
-      // Parallax Background
-      parallaxBackgroundImage: '',
-      parallaxBackgroundSize: '',
-      parallaxBackgroundHorizontal: 0,
-      parallaxBackgroundVertical: 0,
-
-      //Presentation Size
-      width: 960,
-			height: 700,
-			margin: 0.04,
-      minScale: 0.2,
-      maxScale: 2,
-      disableLayout: false,
-
-      audio: {
-        prefix: 'audio/', // audio files are stored in the "audio" folder
-        suffix: '.ogg', // audio files have the ".ogg" ending
-        textToSpeechURL: null, // the URL to the text to speech converter
-        defaultNotes: false, // use slide notes as default for the text to speech converter
-        defaultText: false, // use slide text as default for the text to speech converter
-        advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
-        autoplay: false, // automatically start slideshow
-        defaultDuration: 5, // default duration in seconds if no audio is available
-        defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
-        playerOpacity: 0.05, // opacity value of audio player if unfocused
-        playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
-        startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
-      },
-      
-      chalkboard: { // font-awesome.min.css must be available
-        //src: "chalkboard/chalkboard.json",
-        storage: "chalkboard-demo",
-      },
-      
-			customcontrols: {
-					controls: [
-      						{
-						  id: 'toggle-overview',
-						  title: 'Toggle overview (O)',
-						  icon: '<i class="fa fa-th"></i>',
-						  action: 'Reveal.toggleOverview();'
-						}
-						,
-      {
-        icon: '<i class="fa fa-pen-square"></i>',
-        title: 'Toggle chalkboard (B)',
-        action: 'RevealChalkboard.toggleChalkboard();'
-      },
-      {
-        icon: '<i class="fa fa-pen"></i>',
-        title: 'Toggle notes canvas (C)',
-        action: 'RevealChalkboard.toggleNotesCanvas();'
-      }
-      
-				]
-			},
-			chart: {
-					defaults: { 
-						color: 'lightgray', // color of labels
-						scale: { 
-							beginAtZero: true, 
-							ticks: { stepSize: 1 },
-							grid: { color: "lightgray" } , // color of grid lines
-						},
-					},
-					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
-					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
-					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
-					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
-			},
-			math: {
-				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
-				config: 'TeX-AMS_HTML-full',
-				// pass other options into `MathJax.Hub.Config()`
-				TeX: { Macros: { RR: "{\\bf R}" } }
-				},
-				anything: [ 
-				{
-		className: "plot",
-		defaults: {width:500, height: 500, grid:true},
-		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
-	 },
-	 {
-		className: "chart",  
-		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
-	 },
-	 {
-		className: "anything",
-		initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
-	 },
-					],
-			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
-		});
-			
+      const plugins =  [...printPlugins,
+      RevealZoom, 
+      RevealSearch, 
+          RevealMarkdown,
+          
+          RevealFullscreen,
+          RevealAnything,
+          //RevealAudioSlideshow,
+          //RevealAudioRecorder,
+          
+          // poll
+          // question
+          // seminar
+          Verticator
+           ]
 
 
-	    // Change chalkboard theme : 
-		function changeTheme(input) {
-			var config = {};
-			config.theme = input.value;
-			Reveal.getPlugin("RevealChalkboard").configure(config);
-			input.blur();
-		}
+      // Also available as an ES module, see:
+      // https://revealjs.com/initialization/
+      return {
+        controls: false,
+        controlsTutorial: true,
+        controlsLayout: 'bottom-right',
+        controlsBackArrows: 'faded',
+        progress: true,
+        slideNumber: false,
+        //#showSlideNumber "all" "print" "speaker"
+        hash: true, //# hash: false,
+        //# respondToHashChanges: true,
+        //# history: false,
+        keyboard: true,
+        //#keyboardCondition: null,
+        overview: true,
+        center: false,
+        touch: true,
+        loop: false,
+        rtl: false,
+        //#navigationMode: 'default', linear grid
+        shuffle: false,
+        fragments: true,
+        fragmentInURL: false,
+        embedded: false,
+        help: true,
+        //#pause: true
+        showNotes: true,
+        autoPlayMedia: false, // TODO fix this to a nullable value
+        //#preloadIframes: null. true false
+        //#autoAnimate: true
+        //#autoAnimateMatcher: null,
+        //#autoAnimateEasing: 'ease',
+        //autoAnimateDuration: 1.0,
+        //#autoAnimateUnmatched: true
+        //#autoAnimateStyles: []
+        autoSlide: 0, // TODO fix this to a falseable value
+        autoSlideStoppable: true,
+        autoSlideMethod: '0',
+        defaultTiming: 120,
+        mouseWheel: false,
+        //#previewLinks: false
+        //#postMessage: true, // TODO : this can cause issues with the vscode api ???
+        //#postMessageEvents: false,
+        //#focusBodyOnPageVisibilityChange: true,
+        transition: 'slide',
+        transitionSpeed: 'default',
+        backgroundTransition: 'fade',
+        //#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
+        //#pdfSeparateFragments: true,
+        //#pdfPageHeightOffset: -1,
+        viewDistance: 3,
+        //#mobileViewDistance: 2,
+        display: 'block',
+        //#hideInactiveCursor: true,
+        //#hideCursorTime: 5000
 
-		// // Handle the message inside the webview
-        // window.addEventListener('message', event => {
+        // Parallax Background
+        parallaxBackgroundImage: '',
+        parallaxBackgroundSize: '',
+        parallaxBackgroundHorizontal: 0,
+        parallaxBackgroundVertical: 0,
 
-        //     const message = event.data; // The JSON data our extension sent
+        //Presentation Size
+        width: 1280,
+        height: 720,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2,
+        disableLayout: false,
 
-        //     switch (message.command) {
-        //         case 'refactor':
-        //             Reveal.toggleHelp();
-        //     }
-        // });
-
-		if (window.location.search.match(/print-pdf-now/gi)) {
-      		setTimeout(() => {
-				window.print();
-			  }, 2500);
-			
-    }
+        audio: {
+          prefix: 'audio/', // audio files are stored in the "audio" folder
+          suffix: '.ogg', // audio files have the ".ogg" ending
+          textToSpeechURL: null, // the URL to the text to speech converter
+          defaultNotes: false, // use slide notes as default for the text to speech converter
+          defaultText: false, // use slide text as default for the text to speech converter
+          advance: 0, // advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
+          autoplay: false, // automatically start slideshow
+          defaultDuration: 5, // default duration in seconds if no audio is available
+          defaultAudios: true, // try to play audios with names such as audio/1.2.ogg
+          playerOpacity: 0.05, // opacity value of audio player if unfocused
+          playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
+          startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
+        },
+        
+        chalkboard: { // font-awesome.min.css must be available
+          //src: "chalkboard/chalkboard.json",
+          storage: "chalkboard-demo",
+        },
+        
+        customcontrols: {
+            controls: [
+                    {
+                id: 'toggle-overview',
+                title: 'Toggle overview (O)',
+                icon: '<i class="fa fa-th"></i>',
+                action: 'Reveal.toggleOverview();'
+              }
+              ,
+        {
+          icon: '<i class="fa fa-pen-square"></i>',
+          title: 'Toggle chalkboard (B)',
+          action: 'RevealChalkboard.toggleChalkboard();'
+        },
+        {
+          icon: '<i class="fa fa-pen"></i>',
+          title: 'Toggle notes canvas (C)',
+          action: 'RevealChalkboard.toggleNotesCanvas();'
+        }
+        
+          ]
+        },
+        chart: {
+            defaults: {
+              color: 'lightgray', // color of labels
+              scale: {
+                beginAtZero: true,
+                ticks: { stepSize: 1 },
+                grid: { color: "lightgray" } , // color of grid lines
+              },
+            },
+            line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] },
+            bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
+            pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+            radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
+        },
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          // pass other options into `MathJax.Hub.Config()`
+          TeX: { Macros: { RR: "{\\bf R}" } }
+          },
+          anything: [
+          {
+      className: "plot",
+      defaults: {width:500, height: 500, grid:true},
+      initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
+     },
+     {
+      className: "chart",
+      initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
+     },
+     {
+      className: "anything",
+      initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
+     },
+            ],
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins )
+      };
+  }
 </script>
+
+<script type="module">
+  import LayoutsPlugin from "./plugins/layouts/dist/layouts.js";
+import ShowSourcePlugin from "./plugins/layouts/dist/show-source.js";
+import EmbeddSvgsPlugin, { Color } from "./plugins/layouts/dist/embedd-svgs.js";
+
+console.log("init.esm");
+
+const options = revealOptions();
+// remove fullscreen as it breaks background transition (see: https://github.com/evilz/vscode-reveal/issues/922)
+options.plugins = options.plugins.filter((p) => p.id != "RevealFullscreen");
+
+const layouts = new LayoutsPlugin({
+  extractBackgrounds: true,
+  stripUnusedPlaceholders: true,
+  stripUnusedContent: false,
+  enablePageNumbers: false,
+  backgroundGradient: "linear-gradient(to bottom right, #201d52, #210d40)",
+  layoutsDir: "_layouts",
+  defaultLayouts: {
+    title_main: ["guestline/006_Front-Page---Dark-with-logo"],
+    title: ["guestline/006_Front-Page---Dark"],
+    sectionTitle: [
+      "guestline/011_Section-title-V2---dark",
+      "guestline/013_Section-title-V3---dark",
+      "guestline/089_Cutout-image-right---1---Dark",
+    ],
+    slide: [
+      "guestline/024_Basic-bullets-large-text---blue-swoosh---dark",
+      "guestline/026_1_Basic-bullets-large-text---red-swoosh---dark",
+    ],
+    slide_light: [
+      "guestline/025_Basic-bullets-large-text---red-swoosh",
+      "guestline/023_Basic-bullets-large-text---blue-swoosh",
+    ],
+    graphics: [
+      "guestline/089_Cutout-image-right---1---Dark",
+      "guestline/093_Cutout-image-right---2---Dark",
+      "guestline/097_Cutout-image-right---3---Dark",
+    ],
+    quote: [
+      "guestline/083_Section-Intro-2---Dark",
+      "guestline/080_Quote---Dark",
+    ],
+    none: [""]
+  },
+});
+
+const embeddSvgs = new EmbeddSvgsPlugin({
+  defaultTheme: "dark",
+  autoscale: false,
+  themes: {
+    dark: {
+      colors: [
+        [new Color(0, 0, 0), new Color(255, 255, 255)],
+        [new Color(255, 255, 255), new Color(0x2a, 0x2a, 0x2a)],
+      ],
+    },
+    light: {
+      colors: [],
+    },
+  },
+});
+options.plugins.push(embeddSvgs);
+options.plugins.push(layouts);
+
+const showSource = new ShowSourcePlugin();
+options.plugins.push(showSource);
+options.navigationMode = "linear";
+
+console.dir(options);
+
+Reveal.on('autoanimate', (event) => {
+  console.log('autoanimate');
+  console.dir(event);
+});
+
+Reveal.initialize(options);
+var key = "I";
+Reveal.addKeyBinding(
+  { keyCode: key.charCodeAt(0), key, description: "Show slide source text" },
+  () => {
+    showSource.toggle();
+  }
+);
+
+window.addEventListener("mousedown", handleClick, false);
+window.addEventListener("contextmenu", function(e) { e.preventDefault(); }, false);
+
+function handleClick(e) {
+    e.preventDefault();
+    if(e.button === 0) Reveal.next(); 
+    if(e.button === 2) Reveal.prev(); 
+}
+</script>
+
 
 </body>
 
