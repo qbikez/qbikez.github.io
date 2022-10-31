@@ -35,7 +35,7 @@ export default class LayoutsPlugin {
     `);
         const slides = deck.getSlides(); // array of section elements
         // const resp = await fetch(
-        //   `../${this.settings.layoutsDir}/styles.css`
+        //   `${this.settings.layoutsDir}/styles.css`
         // );
         // var css = document.createElement("style");
         // css.setAttribute("type", "text/css");
@@ -57,8 +57,8 @@ export default class LayoutsPlugin {
             if (templatePath != ".")
                 slide.classList.add(templatePath);
             slide.classList.add("layout");
-            this.loadCss(`../${this.settings.layoutsDir}/${templatePath}/styles.css`);
-            const resp = await fetch(`../${this.settings.layoutsDir}/${layoutName}.html`);
+            this.loadCss(`${this.settings.layoutsDir}/${templatePath}/styles.css`);
+            const resp = await fetch(`${this.settings.layoutsDir}/${layoutName}.html`);
             let html = await resp.text();
             html = html.replace(/(["'])media\//g, `$1${this.settings.layoutsDir}/${templatePath}/media/`);
             var parser = new DOMParser();
